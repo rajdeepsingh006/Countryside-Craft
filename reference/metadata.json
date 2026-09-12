@@ -1,0 +1,6 @@
+{
+  "name": "Vana Artisan | Printed Tote Bags & Handcrafted Goods",
+  "description": "Premium e-commerce storefront for handcrafted & printed tote bags with WhatsApp checkout, workshop gallery, product reviews, and full admin dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

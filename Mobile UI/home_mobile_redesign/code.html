@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100%;margin:0;padding:0;background-color:#FDFBF7;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-primary-fixed-variant": "#8f003f", "surface-pure": "#FFFFFF", "on-secondary-fixed-variant": "#005236", "on-surface": "#111c2d", "surface-cream-alt": "#FAF7F2", "inverse-on-surface": "#ecf1ff", "on-surface-variant": "#594045", "on-background": "#111c2d", "on-tertiary-container": "#ffdbca", "surface-dim": "#cfdaf2", "on-secondary": "#ffffff", "outline": "#8d6f75", "secondary": "#006c49", "tertiary-container": "#a54a00", "surface-container-lowest": "#ffffff", "tertiary-fixed-dim": "#ffb68e", "on-secondary-fixed": "#002113", "surface-container-highest": "#d8e3fb", "primary-container": "#c2185b", "surface-container-low": "#f0f3ff", "surface-dark-slate": "#1A1E29", "on-tertiary-fixed": "#331200", "badge-pink-text": "#BE185D", "border-subtle": "#F1F1F1", "tertiary": "#803700", "surface-bright": "#f9f9ff", "error-container": "#ffdad6", "primary-fixed": "#ffd9df", "tertiary-fixed": "#ffdbca", "inverse-primary": "#ffb1c2", "surface-container": "#e7eeff", "badge-pink-bg": "#FDF2F8", "secondary-fixed": "#6ffbbe", "on-error": "#ffffff", "badge-amber-text": "#B45309", "accent-gold": "#F59E0B", "secondary-fixed-dim": "#4edea3", "inverse-surface": "#263143", "on-error-container": "#93000a", "primary": "#9b0044", "surface-tint": "#b90c55", "primary-fixed-dim": "#ffb1c2", "background": "#f9f9ff", "on-primary": "#ffffff", "surface-variant": "#d8e3fb", "on-primary-fixed": "#3f0018", "canvas-cream": "#FDFBF7", "badge-amber-bg": "#FEF3C7", "on-tertiary-fixed-variant": "#763300", "secondary-container": "#6cf8bb", "error": "#ba1a1a", "on-secondary-container": "#00714d", "outline-variant": "#e1bec4", "border-warm": "#E2E8F0", "surface": "#f9f9ff", "on-primary-container": "#ffd9df", "surface-container-high": "#dee8ff", "on-tertiary": "#ffffff" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "topbar-height": "2rem", "stack-base": "1rem", "stack-tight": "0.5rem", "section-gap": "2rem", "touch-target-min": "2.75rem", "screen-edge-mobile": "1rem", "bottom-nav-height": "3.75rem", "stepper-height": "2.25rem", "grid-gutter": "0.75rem", "header-height": "3.5rem", "button-height-primary": "3rem", "stack-loose": "1.5rem" }, fontFamily: { "body-stepper": ["Plus Jakarta Sans"], "title-brand": ["Playfair Display"], "cta-label": ["Plus Jakarta Sans"], "nav-label": ["Plus Jakarta Sans"], "card-title": ["Plus Jakarta Sans"], "price-pdp": ["Plus Jakarta Sans"], "headline-product": ["Playfair Display"], "badge-label": ["Plus Jakarta Sans"], "price-card": ["Plus Jakarta Sans"], "headline-section": ["Playfair Display"], "body-default": ["Plus Jakarta Sans"], "headline-hero": ["Playfair Display"] }, fontSize: { "body-stepper": ["14px", {"lineHeight": "18px", "fontWeight": "600"}], "title-brand": ["20px", {"lineHeight": "24px", "fontWeight": "700"}], "cta-label": ["15px", {"lineHeight": "20px", "fontWeight": "600"}], "nav-label": ["10px", {"lineHeight": "12px", "fontWeight": "500"}], "card-title": ["15px", {"lineHeight": "20px", "fontWeight": "500"}], "price-pdp": ["24px", {"lineHeight": "28px", "fontWeight": "700"}], "headline-product": ["22px", {"lineHeight": "28px", "fontWeight": "600"}], "badge-label": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700"}], "price-card": ["16px", {"lineHeight": "20px", "fontWeight": "700"}], "headline-section": ["20px", {"lineHeight": "26px", "fontWeight": "600"}], "body-default": ["14px", {"lineHeight": "21px", "fontWeight": "400"}], "headline-hero": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}] } } } };</script></head><body class="bg-canvas-cream text-on-surface font-body-default flex flex-col min-h-screen antialiased selection:bg-primary-fixed"><header class="fixed top-0 w-full z-50 pt-safe bg-canvas-cream/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><aside class="h-8 w-full bg-primary flex items-center justify-center px-4 overflow-hidden"><p class="font-badge-label text-badge-label text-on-primary tracking-wider uppercase truncate text-center">Free Handmade Pouch on orders above ₹1,999 | Code: FESTIVE</p></aside><div class="h-14 px-screen-edge-mobile flex items-center justify-between"><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-title-brand text-[13px] font-bold tracking-tight shadow-sm">CC</div><span class="font-title-brand text-title-brand text-on-surface tracking-tight leading-none">Countryside Craft</span></div><div class="flex items-center gap-1"><button aria-label="Search" class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[22px]">search</span></button><button aria-label="Wishlist" class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[22px]">favorite</span></button><button aria-label="Shopping Bag" class="w-11 h-11 flex items-center justify-center text-on-surface relative hover:text-primary transition-colors"><span class="material-symbols-outlined text-[22px]">shopping_bag</span><span class="absolute top-1.5 right-1.5 min-w-[17px] h-[17px] px-1 bg-primary text-on-primary font-badge-label text-[10px] leading-tight font-bold rounded-full flex items-center justify-center">2</span></button><div class="w-8 h-8 ml-1 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 w-full bg-canvas-cream pt-[88px] pb-[76px]"><div class="flex flex-col w-full">
+<!-- 1. Hero Banner Section -->
+<section class="relative px-screen-edge-mobile pt-3 pb-6">
+<div class="relative w-full rounded-2xl overflow-hidden shadow-sm bg-surface-dark-slate flex flex-col justify-end min-h-[440px]">
+<!-- Image Layer -->
+<img class="absolute inset-0 w-full h-full object-cover opacity-60" data-alt="Close up of Indian artisan hands carefully applying an intricate hand-carved wooden block print with natural deep indigo and earthy madder red dyes onto unbleached cotton canvas fabric. Warm, soft natural daylight illuminating rich textile textures, serene and authentic artisan heritage mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBD0sGeRBJKHP-DIQy-3Y2d5KPJUV_Q09PQeAsXDXUk85TLzEFfmAisoL59p3JC9hOUOxz9_IQqOhmBLn4krGPIOR5Y6mhDeANj4eJyhBRNWeoqn3ABpywmRW_UcjcIYBczfxYCDdf9SDSGV1zlisuTW3MC7TvoNSnmirTTZxghE4F6SCiZE2qZGA2BlhZ8WIG0wMqM7MMUCw7x8qOsr2FMOTHyfqBTZBIZpcV77CfH2GwkRBOkpQXd"/>
+<!-- Gradient Vignette -->
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dark-slate via-surface-dark-slate/60 to-transparent"></div>
+<!-- Hero Content -->
+<div class="relative z-10 p-5 flex flex-col items-start gap-3">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-pure/15 backdrop-blur-md text-surface-pure">
+<span class="material-symbols-outlined text-[14px] text-badge-amber-text">eco</span>
+<span class="font-badge-label text-badge-label uppercase tracking-wider text-surface-pure">Handmade With Love</span>
+</div>
+<h1 class="font-headline-hero text-headline-hero text-surface-pure leading-tight">
+          Crafted by Hand • Made to Cherish
+        </h1>
+<p class="font-body-default text-body-default text-surface-cream-alt/90 max-w-xs leading-relaxed">
+          Heirloom botanical prints &amp; slow-crafted everyday unbleached cotton tote bags made to bring joy.
+        </p>
+<!-- CTAs -->
+<div class="w-full flex flex-col gap-2.5 pt-1.5">
+<button class="w-full h-button-height-primary bg-primary-container text-on-primary font-cta-label text-cta-label rounded-full shadow-md active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span>Explore Festive Totes</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+<button class="w-full h-button-height-primary bg-secondary/85 backdrop-blur-md text-on-secondary font-cta-label text-cta-label rounded-full active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">redeem</span>
+<span>Inquire for Custom &amp; Bulk Favors</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. Trust Micro-Grid (2x2) -->
+<section class="px-screen-edge-mobile pb-6">
+<div class="grid grid-cols-2 gap-2.5 p-3 rounded-2xl bg-surface-pure shadow-sm">
+<!-- Item 1 -->
+<div class="flex items-center gap-2.5 p-2 rounded-xl bg-surface-cream-alt">
+<div class="w-8 h-8 rounded-full bg-badge-pink-bg flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px] text-badge-pink-text">inventory_2</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-stepper text-[12px] leading-tight text-on-surface truncate">5,000+ Totes</span>
+<span class="font-body-default text-[11px] text-on-surface-variant truncate">Small batch craft</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center gap-2.5 p-2 rounded-xl bg-surface-cream-alt">
+<div class="w-8 h-8 rounded-full bg-badge-amber-bg flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px] text-badge-amber-text" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-stepper text-[12px] leading-tight text-on-surface truncate">4.9★ Rating</span>
+<span class="font-body-default text-[11px] text-on-surface-variant truncate">Verified buyers</span>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center gap-2.5 p-2 rounded-xl bg-surface-cream-alt">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px] text-primary">local_shipping</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-stepper text-[12px] leading-tight text-on-surface truncate">48-Hr Dispatch</span>
+<span class="font-body-default text-[11px] text-on-surface-variant truncate">Pan-India delivery</span>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="flex items-center gap-2.5 p-2 rounded-xl bg-surface-cream-alt">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px] text-secondary">park</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-stepper text-[12px] leading-tight text-on-surface truncate">Eco Cotton</span>
+<span class="font-body-default text-[11px] text-on-surface-variant truncate">Zero-plastic pack</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. Shop by Craft & Occasion Snap Carousel -->
+<section class="pb-7">
+<div class="px-screen-edge-mobile flex items-end justify-between mb-3.5">
+<div>
+<div class="flex items-center gap-1.5 text-primary mb-0.5">
+<span class="material-symbols-outlined text-[16px]">palette</span>
+<span class="font-badge-label text-badge-label uppercase tracking-wider">Curated Collections</span>
+</div>
+<h2 class="font-headline-section text-headline-section text-on-surface">Shop by Craft &amp; Occasion</h2>
+</div>
+<a class="font-body-stepper text-[12px] text-primary flex items-center gap-0.5 pb-0.5 hover:underline" href="#">
+<span>View all</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+<!-- Carousel Container -->
+<div class="flex gap-3 overflow-x-auto px-screen-edge-mobile pb-2 snap-x snap-mandatory scroll-smooth no-scrollbar">
+<!-- Slide 1 -->
+<div class="snap-start shrink-0 w-[148px] rounded-2xl overflow-hidden bg-surface-pure shadow-sm flex flex-col">
+<div class="relative w-full h-[155px] bg-surface-cream-alt overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Handcrafted indigo blue Bagru block print tote bag resting on clean neutral organic textured table linen, studio lighting, showing geometric dabu mud resist floral motifs." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBZkl0-zvGfLAF3-pJT0ppR98mHdgI4gMfLk3EwNqZ_f3DFcKN_QMInyWXvYchCYD-r1vWKqqFmgAiX05XyFc2pn8PqkZJNFYv6Q_YCUxPoTu6tziRQWVLSCxz0dMRniYmjYx-XRcSyYPE1vna-Mlh-6BjXismeUGbVitJGbHPMxjL2Buld4J505EPGneKiP0ytzELRvVW6y7o_6FnFEv4UN7j6MQ-y8SG4-qRYNRdBLPzzKrK65FB"/>
+<div class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-surface-pure/90 backdrop-blur-sm">
+<span class="font-badge-label text-[9px] uppercase tracking-wide text-on-surface font-semibold">3 Designs</span>
+</div>
+</div>
+<div class="p-2.5 flex flex-col justify-between flex-1">
+<div>
+<span class="font-badge-label text-[9px] uppercase tracking-wider text-primary">Artisan Craft</span>
+<h3 class="font-card-title text-[13px] leading-tight font-semibold text-on-surface mt-0.5">Block Prints &amp; Dabu</h3>
+</div>
+<span class="font-body-default text-[11px] text-on-surface-variant flex items-center gap-0.5 mt-2 text-primary">
+            Explore <span class="material-symbols-outlined text-[12px]">arrow_forward</span>
+</span>
+</div>
+</div>
+<!-- Slide 2 -->
+<div class="snap-start shrink-0 w-[148px] rounded-2xl overflow-hidden bg-surface-pure shadow-sm flex flex-col">
+<div class="relative w-full h-[155px] bg-surface-cream-alt overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Traditional Kalamkari hand painted tree of life motif tote bag, natural ochre yellow and earthy madder red dyes, detailed fine line textile art." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe7C-9YQhJHlA4M2etSfA6UdfwU8gE6_mZEyUvs6Ny997pHYKZkcOjIt_nexDWFeykQTd18o-vxnNqhF5vROKxAOndqfuHsRFZGUsvM9DM0QHXmFWGZsmGUQ2nl2Amz1yml5_aHXc04RcpxZ7A-qWiF0OKZbi3aWrZHlksa_5p-YgvH_91T0ImE0h2jF0FMZwx2X9QWnO1ym0N8eUeyMPgkkSJO-6prRSWHRziXgr3Aw635RooS9X1"/>
+<div class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-surface-pure/90 backdrop-blur-sm">
+<span class="font-badge-label text-[9px] uppercase tracking-wide text-on-surface font-semibold">2 Designs</span>
+</div>
+</div>
+<div class="p-2.5 flex flex-col justify-between flex-1">
+<div>
+<span class="font-badge-label text-[9px] uppercase tracking-wider text-primary">Heritage Art</span>
+<h3 class="font-card-title text-[13px] leading-tight font-semibold text-on-surface mt-0.5">Botanical Kalamkari</h3>
+</div>
+<span class="font-body-default text-[11px] text-on-surface-variant flex items-center gap-0.5 mt-2 text-primary">
+            Explore <span class="material-symbols-outlined text-[12px]">arrow_forward</span>
+</span>
+</div>
+</div>
+<!-- Slide 3 -->
+<div class="snap-start shrink-0 w-[148px] rounded-2xl overflow-hidden bg-surface-pure shadow-sm flex flex-col">
+<div class="relative w-full h-[155px] bg-surface-cream-alt overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Festive deep maroon cotton tote bag adorned with subtle metallic gold foil marigold motifs and woven zari border handles, festive gift aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBmyqR1kPb9t469zD95b2XLY3CZC9qiUNetcs0QiKyNh_gUMZFdqUBBALlf9UKD62vpArrx7LKZrYZqlXE5RthSVCvqFQPRwBr5rD3QLcknWuUwAPh4Uxs0r26r0jznEbIYKf8sp-a7kcEQdYT-Gi5drFepcbCHzu5ZgjNiemGMR_Q4tHbCHkIqIWoQvYuanL1-6hdLPWM4rwQN0z_VrQo6Sk5_9_vI5njN67-o6PMw8IZ1IFNW9je"/>
+<div class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-surface-pure/90 backdrop-blur-sm">
+<span class="font-badge-label text-[9px] uppercase tracking-wide text-on-surface font-semibold">4 Designs</span>
+</div>
+</div>
+<div class="p-2.5 flex flex-col justify-between flex-1">
+<div>
+<span class="font-badge-label text-[9px] uppercase tracking-wider text-accent-gold">Festive Special</span>
+<h3 class="font-card-title text-[13px] leading-tight font-semibold text-on-surface mt-0.5">Gold Foil &amp; Zari</h3>
+</div>
+<span class="font-body-default text-[11px] text-on-surface-variant flex items-center gap-0.5 mt-2 text-primary">
+            Explore <span class="material-symbols-outlined text-[12px]">arrow_forward</span>
+</span>
+</div>
+</div>
+<!-- Slide 4 -->
+<div class="snap-start shrink-0 w-[148px] rounded-2xl overflow-hidden bg-surface-pure shadow-sm flex flex-col">
+<div class="relative w-full h-[155px] bg-surface-cream-alt overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Heavyweight unbleached off-white canvas tote bag with reinforced raw cotton webbed strap handles and minimalist organic countryside insignia." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaB72argz46zE57P5hIdC2mI4QddL0vpsgDHLdIaZdizxcWnjWpINsUBcGh6Mc1toHwS-DFyJZqGeB04mZxymbUEpb6nA9RhY4exSqSBXV-KgXTQXvHDuIX1_nzk4e2ESCOk9ASXTbDt-qzDAa0rk843TgYdj2FFnO3BOWztECqUQlifUi7H7b3WP72tlCoACgoPNIPN7EMxoWCqNiUNe-nTjyt-IWjHKxpQcBRQU_JTPn47lGyOfR"/>
+<div class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-surface-pure/90 backdrop-blur-sm">
+<span class="font-badge-label text-[9px] uppercase tracking-wide text-on-surface font-semibold">5 Designs</span>
+</div>
+</div>
+<div class="p-2.5 flex flex-col justify-between flex-1">
+<div>
+<span class="font-badge-label text-[9px] uppercase tracking-wider text-secondary">Sustainable Basic</span>
+<h3 class="font-card-title text-[13px] leading-tight font-semibold text-on-surface mt-0.5">Everyday Canvas</h3>
+</div>
+<span class="font-body-default text-[11px] text-on-surface-variant flex items-center gap-0.5 mt-2 text-primary">
+            Explore <span class="material-symbols-outlined text-[12px]">arrow_forward</span>
+</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. Artisan Highlights (Featured Handcrafted Totes) -->
+<section class="px-screen-edge-mobile pb-6">
+<div class="mb-3.5">
+<div class="flex items-center gap-1.5 text-primary mb-0.5">
+<span class="material-symbols-outlined text-[16px]">stars</span>
+<span class="font-badge-label text-badge-label uppercase tracking-wider">Artisan Highlights</span>
+</div>
+<h2 class="font-headline-section text-headline-section text-on-surface">Featured Handcrafted Totes</h2>
+</div>
+<!-- Category Filter Chips -->
+<div class="flex items-center gap-2 overflow-x-auto pb-3.5 no-scrollbar">
+<button class="px-3.5 py-1.5 rounded-full bg-primary text-on-primary font-body-stepper text-[12px] shrink-0 shadow-sm">
+        All
+      </button>
+<button class="px-3 py-1.5 rounded-full bg-surface-pure text-on-surface-variant font-body-stepper text-[12px] shrink-0 flex items-center gap-1 hover:bg-surface-cream-alt">
+<span>🔥</span> Bestsellers
+      </button>
+<button class="px-3 py-1.5 rounded-full bg-surface-pure text-on-surface-variant font-body-stepper text-[12px] shrink-0 flex items-center gap-1 hover:bg-surface-cream-alt">
+<span>✨</span> New Arrivals
+      </button>
+<button class="px-3 py-1.5 rounded-full bg-surface-pure text-on-surface-variant font-body-stepper text-[12px] shrink-0 flex items-center gap-1 hover:bg-surface-cream-alt">
+<span>🎁</span> Festive Gifting
+      </button>
+</div>
+<!-- 2-Column Product Grid -->
+<div class="grid grid-cols-2 gap-3">
+<!-- Product Card 1 -->
+<div class="group rounded-2xl bg-surface-pure p-2 flex flex-col shadow-sm">
+<div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-surface-cream-alt">
+<img alt="Royal Jaipur Indigo Dabu Tote" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNZSdz1hDvSx_Uea6ky8E_p1Q_d_DbhtFVmEL8yZPqXcBNH3_C2XBHkbaNjc-GnRGb26l-RHEkRKNSY7JhyfELaogbyRDtcZPOZGfl6QJyfc-tePcwg2c5gl3jN5pUK4gIi9zRBvm-HfkgE7HbtABwrq3ama2g3LZK0ANtGWnrH82Bdg8yxeInpb-8UXld8aD9zf1mSbhHa1Fm8c1pFZmsPSwS5jg6S3vWnCoMOtYZCodwLYTxNZ0oMh4N0Dd0mhw-eA"/>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-badge-pink-bg text-badge-pink-text font-badge-label text-[10px] font-bold">33% OFF</span>
+<span class="px-1.5 py-0.5 rounded-full bg-surface-pure/95 text-on-surface font-badge-label text-[9px]">Hand-Dyed</span>
+</div>
+<!-- Quick Add Floating Action -->
+<button aria-label="Add to cart" class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-surface-pure text-primary flex items-center justify-center shadow-md active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="pt-2 px-1 flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[13px] text-badge-amber-text" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-body-stepper text-[11px] text-on-surface">5.0</span>
+<span class="font-body-default text-[10px] text-on-surface-variant">(142)</span>
+</div>
+<h3 class="font-card-title text-card-title text-on-surface line-clamp-2 leading-tight">
+              Royal Jaipur Indigo Dabu Tote
+            </h3>
+</div>
+<div class="pt-2 flex items-baseline gap-1.5">
+<span class="font-price-card text-price-card text-primary font-bold">₹799</span>
+<span class="font-body-default text-[12px] text-on-surface-variant/70 line-through">₹1,199</span>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group rounded-2xl bg-surface-pure p-2 flex flex-col shadow-sm">
+<div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-surface-cream-alt">
+<img alt="Marigold Festive Celebration Tote" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhktf0nwrlfrlD46fjjlwU-Zz0tLsxJGi0Z58HVZZE0QdvNzxvt0myQ5ZNom4obtdC1_-Rmma8Z7muzf1GbFw64g2rk8Nr0wjm_KPuDCGPlo9Lqia1sJ8qWtF7fQL7SVhw9KUSfVKc9L3cEPSTIdts9NtghaH8BlZ9kJ1FObLmr1-QKBVljQx-2TZqJGZ9piu7afyYkFxzLuWnLKCQKPxScgBPMgcND__DUL1Hx5IN35MKVZntntnDzAA3ukIwYXd5kA"/>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-badge-pink-bg text-badge-pink-text font-badge-label text-[10px] font-bold">35% OFF</span>
+<span class="px-1.5 py-0.5 rounded-full bg-badge-amber-bg text-badge-amber-text font-badge-label text-[9px]">Festive</span>
+</div>
+<button aria-label="Add to cart" class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-surface-pure text-primary flex items-center justify-center shadow-md active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="pt-2 px-1 flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[13px] text-badge-amber-text" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-body-stepper text-[11px] text-on-surface">4.9</span>
+<span class="font-body-default text-[10px] text-on-surface-variant">(98)</span>
+</div>
+<h3 class="font-card-title text-card-title text-on-surface line-clamp-2 leading-tight">
+              Marigold Festive Celebration Tote
+            </h3>
+</div>
+<div class="pt-2 flex items-baseline gap-1.5">
+<span class="font-price-card text-price-card text-primary font-bold">₹849</span>
+<span class="font-body-default text-[12px] text-on-surface-variant/70 line-through">₹1,299</span>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group rounded-2xl bg-surface-pure p-2 flex flex-col shadow-sm">
+<div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-surface-cream-alt">
+<img alt="Kalamkari Tree of Life Lotus Tote" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCa1icoU_m_aqIAyB_AUlVAoHAHIYOrY2Q4dVk8zNwG0R31gjYURrCp3zqHA-mBK79GqEuvk8K6krZwF4717j2do0hAoHV2iamymKIGL0dgMrpp1GF8kIbzEX6mF1suA79157XqZLrjD9GsijcGBsz8Z5uVeXxWTnPoT1V90OtJVicGjbT5HHS4H2TpBPnk855Bga1XgHkklGyvnZCdE_PiIC41qN9Ljy_P-eADC55oxrxhzYSF4IHTIrxcNvd3fwA0kA"/>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-badge-amber-bg text-badge-amber-text font-badge-label text-[10px] font-bold">BESTSELLER</span>
+</div>
+<button aria-label="Add to cart" class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-surface-pure text-primary flex items-center justify-center shadow-md active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="pt-2 px-1 flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[13px] text-badge-amber-text" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-body-stepper text-[11px] text-on-surface">5.0</span>
+<span class="font-body-default text-[10px] text-on-surface-variant">(64)</span>
+</div>
+<h3 class="font-card-title text-card-title text-on-surface line-clamp-2 leading-tight">
+              Kalamkari Tree of Life Lotus Tote
+            </h3>
+</div>
+<div class="pt-2 flex items-baseline gap-1.5">
+<span class="font-price-card text-price-card text-primary font-bold">₹899</span>
+<span class="font-body-default text-[12px] text-on-surface-variant/70 line-through">₹1,299</span>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group rounded-2xl bg-surface-pure p-2 flex flex-col shadow-sm">
+<div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-surface-cream-alt">
+<img alt="Raw Jute &amp; Botanical Tote" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTO4KEj69ivNfrjcEXB06fIhuTUV9BG9W214NDFDIruSOyi-yKH1B-xgIdVl68TdBF_-sduu-EPKGERxLhwgaw9728eyC3W8cjt-RUrWGlt-z2NOaK58SzSVafVAvzucyPpq3qLfsJmX6afGp2ID7dPIeGw-C_kqgM0llLQJ93fDc2MAkoXDpKzYpHE1Jdn7zF46X_sTDgXCMYQ2f8KJnyi4mhm3WRE1Iu2uLmE2AkJf-aDXz5U7YR2b41w8YW3qxcOQ"/>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-secondary font-badge-label text-[10px] font-bold">ORGANIC</span>
+</div>
+<button aria-label="Add to cart" class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-surface-pure text-primary flex items-center justify-center shadow-md active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="pt-2 px-1 flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[13px] text-badge-amber-text" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-body-stepper text-[11px] text-on-surface">4.8</span>
+<span class="font-body-default text-[10px] text-on-surface-variant">(110)</span>
+</div>
+<h3 class="font-card-title text-card-title text-on-surface line-clamp-2 leading-tight">
+              Raw Jute &amp; Botanical Everyday Tote
+            </h3>
+</div>
+<div class="pt-2 flex items-baseline gap-1.5">
+<span class="font-price-card text-price-card text-primary font-bold">₹749</span>
+<span class="font-body-default text-[12px] text-on-surface-variant/70 line-through">₹1,099</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. Real Customer Stories Review Card -->
+<section class="px-screen-edge-mobile pb-6">
+<div class="p-4 rounded-2xl bg-surface-pure shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[16px]">rate_review</span>
+<span class="font-badge-label text-badge-label uppercase tracking-wider">Real Customer Stories</span>
+</div>
+<div class="flex items-center gap-0.5 text-accent-gold">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="font-headline-product text-[15px] italic text-on-surface leading-snug">
+        “The quality of the canvas is extraordinary! Fits my 15-inch laptop and daily essentials seamlessly. The dabu print gets endless compliments.”
+      </p>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-primary flex items-center justify-center font-bold text-[12px]">
+            AS
+          </div>
+<div>
+<p class="font-body-stepper text-[13px] text-on-surface leading-tight">Ananya Sharma</p>
+<p class="font-body-default text-[11px] text-on-surface-variant">Bangalore • Verified Gifting Buyer</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 text-secondary text-[11px] font-semibold">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+          Verified
+        </span>
+</div>
+</div>
+</section>
+<!-- 6. Artisan Journal Newsletter Subscription Box -->
+<section class="px-screen-edge-mobile pb-6">
+<div class="rounded-2xl p-4 bg-surface-cream-alt shadow-sm flex flex-col gap-2.5">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[16px]">mail</span>
+</div>
+<h3 class="font-headline-section text-[17px] text-on-surface leading-tight">The Slow Craft Journal</h3>
+</div>
+<p class="font-body-default text-[13px] text-on-surface-variant leading-relaxed">
+        Be the first to receive secret seasonal artisan drops, craft workshops, and 10% off your first handcrafted order.
+      </p>
+<form class="flex items-center gap-2 pt-1" onsubmit="event.preventDefault(); alert('Thank you for joining our slow-craft community!');">
+<input class="flex-1 min-w-0 h-11 px-3.5 rounded-full bg-surface-pure text-on-surface font-body-default text-[13px] placeholder:text-on-surface-variant/60 focus:outline-none shadow-sm" placeholder="Enter your email address" required="" type="email"/>
+<button class="h-11 px-5 rounded-full bg-primary text-on-primary font-cta-label text-[13px] font-semibold active:scale-95 transition-transform shrink-0 shadow-sm" type="submit">
+          Join
+        </button>
+</form>
+</div>
+</section>
+<!-- 7. Floating WhatsApp Concierge Banner -->
+<section class="px-screen-edge-mobile pb-5">
+<div class="p-3.5 rounded-2xl bg-secondary text-on-secondary shadow-md flex items-center justify-between gap-3">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-10 h-10 rounded-full bg-surface-pure/20 backdrop-blur-md flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px] text-surface-pure">chat</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-stepper text-[13px] text-surface-pure leading-tight truncate">Need Gifting or Bulk Advice?</span>
+<span class="font-body-default text-[11px] text-surface-pure/80 truncate">Instant bespoke concierge on WhatsApp</span>
+</div>
+</div>
+<a class="px-3.5 py-2 rounded-full bg-surface-pure text-secondary font-cta-label text-[12px] font-bold shrink-0 active:scale-95 transition-transform flex items-center gap-1 shadow-sm" href="https://wa.me/" rel="noopener noreferrer" target="_blank">
+<span>Chat Now</span>
+<span class="material-symbols-outlined text-[14px]">send</span>
+</a>
+</div>
+</section>
+</div></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-canvas-cream/90 backdrop-blur-xl shadow-[0_-4px_16px_rgba(30,41,59,0.06)]" data-active-classes="text-primary font-semibold"><div class="h-[60px] px-2 flex items-center justify-around"><a aria-current="page" class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 transition-colors group text-primary font-semibold" data-path="home" href="#"><span class="material-symbols-outlined text-[22px] group-hover:scale-105 transition-transform">home</span><span class="font-nav-label text-nav-label">Home</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-on-surface-variant hover:text-primary transition-colors group" data-path="shop" href="#"><span class="material-symbols-outlined text-[22px] group-hover:scale-105 transition-transform">grid_view</span><span class="font-nav-label text-nav-label">Shop</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-on-surface-variant hover:text-primary transition-colors group" data-path="workshops" href="#"><span class="material-symbols-outlined text-[22px] group-hover:scale-105 transition-transform">auto_awesome</span><span class="font-nav-label text-nav-label">Workshops</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-on-surface-variant hover:text-primary transition-colors group" data-path="artisan-story" href="#"><span class="material-symbols-outlined text-[22px] group-hover:scale-105 transition-transform">menu_book</span><span class="font-nav-label text-nav-label">Story</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-on-surface-variant hover:text-primary transition-colors relative group" data-path="cart-bag" href="#"><span class="material-symbols-outlined text-[22px] group-hover:scale-105 transition-transform">shopping_cart</span><span class="absolute top-1 right-2 min-w-[15px] h-[15px] px-0.5 bg-primary text-on-primary font-badge-label text-[9px] font-bold rounded-full flex items-center justify-center leading-none">2</span><span class="font-nav-label text-nav-label">Bag</span></a></div></nav></body></html>

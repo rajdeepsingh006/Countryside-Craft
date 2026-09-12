@@ -1,0 +1,234 @@
+/**
+ * Seed Script — run with: npm run seed
+ * Creates: 1 Main Admin, 4 Categories, 4 Handcrafted Products (without images), 1 Settings document
+ */
+
+require('./config/env');
+const mongoose = require('mongoose');
+const connectDB = require('./config/db');
+const Admin = require('./models/admin.model');
+const Category = require('./models/category.model');
+const Product = require('./models/product.model');
+const Settings = require('./models/settings.model');
+
+const seed = async () => {
+  await connectDB();
+  console.log('\n🌱 Starting database seed with 4 new handcrafted products (no images)...\n');
+
+  // ─── Clear existing sample data ───────────────────────────────
+  await Admin.deleteMany({});
+  await Category.deleteMany({});
+  await Product.deleteMany({});
+  await Settings.deleteMany({});
+  console.log('✅ Cleared all previous sample products and data');
+
+  // ─── Create Main Admin ────────────────────────────────────────
+  await Admin.create({
+    name: 'Countryside Craft Owner',
+    username: 'admin',
+    passwordHash: 'Admin@123456',
+    role: 'main_admin',
+  });
+  console.log(`✅ Main Admin created — username: admin | password: Admin@123456`);
+
+  // ─── Create Categories ────────────────────────────────────────
+  const categories = await Category.insertMany([
+    {
+      name: 'Travel & Stationery Kits',
+      slug: 'travel-stationery',
+      description: 'Handcrafted multi-utility pouches, stationery kits, and compact travel organizers',
+      image: '',
+    },
+    {
+      name: 'Festive Cards & Shagun',
+      slug: 'festive-gifting',
+      description: 'Artisanal Shagun envelopes, traditional blessing cards, and celebratory gifting essentials',
+      image: '',
+    },
+    {
+      name: 'Hand-Painted Jute Bags',
+      slug: 'handpainted-jute',
+      description: 'Master-crafted hand-painted natural jute bags with handcrafted metal ring handles',
+      image: '',
+    },
+    {
+      name: 'Jute Utility & Bottle Bags',
+      slug: 'utility-bottle-bags',
+      description: 'Eco-friendly laminated jute carriers designed for water bottles, thermoses, and daily utility',
+      image: '',
+    },
+  ]);
+  console.log(`✅ ${categories.length} Categories created`);
+
+  // Category map by slug
+  const catMap = {};
+  categories.forEach((c) => {
+    catMap[c.slug] = c._id;
+  });
+
+  // ─── Create Products (4 without images) ───────────────────────
+  const products = await Product.insertMany([
+    {
+      name: 'Artisan Dual-Utility Travel & Stationery Kit',
+      slug: 'artisan-dual-utility-travel-stationery-kit',
+      tagline: 'Compact 8.5" x 6" Zipper Pouch for Travel Essentials & Stationery',
+      description:
+        'A versatile, handcrafted organizer designed for conscious travelers, students, and working professionals. Sized at a practical 8.5" x 6", this dual-purpose kit effortlessly transitions from an artist pen-and-stationery pouch into a travel organizer for cosmetics, toiletries, passports, charging cables, and daily grooming necessities. Features a heavy-duty smooth brass zipper, water-resistant reinforced lining, and double-stitched perimeter seams for lifetime durability.',
+      detailedStory:
+        'Handcrafted in small artisan batches using durable, eco-friendly fabric. Each pouch is carefully cut, stitched, and finished by master craftspeople with attention to seam integrity and load-bearing stress points. Compact enough to slip smoothly into totes, backpacks, and carry-ons while keeping your everyday essentials perfectly organized.',
+      material: 'Eco-Friendly Heavyweight Cotton Duck & Jute-Cotton Weave with Water-Resistant Inner Lining',
+      dimensions: '8.5" L x 6" H (Slim Profile)',
+      handleLength: 'Integrated Hand Grab Loop',
+      closureType: 'Antiqued Brass Heavy-Duty Zipper',
+      features: [
+        'Practical 8.5" x 6" compact profile — fits easily into totes and travel luggage',
+        'Dual utility: organizes stationery, art supplies, pens, or cosmetics & travel toiletries',
+        'Smooth, snag-free antiqued brass zipper with easy-pull tab',
+        'Protective inner lining to guard against pen leaks and liquid spills',
+        'Reinforced stress points and neatly piped edges for everyday durability',
+      ],
+      images: [],
+      price: 349,
+      originalPrice: 449,
+      discountPercent: 22,
+      stock: 35,
+      category: catMap['travel-stationery'],
+      tags: ['stationery', 'travel-kit', 'pouch', 'organizer', 'handcrafted', 'eco-friendly'],
+      isFeatured: true,
+      isBestseller: true,
+      isNewArrival: true,
+      ratingAverage: 4.9,
+      ratingCount: 14,
+      isActive: true,
+    },
+    {
+      name: 'Royal Heritage Handcrafted Shagun Card & Envelope',
+      slug: 'royal-heritage-handcrafted-shagun-card',
+      tagline: 'Artisanal Festive Cash & Blessing Gift Envelope (3.5" x 7" — Multiple Assorted Designs)',
+      description:
+        'Add grace and traditional charm to your festive blessings with Countryside Craft’s handcrafted Shagun cards. Measuring an elegant 3.5" x 7", these celebratory envelopes are tailored to hold standard currency notes crisp and flat without folding, accompanied by a matching personal blessing card. Available in a rich variety of artisan designs—featuring delicate hand block-printed florals, royal festive gold foil accents, and traditional auspicious motifs.',
+      detailedStory:
+        'Rooted in timeless Indian gifting customs, our Shagun envelopes are slow-crafted on premium textured handmade paper. Each card is hand-embellished by local artisans, transforming every cash gift or ceremonial blessing into a treasured keepsake for weddings, Diwali, Mehendi, housewarmings, and special celebrations.',
+      material: 'Textured Premium Handmade Paperboard with Metallic Gold Foil & Botanical Block Accents',
+      dimensions: '3.5" W x 7" H (Fits all Indian & international currency notes flat)',
+      handleLength: 'Self-tuck secure closure flap',
+      closureType: 'Tuck-in Seal / Elegant Wax Seal Flap',
+      features: [
+        'Standard currency dimension: 3.5" x 7" (no folding of notes needed)',
+        'Available in multiple exclusive festive designs and artistic color palettes',
+        'Accompanied by a blank textured greeting insert for personal handwritten messages',
+        'Embellished with intricate metallic foil and traditional handcrafted motifs',
+        'Ideal for weddings, Mehendi, Diwali, baby showers, and festive milestone gifting',
+      ],
+      images: [],
+      price: 149,
+      originalPrice: 199,
+      discountPercent: 25,
+      stock: 100,
+      category: catMap['festive-gifting'],
+      tags: ['shagun', 'card', 'envelope', 'wedding', 'festive', 'gifting', 'handmade'],
+      isFeatured: true,
+      isBestseller: true,
+      isNewArrival: false,
+      ratingAverage: 5.0,
+      ratingCount: 28,
+      isActive: true,
+    },
+    {
+      name: 'Artisan Hand-Painted Jute Box Bag with Jute-Wrapped Ring Handle',
+      slug: 'artisan-hand-painted-jute-box-bag',
+      tagline: '10" x 5" x 5" Structured Jute Silhouette with 2.5" Metal Ring Handles & Artisan Folk Art',
+      description:
+        'A sculptural statement piece celebrating raw texture and vibrant Indian folk artistry. Structured in a clean 10" x 5" x 5" geometric silhouette, this handcrafted bag features dual 2.5-inch solid metal ring handles meticulously wrapped by hand in natural jute cord for a warm, ergonomic grip. The bag exterior is individually hand-painted with evocative botanical and village heritage artwork using organic, colorfast dyes.',
+      detailedStory:
+        'Every piece is an individual artisan canvas. Hand-painted one-by-one by master craftsmen in rural craft clusters, the earthy golden jute fiber harmonizes with rich brushwork motifs. Its rigid, structured base keeps the bag upright, making it equally functional as an everyday statement accessory or a striking festive conversation starter.',
+      material: '100% Biodegradable Natural Golden Jute with Dual 2.5" Metal Ring Handles wrapped in Jute Cord',
+      dimensions: '10" H x 5" W x 5" Gusset (Structured Box Silhouette)',
+      handleLength: '2.5" Solid Metal Ring Handles Hand-Wrapped in Jute Twine (Hand Carry)',
+      closureType: 'Open Box Top with Tie-Cord / Magnetic Fastener',
+      features: [
+        'Structured 10" x 5" x 5" box bag silhouette that stands upright easily',
+        'Dual 2.5-inch solid metal ring handles wrapped with natural jute twine for supreme comfort',
+        '100% individually hand-painted by local folk artisans with fade-resistant pigments',
+        'Durable, breathable natural golden jute body with reinforced load-bearing corners',
+        'Chic artisanal aesthetic perfect for day outings, festive parties, brunches, and boutique gifting',
+      ],
+      images: [],
+      price: 799,
+      originalPrice: 999,
+      discountPercent: 20,
+      stock: 20,
+      category: catMap['handpainted-jute'],
+      tags: ['jute', 'hand-painted', 'ring-handle', 'basket', 'statement', 'handcrafted'],
+      isFeatured: true,
+      isBestseller: false,
+      isNewArrival: true,
+      ratingAverage: 5.0,
+      ratingCount: 19,
+      isActive: true,
+    },
+    {
+      name: 'Heavy-Duty Laminated Jute Bottle & Thermos Carrier Bag',
+      slug: 'heavy-duty-laminated-jute-bottle-bag',
+      tagline: 'Water-Resistant 14" x 6" x 6" Carrier with Reinforced Handle (Holds up to 2L Bottles or Thermoses)',
+      description:
+        'Engineered for daily resilience and eco-friendly utility, this heavy-duty bottle carrier is tailored to securely transport 2-litre water bottles, large steel thermoses, beverage jugs, and drinkware. Standing 14" tall with a 6" x 6" square gusseted base, it is crafted from tightly woven natural golden jute with a clear laminated interior that resists spills, condensation, and stains. A reinforced padded handle ensures comfortable, weight-balanced carrying even at full capacity.',
+      detailedStory:
+        'Designed to replace single-use plastic bags and fragile sleeves. Crafted with heavy-gauge poly-cotton stitching along all stress seams, this carrier keeps tall insulated thermoses and bottles upright in your car, office, gym, or picnic spread. The wipe-clean laminated inner lining makes everyday maintenance effortless.',
+      material: 'Heavyweight Natural Golden Jute with Water-Resistant Food-Grade Laminated Interior',
+      dimensions: '14" H x 6" W x 6" Gusset (Spacious 2L / Thermos Capacity)',
+      handleLength: '7" Drop Reinforced Jute-Padded Carry Handle',
+      closureType: 'Open Top for Easy Access with Deep Protective Sidewalls',
+      features: [
+        'Generous 14" x 6" x 6" dimensions built specifically for 2-litre bottles, flasks, and thermoses',
+        'Spill-resistant laminated jute interior that prevents moisture seepage and wipes clean in seconds',
+        'Reinforced ergonomic carry handle designed to comfortably bear heavy liquid weight',
+        'Rigid square base keeps bottles securely upright and prevents tipping',
+        '100% natural, biodegradable jute exterior — durable and environmentally conscious',
+      ],
+      images: [],
+      price: 499,
+      originalPrice: 599,
+      discountPercent: 17,
+      stock: 40,
+      category: catMap['utility-bottle-bags'],
+      tags: ['bottle-bag', 'thermos-bag', 'laminated-jute', 'utility', 'eco-friendly', 'jute'],
+      isFeatured: true,
+      isBestseller: true,
+      isNewArrival: false,
+      ratingAverage: 4.8,
+      ratingCount: 22,
+      isActive: true,
+    },
+  ]);
+  console.log(`✅ ${products.length} Products created without images`);
+
+  // ─── Create Settings ──────────────────────────────────────────
+  await Settings.create({
+    storeName: 'Countryside Craft',
+    shippingNote: 'Prices shown exclude shipping/delivery charges. Delivery charges will be confirmed on WhatsApp.',
+    announcementBarText: '✦ FESTIVE SALE: Free Handmade Zipper Pouch on orders over ₹1,499 | Pan-India 48hr Dispatch ✦',
+    announcementText: '✦ FESTIVE SALE: Free Handmade Zipper Pouch on orders over ₹1,499 | Pan-India 48hr Dispatch ✦',
+    whatsappNumber: '917009361881',
+    email: 'hello@countrysidecraft.in',
+    contactEmail: 'hello@countrysidecraft.in',
+    currency: 'INR',
+    freeShippingThreshold: 1499,
+  });
+  console.log('✅ Settings document created');
+
+  console.log('\n🎉 Seed complete! 4 products without images are configured.\n');
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('Admin Login:');
+  console.log('  Username : admin');
+  console.log('  Password : Admin@123456');
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+  await mongoose.connection.close();
+  process.exit(0);
+};
+
+seed().catch((err) => {
+  console.error('❌ Seed failed:', err);
+  process.exit(1);
+});
