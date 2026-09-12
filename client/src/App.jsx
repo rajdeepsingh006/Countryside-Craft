@@ -27,9 +27,23 @@ import { AboutPage } from './pages/AboutPage';
 import { AdminLoginPage } from './pages/admin/AdminLoginPage';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 
+// Helper to detect if running under GitHub Pages repository subpath (e.g. /Countryside-Craft)
+const getRepoBase = () => {
+  const match = window.location.pathname.match(/^\/([^/]+)/);
+  if (match && match[1].toLowerCase() === 'countryside-craft') {
+    return `/${match[1]}`;
+  }
+  return '';
+};
+
 // Helper to parse route from the current URL path or fallback
 const parseRouteFromUrl = () => {
-  const pathname = window.location.pathname.replace(/^\/+|\/+$/g, '');
+  const repoBase = getRepoBase();
+  let pathname = window.location.pathname;
+  if (repoBase && pathname.startsWith(repoBase)) {
+    pathname = pathname.slice(repoBase.length);
+  }
+  pathname = pathname.replace(/^\/+|\/+$/g, '');
   const searchParams = new URLSearchParams(window.location.search);
   const categoryParam = searchParams.get('category');
 
@@ -81,17 +95,19 @@ const parseRouteFromUrl = () => {
 
 // Helper to compute clean URL path from route view & param
 const getUrlForRoute = (view, param) => {
-  if (view === 'home') return '/';
-  if (view === 'products') return param ? `/products/${encodeURIComponent(param)}` : '/products';
-  if (view === 'product-detail') return `/product/${encodeURIComponent(param || '')}`;
-  if (view === 'cart') return '/cart';
-  if (view === 'checkout') return '/checkout';
-  if (view === 'order-confirmation') return param ? `/order-confirmation/${encodeURIComponent(param)}` : '/order-confirmation';
-  if (view === 'gallery') return '/gallery';
-  if (view === 'about') return '/about';
-  if (view === 'admin') return '/admin';
-  if (view === 'admin-login') return '/admin-login';
-  return '/';
+  const repoBase = getRepoBase();
+  let path = '/';
+  if (view === 'products') path = param ? `/products/${encodeURIComponent(param)}` : '/products';
+  else if (view === 'product-detail') path = `/product/${encodeURIComponent(param || '')}`;
+  else if (view === 'cart') path = '/cart';
+  else if (view === 'checkout') path = '/checkout';
+  else if (view === 'order-confirmation') path = param ? `/order-confirmation/${encodeURIComponent(param)}` : '/order-confirmation';
+  else if (view === 'gallery') path = '/gallery';
+  else if (view === 'about') path = '/about';
+  else if (view === 'admin') path = '/admin';
+  else if (view === 'admin-login') path = '/admin-login';
+
+  return repoBase ? `${repoBase}${path === '/' ? '/' : path}` : path;
 };
 
 const AppContent = () => {
