@@ -16,9 +16,10 @@ import {
 import { useStore } from '../../context/StoreContext';
 import { formatDate } from '../../utils/formatters';
 import { adminService } from '../../services/adminService';
+import { isVideoUrl, getVideoThumbnail } from '../../utils/videoHelpers';
 
 export const AdminGallery = () => {
-  const { showToast, refreshData } = useStore();
+  const { showToast, refreshData, gallery } = useStore();
   const [galleryItems, setGalleryItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,9 +46,16 @@ export const AdminGallery = () => {
       setLoading(true);
       const res = await adminService.getGallery();
       const items = res.items || (Array.isArray(res) ? res : []);
-      setGalleryItems(items);
+      if (items.length > 0) {
+        setGalleryItems(items);
+      } else if (gallery && gallery.length > 0) {
+        setGalleryItems(gallery);
+      }
     } catch (err) {
       console.error('Failed to fetch gallery items:', err);
+      if (gallery && gallery.length > 0) {
+        setGalleryItems(gallery);
+      }
     } finally {
       setLoading(false);
     }
@@ -243,6 +251,9 @@ export const AdminGallery = () => {
             const allImages = Array.isArray(item.images) && item.images.length > 0
               ? item.images
               : [item.thumbnailUrl || item.mediaUrl];
+            const firstPhoto = allImages.find((img) => img && !isVideoUrl(img));
+            const firstVideo = allImages.find((img) => img && isVideoUrl(img));
+            const coverSrc = firstPhoto || (firstVideo ? getVideoThumbnail(firstVideo, item.thumbnailUrl) : (item.thumbnailUrl || allImages[0]));
 
             return (
               <div
@@ -251,8 +262,11 @@ export const AdminGallery = () => {
               >
                 <div className="relative aspect-[16/10] bg-[#161C2A]">
                   <img
-                    src={allImages[0]}
+                    src={coverSrc || 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800'}
                     alt={item.title}
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800';
+                    }}
                     className="w-full h-full object-cover"
                   />
                   {item.mediaType === 'video' && (

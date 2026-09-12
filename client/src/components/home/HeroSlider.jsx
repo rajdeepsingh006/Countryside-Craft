@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, Sparkles, MessageCircle, ChevronLeft, ChevronRight, Award, Star, Truck } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { buildWhatsAppInquiryMessage, generateWhatsAppUrl } from '../../utils/whatsappMessageBuilder';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 const HERO_SLIDES = [
   {
@@ -10,6 +11,7 @@ const HERO_SLIDES = [
     title: 'Crafted by Hand • Made to Gift',
     description: 'Rustic textures, colorful details, and thoughtful craftsmanship come together in charming handmade pouches and keychains.',
     image: '/images/carousel/carousel-pouches.jpg',
+    fallbackImage: 'https://res.cloudinary.com/u1jnbrwg/image/upload/v1789142235/WhatsApp_Image_2026-09-08_at_12.54.45_PM.jpg',
     pattern: '/images/patterns/pattern-swirl-damask.png',
     ctaPrimary: 'Explore Handmade Pouches',
     categoryTarget: '',
@@ -26,6 +28,7 @@ const HERO_SLIDES = [
     title: 'Handcrafted Floral Jute Bags',
     description: 'Beautiful eco-friendly jute bags adorned with vibrant floral embroidery, bringing together natural texture and traditional handmade charm.',
     image: '/images/carousel/carousel-floral-bags.jpg',
+    fallbackImage: 'https://res.cloudinary.com/u1jnbrwg/image/upload/v1789142235/WhatsApp_Image_2026-09-08_at_12.52.38_PM.jpg',
     pattern: '/images/patterns/pattern-paisley-kalamkari.jpg',
     ctaPrimary: 'Shop Floral Jute Bags',
     categoryTarget: '',
@@ -42,6 +45,7 @@ const HERO_SLIDES = [
     title: 'Vibrant Jute Bag Collection',
     description: 'A colorful collection of handcrafted jute bags featuring elegant trims, embroidery, floral accents, and thoughtful gift designs.',
     image: '/images/carousel/carousel-vibrant-collection.jpg',
+    fallbackImage: 'https://res.cloudinary.com/u1jnbrwg/image/upload/v1789142235/WhatsApp_Image_2026-09-08_at_12.49.14_PM.jpg',
     pattern: '/images/patterns/pattern-botanical-blockprint.png',
     ctaPrimary: 'Browse Vibrant Collection',
     categoryTarget: '',
@@ -86,8 +90,13 @@ export const HeroSlider = ({ onNavigate }) => {
             >
               {/* Full-card product image — completely unobscured */}
               <img
-                src={s.image}
+                src={getAssetUrl(s.image)}
                 alt={s.title}
+                onError={(e) => {
+                  if (s.fallbackImage && e.currentTarget.src !== s.fallbackImage) {
+                    e.currentTarget.src = s.fallbackImage;
+                  }
+                }}
                 className="absolute inset-0 w-full h-full object-cover object-center"
               />
               {/* Only a gentle gradient at the very bottom behind the text — image stays fully visible */}
@@ -112,7 +121,7 @@ export const HeroSlider = ({ onNavigate }) => {
               {s.pattern && (
                 <div
                   className="absolute inset-0 opacity-28 mix-blend-overlay pointer-events-none bg-repeat"
-                  style={{ backgroundImage: `url(${s.pattern})`, backgroundSize: '320px' }}
+                  style={{ backgroundImage: `url(${getAssetUrl(s.pattern)})`, backgroundSize: '320px' }}
                 />
               )}
               <div className={`absolute top-0 right-1/4 w-96 h-96 rounded-full ${s.accentGlow} blur-3xl opacity-60 pointer-events-none`} />
@@ -187,8 +196,13 @@ export const HeroSlider = ({ onNavigate }) => {
                   }`}
                 >
                   <img
-                    src={s.image}
+                    src={getAssetUrl(s.image)}
                     alt={s.title}
+                    onError={(e) => {
+                      if (s.fallbackImage && e.currentTarget.src !== s.fallbackImage) {
+                        e.currentTarget.src = s.fallbackImage;
+                      }
+                    }}
                     className="w-full h-full object-cover object-center rounded-3xl transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>

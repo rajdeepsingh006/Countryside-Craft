@@ -24,7 +24,7 @@ import { VideoThumbnail } from '../common/VideoThumbnail';
 import { parseVideoUrl, isVideoUrl, getVideoThumbnail } from '../../utils/videoHelpers';
 
 export const AdminProducts = () => {
-  const { categories, refreshData, showToast } = useStore();
+  const { categories, refreshData, showToast, products } = useStore();
   const [adminProducts, setAdminProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -72,9 +72,16 @@ export const AdminProducts = () => {
       setLoading(true);
       const res = await adminService.getProducts({ limit: 100 });
       const prods = res.products || (Array.isArray(res) ? res : []);
-      setAdminProducts(prods);
+      if (prods.length > 0) {
+        setAdminProducts(prods);
+      } else if (products && products.length > 0) {
+        setAdminProducts(products);
+      }
     } catch (err) {
       console.error('Failed to load admin products:', err);
+      if (products && products.length > 0) {
+        setAdminProducts(products);
+      }
     } finally {
       setLoading(false);
     }
@@ -423,24 +430,30 @@ export const AdminProducts = () => {
                 </tr>
               ) : (
                 filteredProducts.map((product) => {
-                  const hasImage = Array.isArray(product.images) && product.images.length > 0 && Boolean(product.images[0]);
-                  const hasVideo = Boolean(product.video && product.video.trim());
+                  const rawImages = Array.isArray(product.images) ? product.images.filter(Boolean) : [];
+                  const firstPhoto = rawImages.find((img) => !isVideoUrl(img));
+                  const firstVideo = rawImages.find((img) => isVideoUrl(img)) || (product.video && product.video.trim() ? product.video.trim() : null);
+                  const displayThumb = firstPhoto || (firstVideo ? getVideoThumbnail(firstVideo, product.videoThumbnail) : null);
+                  const hasVideo = Boolean(firstVideo);
 
                   return (
                     <tr key={product._id} className="hover:bg-[#EEF3FA]/30 transition-colors">
                       {/* Product Name & Cover Image */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center space-x-3">
-                          {hasImage ? (
+                          {displayThumb ? (
                             <img
-                              src={product.images[0]}
+                              src={displayThumb}
                               alt={product.name}
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
                               className="w-12 h-14 object-cover rounded-xl bg-[#EEF3FA] border border-[#B9C9E7]/60 shrink-0"
                             />
                           ) : hasVideo ? (
                             <div className="w-12 h-14 rounded-xl overflow-hidden shrink-0 border border-[#B9C9E7]/60">
                               <VideoThumbnail
-                                videoUrl={product.video}
+                                videoUrl={firstVideo}
                                 posterUrl={product.videoThumbnail}
                                 playIconSize="sm"
                                 showBadge={false}

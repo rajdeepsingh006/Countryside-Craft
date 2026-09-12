@@ -2,6 +2,7 @@ import React from 'react';
 import { Sparkles, ArrowRight, Play, MapPin, Calendar } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { formatDate } from '../../utils/formatters';
+import { isVideoUrl, getVideoThumbnail } from '../../utils/videoHelpers';
 
 export const WorkshopTeaser = ({ onNavigate }) => {
   const { gallery } = useStore();
@@ -32,18 +33,25 @@ export const WorkshopTeaser = ({ onNavigate }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {gallery.slice(0, 3).map((item) => (
-            <div
-              key={item._id}
-              onClick={() => onNavigate('gallery')}
-              className="group relative rounded-3xl overflow-hidden bg-white border border-[#B9C9E7]/40 shadow-xs hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col"
-            >
-              <div className="relative aspect-[16/10] overflow-hidden bg-[#161C2A]">
-                <img
-                  src={item.thumbnailUrl || item.mediaUrl}
-                  alt={item.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
+          {gallery.slice(0, 3).map((item) => {
+            const rawThumb = item.thumbnailUrl || (Array.isArray(item.images) ? item.images[0] : item.mediaUrl);
+            const displaySrc = isVideoUrl(rawThumb) ? getVideoThumbnail(rawThumb) : rawThumb;
+
+            return (
+              <div
+                key={item._id}
+                onClick={() => onNavigate('gallery')}
+                className="group relative rounded-3xl overflow-hidden bg-white border border-[#B9C9E7]/40 shadow-xs hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col"
+              >
+                <div className="relative aspect-[16/10] overflow-hidden bg-[#161C2A]">
+                  <img
+                    src={displaySrc || 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800'}
+                    alt={item.title}
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800';
+                    }}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
                 {item.mediaType === 'video' && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20 transition-colors">
                     <div className="w-12 h-12 rounded-full bg-white/95 text-[#D91680] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
@@ -84,7 +92,8 @@ export const WorkshopTeaser = ({ onNavigate }) => {
                 </div>
               </div>
             </div>
-          ))}
+          );
+        })}
         </div>
       </div>
     </section>

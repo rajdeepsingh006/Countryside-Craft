@@ -4,7 +4,7 @@ export const DEFAULT_CATEGORIES = [
     name: 'Travel & Stationery Kits',
     slug: 'travel-stationery',
     description: 'Handcrafted multi-utility pouches, stationery kits, and compact travel organizers',
-    image: '',
+    image: 'https://res.cloudinary.com/u1jnbrwg/image/upload/v1789142235/WhatsApp_Image_2026-09-08_at_12.54.45_PM.jpg',
     itemCount: 1,
   },
   {
@@ -12,7 +12,7 @@ export const DEFAULT_CATEGORIES = [
     name: 'Festive Cards & Shagun',
     slug: 'festive-gifting',
     description: 'Artisanal Shagun envelopes, traditional blessing cards, and celebratory gifting essentials',
-    image: '',
+    image: 'https://res.cloudinary.com/u1jnbrwg/image/upload/v1789142235/WhatsApp_Image_2026-09-08_at_12.43.38_PM.jpg',
     itemCount: 1,
   },
   {
@@ -20,7 +20,7 @@ export const DEFAULT_CATEGORIES = [
     name: 'Hand-Painted Jute Bags',
     slug: 'handpainted-jute',
     description: 'Master-crafted hand-painted natural jute bags with handcrafted metal ring handles',
-    image: '',
+    image: 'https://res.cloudinary.com/u1jnbrwg/image/upload/v1789142235/WhatsApp_Image_2026-09-08_at_12.52.38_PM.jpg',
     itemCount: 1,
   },
   {
@@ -28,7 +28,7 @@ export const DEFAULT_CATEGORIES = [
     name: 'Jute Utility & Bottle Bags',
     slug: 'utility-bottle-bags',
     description: 'Eco-friendly laminated jute carriers designed for water bottles, thermoses, and daily utility',
-    image: '',
+    image: 'https://res.cloudinary.com/u1jnbrwg/image/upload/v1789142236/WhatsApp_Image_2026-09-08_at_12.55.14_PM.jpg',
     itemCount: 1,
   },
 ];

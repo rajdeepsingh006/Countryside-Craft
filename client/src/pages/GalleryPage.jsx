@@ -3,6 +3,7 @@ import { Play, Sparkles, MapPin, Calendar, MessageCircle, X, ChevronRight, Chevr
 import { useStore } from '../context/StoreContext';
 import { formatDate } from '../utils/formatters';
 import { buildWhatsAppInquiryMessage, generateWhatsAppUrl } from '../utils/whatsappMessageBuilder';
+import { isVideoUrl, getVideoThumbnail } from '../utils/videoHelpers';
 
 export const GalleryPage = ({ onNavigate }) => {
   const { gallery, settings } = useStore();
@@ -38,7 +39,7 @@ export const GalleryPage = ({ onNavigate }) => {
               <span>Behind the Craft</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-serif-display font-bold text-[#1A1F2C]">
-              Workshops, Events & Artisan Stories
+              Workshops, Events &amp; Artisan Stories
             </h1>
             <p className="text-xs sm:text-sm text-[#6A758E] mt-1 max-w-2xl">
               Explore our journey through community block printing masterclasses, craft festivals, and hands-on dye experiments across India.
@@ -83,6 +84,9 @@ export const GalleryPage = ({ onNavigate }) => {
             const itemImages = Array.isArray(item.images) && item.images.length > 0
               ? item.images
               : [item.thumbnailUrl || item.mediaUrl];
+            const firstPhoto = itemImages.find((img) => img && !isVideoUrl(img));
+            const firstVideo = itemImages.find((img) => img && isVideoUrl(img));
+            const displayCover = firstPhoto || (firstVideo ? getVideoThumbnail(firstVideo, item.thumbnailUrl) : (item.thumbnailUrl || itemImages[0]));
 
             return (
               <div
@@ -93,8 +97,11 @@ export const GalleryPage = ({ onNavigate }) => {
                 {/* Media Preview Box */}
                 <div className="relative aspect-[16/11] overflow-hidden bg-[#161C2A]">
                   <img
-                    src={itemImages[0]}
+                    src={displayCover || 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800'}
                     alt={item.title}
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800';
+                    }}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
 

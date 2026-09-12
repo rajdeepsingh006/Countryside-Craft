@@ -3,6 +3,7 @@ import { productService } from '../services/productService';
 import { galleryService } from '../services/galleryService';
 import { reviewService } from '../services/reviewService';
 import { DEFAULT_PRODUCTS, DEFAULT_CATEGORIES } from '../data/defaultProducts';
+import { DEFAULT_GALLERY } from '../data/defaultGallery';
 
 const STORE_SETTINGS = {
   storeName: 'Countryside Craft',
@@ -28,7 +29,7 @@ const defaultStoreContext = {
   setCategories: () => {},
   reviews: [],
   setReviews: () => {},
-  gallery: [],
+  gallery: DEFAULT_GALLERY,
   setGallery: () => {},
   settings: STORE_SETTINGS,
   setSettings: () => {},
@@ -55,7 +56,7 @@ export const StoreProvider = ({ children }) => {
   const [products, setProducts] = useState(DEFAULT_PRODUCTS);
   const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
   const [reviews, setReviews] = useState([]);
-  const [gallery, setGallery] = useState([]);
+  const [gallery, setGallery] = useState(DEFAULT_GALLERY);
   const [settings, setSettings] = useState(STORE_SETTINGS);
   const [loading, setLoading] = useState(true);
 
@@ -115,12 +116,13 @@ export const StoreProvider = ({ children }) => {
         setCategories(DEFAULT_CATEGORIES);
       }
 
-      setGallery(rawGal);
+      setGallery(rawGal.length > 0 ? rawGal : DEFAULT_GALLERY);
       if (rawRevs.length > 0) setReviews(rawRevs);
     } catch (err) {
       console.error('Failed to load store data:', err);
       setProducts(DEFAULT_PRODUCTS);
       setCategories(DEFAULT_CATEGORIES);
+      setGallery(DEFAULT_GALLERY);
     } finally {
       setLoading(false);
     }
