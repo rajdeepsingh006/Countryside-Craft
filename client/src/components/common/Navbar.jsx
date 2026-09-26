@@ -205,7 +205,7 @@ export const Navbar = ({ currentView, onNavigate }) => {
               <button
                 id="nav-cart-btn"
                 onClick={openCart}
-                className="relative p-2.5 sm:p-3 rounded-full bg-[#D91680] text-white hover:bg-[#BE0E6E] shadow-sm hover:shadow-md transition-all active:scale-95 flex items-center justify-center cursor-pointer border border-[#EFC0DA] min-w-10 min-h-10"
+                className="relative p-2.5 sm:p-3 rounded-full bg-[#D91680] text-white hover:bg-[#BE0E6E] shadow-sm hover:shadow-md transition-all active:scale-98 flex items-center justify-center cursor-pointer border border-[#EFC0DA] min-w-10 min-h-10"
                 aria-label="Open Shopping Bag Drawer"
               >
                 <ShoppingBag className="w-4.5 h-4.5 text-white" />

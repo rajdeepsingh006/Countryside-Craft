@@ -34,11 +34,11 @@ export const GalleryPage = ({ onNavigate }) => {
         {/* Header */}
         <div className="mb-8 pb-6 border-b border-[#B9C9E7]/40 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#D91680] mb-1">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#1E3A8A] bg-[#EEF3FA] border border-[#B9C9E7] px-2.5 py-1 rounded-full mb-2 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#1E3A8A]" />
               <span>Behind the Craft</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-serif-display font-bold text-[#1A1F2C]">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif-display font-bold text-[#1A1F2C]">
               Workshops, Events &amp; Artisan Stories
             </h1>
             <p className="text-xs sm:text-sm text-[#6A758E] mt-1 max-w-2xl">
@@ -48,7 +48,7 @@ export const GalleryPage = ({ onNavigate }) => {
 
           <button
             onClick={handleInquireWorkshop}
-            className="px-5 py-3 rounded-2xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-md flex items-center space-x-2 shrink-0 cursor-pointer"
+            className="px-5 py-3 rounded-2xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-md flex items-center space-x-2 shrink-0 cursor-pointer active:scale-98"
           >
             <MessageCircle className="w-4 h-4" />
             <span>Host or Attend a Workshop</span>
@@ -66,7 +66,7 @@ export const GalleryPage = ({ onNavigate }) => {
             <button
               key={id}
               onClick={() => setSelectedFilter(id)}
-              className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+              className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer active:scale-98 ${
                 selectedFilter === id
                   ? 'bg-[#D91680] text-white shadow-md'
                   : 'bg-white text-[#2C3549] hover:bg-[#EEF3FA] border border-[#B9C9E7]/60'
@@ -92,7 +92,7 @@ export const GalleryPage = ({ onNavigate }) => {
               <div
                 key={item._id}
                 onClick={() => handleOpenModal(item)}
-                className="group relative rounded-3xl overflow-hidden bg-white border border-[#B9C9E7]/50 shadow-xs hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col"
+                className="group relative rounded-3xl overflow-hidden bg-white border border-[#B9C9E7]/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col"
               >
                 {/* Media Preview Box */}
                 <div className="relative aspect-[16/11] overflow-hidden bg-[#161C2A]">

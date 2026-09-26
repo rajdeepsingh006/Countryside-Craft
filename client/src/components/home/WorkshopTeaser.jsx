@@ -8,15 +8,15 @@ export const WorkshopTeaser = ({ onNavigate }) => {
   const { gallery } = useStore();
 
   return (
-    <section className="py-16 bg-[#FCFBFA]">
+    <section className="py-16 bg-[#FCFBFA] texture-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-[#B9C9E7]/40">
           <div>
-            <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#D91680] mb-1">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#1E3A8A] bg-[#EEF3FA] border border-[#B9C9E7] px-2.5 py-1 rounded-full mb-2 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#1E3A8A]" />
               <span>Behind the Loom & Dye Vats</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-serif-display font-bold text-[#1A1F2C]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif-display font-bold text-[#1A1F2C]">
               Workshops, Pop-ups & Craft Events
             </h2>
             <p className="text-xs sm:text-sm text-[#6A758E] mt-1">
@@ -41,7 +41,7 @@ export const WorkshopTeaser = ({ onNavigate }) => {
               <div
                 key={item._id}
                 onClick={() => onNavigate('gallery')}
-                className="group relative rounded-3xl overflow-hidden bg-white border border-[#B9C9E7]/40 shadow-xs hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col"
+                className="group relative rounded-3xl overflow-hidden bg-white border border-[#B9C9E7]/40 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col"
               >
                 <div className="relative aspect-[16/10] overflow-hidden bg-[#161C2A]">
                   <img

@@ -29,6 +29,7 @@ ${itemLines}
 
 ━━━━━━━━━━━━━━━━━━━━
 *Subtotal:* ₹${order.totalAmount.toLocaleString('en-IN')}
+Payment: UPI QR (customer-confirmed, please verify)
 ⚠️ Shipping charges are extra and will be confirmed.
 
 Please confirm this order and let me know the delivery charges. Thank you! 🙏

@@ -38,24 +38,24 @@ export const TestimonialsSection = ({ onNavigate }) => {
   const displayReviews = approvedReviews.length > 0 ? approvedReviews.slice(0, 3) : FALLBACK_REVIEWS;
 
   return (
-    <section className="py-8 sm:py-16 bg-[#FDFBF7] border-t border-[#EADDC6]/40">
+    <section className="py-8 sm:py-16 bg-[#FDFBF7] border-t border-[#EADDC6]/40 texture-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-10">
         
         {/* 1. Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between pb-3 sm:pb-4 border-b border-[#EADDC6]/40 gap-3">
           <div>
-            <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#D91680] mb-0.5">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#1E3A8A] bg-[#EEF3FA] border border-[#B9C9E7] px-2.5 py-1 rounded-full mb-1.5 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#1E3A8A]" />
               <span>Real Customer Stories</span>
             </div>
-            <h2 className="text-xl sm:text-3xl font-serif-display font-bold text-[#1A1F2C]">
+            <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-serif-display font-bold text-[#1A1F2C]">
               Loved by Conscious Shoppers
             </h2>
           </div>
           <button
             id="write-a-review-home-btn"
             onClick={() => openReviewModal()}
-            className="px-4 py-2 rounded-full bg-[#FAF7F2] hover:bg-[#F2ECE0] text-[#1A1F2C] text-xs font-bold transition-colors flex items-center space-x-2 shrink-0 border border-[#EADDC6] cursor-pointer w-fit"
+            className="px-4 py-2 rounded-full bg-[#FAF7F2] hover:bg-[#F2ECE0] text-[#1A1F2C] text-xs font-bold transition-colors flex items-center space-x-2 shrink-0 border border-[#EADDC6] cursor-pointer w-fit active:scale-98"
           >
             <MessageSquare className="w-4 h-4 text-[#D91680]" />
             <span>Write a Review</span>
@@ -72,10 +72,17 @@ export const TestimonialsSection = ({ onNavigate }) => {
               .toUpperCase()
               .slice(0, 2);
 
+            const avatarStyle =
+              idx % 3 === 0
+                ? 'bg-[#FDF2F8] text-[#D91680] border-[#EFC0DA]'
+                : idx % 3 === 1
+                ? 'bg-[#EEF3FA] text-[#1E3A8A] border-[#B9C9E7]'
+                : 'bg-[#F7F9E4] text-[#3D4706] border-[#DBE586]';
+
             return (
               <div
                 key={review._id}
-                className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border border-[#F1E9DF] shadow-sm flex flex-col justify-between space-y-3.5 relative"
+                className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border border-[#F1E9DF] shadow-sm flex flex-col justify-between space-y-3.5 relative hover:shadow-md transition-shadow"
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
@@ -102,7 +109,7 @@ export const TestimonialsSection = ({ onNavigate }) => {
 
                 <div className="flex items-center justify-between pt-2 border-t border-[#F8F5EE]">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-[#FDF2F8] text-[#D91680] font-bold text-[12px] flex items-center justify-center border border-[#EFC0DA]">
+                    <div className={`w-8 h-8 rounded-full font-bold text-[12px] flex items-center justify-center border ${avatarStyle}`}>
                       {initials}
                     </div>
                     <div>
@@ -117,7 +124,7 @@ export const TestimonialsSection = ({ onNavigate }) => {
         </div>
 
         {/* 3. The Slow Craft Journal Newsletter Subscription Box */}
-        <div className="rounded-2xl sm:rounded-3xl p-4 sm:p-6 bg-[#FAF7F2] border border-[#EADDC6]/60 shadow-sm flex flex-col gap-2.5">
+        <div className="rounded-2xl sm:rounded-3xl p-4 sm:p-6 bg-[#FAF7F2] border border-[#EADDC6]/60 shadow-sm flex flex-col gap-2.5 texture-canvas">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-full bg-[#D91680] flex items-center justify-center text-white text-xs">
               ✉
@@ -143,7 +150,7 @@ export const TestimonialsSection = ({ onNavigate }) => {
               type="email"
             />
             <button
-              className="h-11 px-5 rounded-full bg-[#D91680] hover:bg-[#BE0E6E] text-white text-[13px] font-semibold active:scale-95 transition-transform shrink-0 shadow-sm cursor-pointer"
+              className="h-11 px-5 rounded-full bg-[#D91680] hover:bg-[#BE0E6E] text-white text-[13px] font-semibold active:scale-98 transition-all shrink-0 shadow-sm cursor-pointer border border-[#EFC0DA]"
               type="submit"
             >
               Join
@@ -152,7 +159,7 @@ export const TestimonialsSection = ({ onNavigate }) => {
         </div>
 
         {/* 4. WhatsApp Concierge Floating / In-Page Banner */}
-        <div className="p-4 rounded-2xl bg-[#006C49] text-white shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="p-4 rounded-2xl bg-[#006C49] text-white shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 texture-canvas">
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0">
               <span className="text-xl">💬</span>
@@ -167,7 +174,7 @@ export const TestimonialsSection = ({ onNavigate }) => {
             </div>
           </div>
           <a
-            className="px-4 py-2 rounded-full bg-white text-[#006C49] text-[12px] sm:text-xs font-bold shrink-0 active:scale-95 transition-transform flex items-center justify-center gap-1 shadow-sm w-full sm:w-auto"
+            className="px-4 py-2 rounded-full bg-white text-[#006C49] text-[12px] sm:text-xs font-bold shrink-0 active:scale-98 transition-all flex items-center justify-center gap-1 shadow-sm w-full sm:w-auto"
             href="https://wa.me/919876543210?text=Hi%20Countryside%20Craft,%20I%20need%20custom%20gifting%20advice"
             rel="noopener noreferrer"
             target="_blank"

@@ -54,6 +54,19 @@ const orderSchema = new mongoose.Schema(
       enum: ['pending', 'pending_whatsapp', 'confirmed', 'shipped', 'delivered', 'cancelled'],
       default: 'pending',
     },
+    paymentMethod: {
+      type: String,
+      enum: ['upi', 'razorpay', 'cod', 'whatsapp', 'manual'],
+      default: 'whatsapp',
+    },
+    paymentStatus: {
+      type: String,
+      enum: ['pending', 'paid', 'failed'],
+      default: 'pending',
+    },
+    razorpayOrderId: { type: String, default: '' },
+    razorpayPaymentId: { type: String, default: '' },
+    razorpaySignature: { type: String, default: '' },
     whatsappMessageSent: {
       type: Boolean,
       default: false,

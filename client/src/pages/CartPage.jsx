@@ -60,7 +60,7 @@ export const CartPage = ({ onNavigate }) => {
   const amountToFreePouch = Math.max(0, freePouchThreshold - subtotal);
 
   return (
-    <div className="bg-[#FDFBF7] min-h-screen py-4 sm:py-10 pb-28 md:pb-10">
+    <div className="bg-[#FDFBF7] min-h-screen py-4 sm:py-10 pb-44 sm:pb-48 md:pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-6">
         
         {/* Page Title & Clear Bag Trigger */}
@@ -213,7 +213,7 @@ export const CartPage = ({ onNavigate }) => {
                   />
                   <button
                     type="submit"
-                    className="px-4 py-2 rounded-xl bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs font-bold uppercase transition-colors cursor-pointer"
+                    className="px-4 py-2 rounded-xl bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs font-bold uppercase transition-colors cursor-pointer active:scale-98"
                   >
                     Apply
                   </button>
@@ -229,7 +229,7 @@ export const CartPage = ({ onNavigate }) => {
                       setCouponApplied(true);
                       showToast('🎉 FESTIVE10 applied! 10% discount added.', 'success');
                     }}
-                    className="px-2 py-0.5 rounded-md bg-[#FDF2F8] text-[#BE185D] text-[10px] font-bold border border-[#EFC0DA] hover:bg-[#FCE7F3] cursor-pointer"
+                    className="px-2 py-0.5 rounded-md bg-[#FDF2F8] text-[#BE185D] text-[10px] font-bold border border-[#EFC0DA] hover:bg-[#FCE7F3] cursor-pointer active:scale-98"
                   >
                     FESTIVE10
                   </button>
@@ -240,7 +240,7 @@ export const CartPage = ({ onNavigate }) => {
                       setCouponApplied(true);
                       showToast('🎉 ARTISAN10 applied! 10% discount added.', 'success');
                     }}
-                    className="px-2 py-0.5 rounded-md bg-[#FAF7F2] text-[#6A5E54] text-[10px] font-bold border border-[#E5DDD0] hover:bg-[#F2ECE0] cursor-pointer"
+                    className="px-2 py-0.5 rounded-md bg-[#EEF3FA] text-[#1E3A8A] text-[10px] font-bold border border-[#B9C9E7] hover:bg-[#E3ECF8] cursor-pointer active:scale-98"
                   >
                     ARTISAN10
                   </button>
@@ -322,7 +322,7 @@ export const CartPage = ({ onNavigate }) => {
       </div>
 
       {/* Mobile Sticky Checkout Bar (Pinned above bottom tab bar) */}
-      <div className="fixed bottom-15 left-0 right-0 z-30 md:hidden bg-white/95 backdrop-blur-md border-t border-[#F1E9DF] px-4 py-3 shadow-[0_-4px_16px_rgba(30,41,59,0.08)] flex items-center justify-between gap-3">
+      <div className="fixed bottom-15 left-0 right-0 z-30 md:hidden bg-white/95 backdrop-blur-md border-t border-[#F1E9DF] px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] shadow-[0_-4px_16px_rgba(30,41,59,0.08)] flex items-center justify-between gap-3">
         <div className="min-w-0 flex-1">
           <p className="text-[10px] uppercase font-bold text-[#8A7E72] tracking-wider truncate">Total Payable</p>
           <span className="text-[18px] font-black text-[#1A1F2C] leading-tight">
@@ -332,7 +332,7 @@ export const CartPage = ({ onNavigate }) => {
 
         <button
           onClick={handleProceedCheckout}
-          className="h-11 px-5 rounded-full bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs font-bold uppercase tracking-wider shadow-md active:scale-95 transition-all flex items-center space-x-1.5 border border-[#EFC0DA] cursor-pointer"
+          className="h-11 px-5 rounded-full bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs font-bold uppercase tracking-wider shadow-md active:scale-98 transition-all flex items-center space-x-1.5 border border-[#EFC0DA] cursor-pointer"
         >
           <span>Checkout</span>
           <ArrowRight className="w-3.5 h-3.5" />

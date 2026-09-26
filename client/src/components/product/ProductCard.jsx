@@ -6,7 +6,7 @@ import { formatCurrency } from '../../utils/formatters';
 import { VideoThumbnail } from '../common/VideoThumbnail';
 import { isVideoUrl, getVideoThumbnail } from '../../utils/videoHelpers';
 
-export const ProductCard = ({ product, onNavigate }) => {
+export const ProductCard = ({ product, onNavigate, layout = 'grid' }) => {
   const { addToCart } = useCart();
   const { openQuickView } = useStore();
   const [added, setAdded] = useState(false);
@@ -33,12 +33,144 @@ export const ProductCard = ({ product, onNavigate }) => {
   const hasVideo = Boolean(firstVideo);
   const primaryImage = firstPhoto || (firstVideo ? getVideoThumbnail(firstVideo, product.videoThumbnail) : null);
 
+  // ─── Horizontal Row Layout ───────────────────────────────────────────────
+  if (layout === 'horizontal') {
+    return (
+      <div
+        onClick={handleCardClick}
+        className="group relative bg-white rounded-2xl sm:rounded-3xl border border-[#F1E9DF] hover:border-[#EADDC6] overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex flex-col sm:flex-row cursor-pointer p-2.5 sm:p-3.5 gap-3 sm:gap-4 items-stretch"
+      >
+        {/* Left Horizontal Image */}
+        <div className="relative w-full sm:w-56 md:w-64 aspect-[16/10] shrink-0 rounded-xl sm:rounded-2xl overflow-hidden bg-[#FAF7F2]">
+          {primaryImage ? (
+            <img
+              src={primaryImage}
+              alt={product.name}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+              className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            />
+          ) : firstVideo ? (
+            <VideoThumbnail
+              url={firstVideo}
+              poster={product.videoThumbnail}
+              alt={product.name}
+              playIconSize="md"
+              badgeText="VIDEO"
+            />
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center p-3 text-center bg-gradient-to-br from-[#FDFBF7] via-[#F6EFE5] to-[#EAE0D2]">
+              <Sparkles className="w-6 h-6 text-[#D91680] mb-1" />
+              <span className="font-brand-script text-base text-[#1A1F2C]">Countryside Craft</span>
+            </div>
+          )}
+
+          {/* Badges */}
+          <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
+            {product.discountPercent > 0 && (
+              <span className="bg-[#FDF2F8] text-[#BE185D] text-[10px] font-black px-1.5 py-0.5 rounded shadow-2xs border border-white">
+                {product.discountPercent}% OFF
+              </span>
+            )}
+            {product.isBestseller && (
+              <span className="bg-[#FEF3C7] text-[#B45309] text-[9px] font-black px-1.5 py-0.5 rounded shadow-2xs border border-white">
+                ★ BESTSELLER
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Right Info */}
+        <div className="flex-1 flex flex-col justify-between py-1">
+          <div>
+            <div className="flex items-center justify-between text-[11px] gap-2 mb-1">
+              <span className="font-bold uppercase tracking-wider text-[#D91680] text-[10px]">
+                {(product.categoryName || product.category?.name || product.category || '')
+                  .replace(' Prints', '')
+                  .replace(' Collection', '')}
+              </span>
+              <div className="flex items-center space-x-1 shrink-0 text-amber-500 font-bold text-xs">
+                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+                <span className="text-[#1A1F2C]">{product.ratingAverage || '4.9'}</span>
+                <span className="text-[#8E9DBE] font-normal text-[11px]">({product.ratingCount || 12})</span>
+              </div>
+            </div>
+
+            <h3 className="font-sans font-bold text-base sm:text-lg text-[#1A1F2C] group-hover:text-[#D91680] transition-colors leading-snug line-clamp-1 mb-1">
+              {product.name}
+            </h3>
+
+            {product.tagline && (
+              <p className="text-xs text-[#6A758E] line-clamp-2 leading-relaxed mb-2">
+                {product.tagline}
+              </p>
+            )}
+
+            {product.material && (
+              <span className="inline-block text-[11px] text-[#8A7A6C] bg-[#FAF7F2] px-2.5 py-0.5 rounded-md font-medium border border-[#EADBCE]/50 mb-2">
+                {product.material}
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between pt-2 border-t border-[#F1E9DF] mt-2">
+            <div className="flex items-baseline space-x-1.5">
+              <span className="text-lg sm:text-xl font-bold text-[#1A1F2C]">
+                {formatCurrency(product.price)}
+              </span>
+              {product.originalPrice && product.originalPrice > product.price && (
+                <span className="text-xs text-[#8E9DBE] line-through">
+                  {formatCurrency(product.originalPrice)}
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={handleQuickView}
+                className="hidden sm:flex p-2 rounded-xl bg-[#FAF7F2] hover:bg-[#EEF3FA] text-[#1A1F2C] text-xs font-bold transition-colors cursor-pointer"
+                title="Quick preview"
+              >
+                <Eye className="w-4 h-4" />
+              </button>
+              <button
+                onClick={handleAddToCart}
+                disabled={added || product.stock <= 0}
+                className={`py-2 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center space-x-1.5 shadow-xs cursor-pointer ${
+                  added
+                    ? 'bg-emerald-600 text-white'
+                    : product.stock <= 0
+                    ? 'bg-neutral-200 text-neutral-500 cursor-not-allowed'
+                    : 'bg-[#D91680] hover:bg-[#BE0E6E] text-white active:scale-98'
+                }`}
+              >
+                {added ? (
+                  <>
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Added!</span>
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag className="w-3.5 h-3.5 text-[#EFC0DA]" />
+                    <span>Add to Bag</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── Grid Layout (Horizontal Image Format) ────────────────────────────────
   return (
     <div
       onClick={handleCardClick}
-      className="group relative bg-white rounded-2xl sm:rounded-3xl border border-[#F1E9DF] hover:border-[#EADDC6] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col cursor-pointer p-2 sm:p-3"
+      className="group relative bg-white rounded-2xl sm:rounded-3xl border border-[#F1E9DF] hover:border-[#EADDC6] overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer p-2 sm:p-3"
     >
-      <div className="relative aspect-[3/4] sm:aspect-[4/5] rounded-xl overflow-hidden bg-[#FAF7F2]">
+      <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-[#FAF7F2]">
         {primaryImage ? (
           <img
             src={primaryImage}

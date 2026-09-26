@@ -1,19 +1,24 @@
 import React from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
+import { getAssetUrl } from '../../utils/assetHelper';
+
+const CATEGORY_THUMBNAILS = {
+  'jute': '/images/categories/handpainted-jute.jpg',
+  'canvas': '/images/categories/travel-stationery.jpg',
+  'utility-bottle-bags': '/images/categories/utility-bottle-bags.jpg',
+  'handpainted-jute': '/images/categories/handpainted-jute.jpg',
+  'festive-gifting': '/images/categories/festive-gifting.jpg',
+  'travel-stationery': '/images/categories/travel-stationery.jpg',
+};
 
 export const CategoryTiles = ({ onNavigate }) => {
   const { categories, products } = useStore();
 
-  const collectionImages = [
-    'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800',
-    'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800',
-    'https://images.unsplash.com/photo-1544441893-675973e31985?w=800',
-    'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800',
-  ];
-
   const getSubTag = (slug = '', name = '') => {
     const lower = (slug + ' ' + name).toLowerCase();
+    if (lower.includes('jute')) return 'Natural Golden Fiber';
+    if (lower.includes('canvas')) return 'Durable Cotton Weave';
     if (lower.includes('stationery') || lower.includes('travel')) return 'Essentials & Kits';
     if (lower.includes('card') || lower.includes('shagun') || lower.includes('festive')) return 'Festive Gifting';
     if (lower.includes('hand-painted') || lower.includes('handpainted')) return 'Artisan Painted';
@@ -24,16 +29,16 @@ export const CategoryTiles = ({ onNavigate }) => {
   };
 
   return (
-    <section className="py-8 sm:py-16 bg-[#FDFBF7]">
+    <section className="py-8 sm:py-16 bg-[#FDFBF7] texture-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-4 sm:mb-8 pb-2 sm:pb-4 border-b border-[#EADDC6]/40">
           <div>
-            <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#D91680] mb-0.5">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#1E3A8A] bg-[#EEF3FA] border border-[#B9C9E7] px-2.5 py-1 rounded-full mb-1.5 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#1E3A8A]" />
               <span>Curated Collections</span>
             </div>
-            <h2 className="text-xl sm:text-3xl font-serif-display font-bold text-[#1A1F2C]">
-              Shop by Craft &amp; Occasion
+            <h2 className="text-xl sm:text-3xl md:text-4xl font-serif-display font-bold text-[#1A1F2C]">
+              Shop by Craft &amp; Material
             </h2>
           </div>
           <button
@@ -45,11 +50,16 @@ export const CategoryTiles = ({ onNavigate }) => {
           </button>
         </div>
 
-        {/* Snap Carousel on Mobile, 4-Column Grid on Desktop */}
-        <div className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none gap-3 sm:gap-6 pb-2 md:pb-0 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0 md:grid-cols-2 lg:grid-cols-4">
+        {/* Snap Carousel on Mobile, Responsive Grid on Desktop */}
+        <div className={`flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none gap-4 sm:gap-6 pb-2 md:pb-0 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0 ${
+          categories.length <= 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-2 lg:grid-cols-4'
+        }`}>
           {categories.map((cat, idx) => {
             const count = products.filter((p) => (p.category?.slug || p.category) === cat.slug).length;
             const subTag = getSubTag(cat.slug, cat.name);
+            const fallbackThumbnail = CATEGORY_THUMBNAILS[cat.slug] || '';
+            const rawImage = cat.image || fallbackThumbnail;
+            const imageSrc = rawImage ? getAssetUrl(rawImage) : '';
 
             return (
               <div
@@ -58,14 +68,19 @@ export const CategoryTiles = ({ onNavigate }) => {
                   onNavigate('products', cat.slug);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="snap-start shrink-0 w-[148px] sm:w-auto rounded-2xl overflow-hidden bg-white shadow-sm flex flex-col border border-[#F1E9DF] hover:shadow-md transition-all duration-300 cursor-pointer group"
+                className="snap-start shrink-0 w-[148px] sm:w-auto rounded-2xl overflow-hidden bg-white shadow-sm flex flex-col border border-[#F1E9DF] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
               >
                 {/* Card Image */}
                 <div className="relative w-full h-[155px] sm:h-[220px] md:h-[260px] bg-[#FAF7F2] overflow-hidden">
-                  {cat.image ? (
+                  {imageSrc ? (
                     <img
-                      src={cat.image}
+                      src={imageSrc}
                       alt={cat.name}
+                      onError={(e) => {
+                        if (fallbackThumbnail && e.currentTarget.src !== getAssetUrl(fallbackThumbnail)) {
+                          e.currentTarget.src = getAssetUrl(fallbackThumbnail);
+                        }
+                      }}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
@@ -91,12 +106,19 @@ export const CategoryTiles = ({ onNavigate }) => {
                 {/* Card Content */}
                 <div className="p-2.5 sm:p-4 flex flex-col justify-between flex-1">
                   <div>
-                    <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-[#D91680] font-bold block">
+                    <span className={`text-[9px] sm:text-[10px] uppercase tracking-wider font-bold block ${
+                      idx % 2 === 0 ? 'text-[#2D4B7D]' : 'text-[#475708]'
+                    }`}>
                       {subTag}
                     </span>
                     <h3 className="text-[13px] sm:text-base font-semibold text-[#1A1F2C] mt-0.5 leading-tight group-hover:text-[#D91680] transition-colors line-clamp-2">
                       {cat.name}
                     </h3>
+                    {cat.description && (
+                      <p className="text-[11px] text-[#6A758E] mt-1 line-clamp-2 leading-relaxed hidden sm:block">
+                        {cat.description}
+                      </p>
+                    )}
                   </div>
                   <span className="text-[11px] sm:text-xs text-[#D91680] flex items-center gap-0.5 mt-2 font-semibold">
                     <span>Explore</span>

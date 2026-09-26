@@ -15,6 +15,7 @@ const updateSettings = async (req, res) => {
     'announcementBarText',
     'announcementText',
     'whatsappNumber',
+    'upiId',
     'storeName',
     'contactEmail',
     'email',

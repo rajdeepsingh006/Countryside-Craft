@@ -19,7 +19,7 @@ export const SignatureSpotlight = ({ onNavigate }) => {
     : primaryMedia;
 
   return (
-    <section className="py-12 sm:py-20 bg-[#FAF8F5] text-[#2D2A26] overflow-hidden relative border-y border-[#EADDC6]/70">
+    <section className="py-12 sm:py-20 bg-[#FAF8F5] text-[#2D2A26] overflow-hidden relative border-y border-[#EADDC6]/70 texture-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="bg-white rounded-3xl border border-[#EADDC6] p-6 sm:p-10 lg:p-12 shadow-sm">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -59,11 +59,11 @@ export const SignatureSpotlight = ({ onNavigate }) => {
             {/* Spotlight Product Details */}
             <div className="lg:col-span-5 space-y-4 sm:space-y-6">
               <div>
-                <div className="inline-flex items-center space-x-2 text-xs font-black uppercase tracking-widest text-[#D91680] mb-2 bg-[#FDF1F7] px-3 py-1 rounded-full border border-[#EFC0DA]">
-                  <Sparkles className="w-3.5 h-3.5 text-[#D91680]" />
+                <div className="inline-flex items-center space-x-2 text-xs font-black uppercase tracking-widest text-[#1E3A8A] mb-2 bg-[#EEF3FA] px-3 py-1 rounded-full border border-[#B9C9E7] shadow-2xs">
+                  <Sparkles className="w-3.5 h-3.5 text-[#1E3A8A]" />
                   <span>Heirloom Craft Spotlight</span>
                 </div>
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif-display font-black text-[#1A1F2C] leading-tight">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif-display font-black text-[#1A1F2C] leading-tight">
                   {spotlightProduct.name}
                 </h2>
                 <p className="text-xs sm:text-sm text-[#86124F] font-serif-display italic mt-1.5 sm:mt-2">
@@ -112,7 +112,7 @@ export const SignatureSpotlight = ({ onNavigate }) => {
                   </button>
                   <button
                     onClick={() => onNavigate('product-detail', spotlightProduct.slug)}
-                    className="py-3 sm:py-3.5 px-5 rounded-2xl bg-[#FAF8F5] hover:bg-[#F2ECE0] text-[#1A1F2C] text-xs font-bold tracking-wide transition-colors flex items-center justify-center space-x-1.5 border border-[#D8CCB8] cursor-pointer"
+                    className="py-3 sm:py-3.5 px-5 rounded-2xl bg-[#FAF8F5] hover:bg-[#F2ECE0] text-[#1A1F2C] text-xs font-bold tracking-wide transition-colors flex items-center justify-center space-x-1.5 border border-[#D8CCB8] cursor-pointer active:scale-98"
                   >
                     <span>View Details</span>
                     <ArrowRight className="w-3.5 h-3.5 text-[#D91680]" />

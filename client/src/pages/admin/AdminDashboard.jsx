@@ -24,10 +24,14 @@ import { AdminSettings } from '../../components/admin/AdminSettings';
 import { AdminManage } from '../../components/admin/AdminManage';
 
 export const AdminDashboard = ({ onNavigateHome }) => {
-  const { admin, logout, isMainAdmin } = useAuth();
+  const { admin, logout, isMainAdmin, isAuthenticated } = useAuth();
   const { reviews, showToast } = useStore();
   const [activeTab, setActiveTab] = useState('overview');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  if (!isAuthenticated || !admin) {
+    return null;
+  }
 
   const pendingReviewsCount = reviews.filter((r) => r.isApproved === false).length;
 

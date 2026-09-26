@@ -171,7 +171,7 @@ export const QuickViewModal = ({ onNavigate }) => {
 
           <div className="p-6 flex flex-col justify-between space-y-4">
             <div>
-              <span className="text-[10px] uppercase font-black text-[#D91680] tracking-widest block">
+              <span className="inline-flex items-center text-[10px] uppercase font-black text-[#1E3A8A] tracking-widest bg-[#EEF3FA] px-2.5 py-0.5 rounded-full border border-[#B9C9E7] shadow-2xs">
                 {product.categoryName || product.category}
               </span>
               <h2 className="text-xl font-serif-display font-black text-[#1A1F2C] mt-1 leading-tight">

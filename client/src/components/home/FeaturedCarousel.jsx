@@ -29,15 +29,15 @@ export const FeaturedCarousel = ({ onNavigate }) => {
   ];
 
   return (
-    <section className="py-12 sm:py-16 bg-[#FDFBF7] border-y border-[#EADDC6]/70">
+    <section className="py-12 sm:py-16 bg-[#FDFBF7] border-y border-[#EADDC6]/70 texture-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 gap-4">
           <div>
-            <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#D91680] mb-1">
+            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#1E3A8A] bg-[#EEF3FA] border border-[#B9C9E7] px-2.5 py-1 rounded-full mb-1.5 shadow-2xs">
               <Flame className="w-3.5 h-3.5 text-[#D91680]" />
               <span>Artisan Highlights</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-serif-display font-bold text-[#1A1F2C]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif-display font-bold text-[#1A1F2C]">
               Featured Handcrafted Pieces
             </h2>
           </div>
@@ -55,10 +55,10 @@ export const FeaturedCarousel = ({ onNavigate }) => {
                   key={t.id}
                   onClick={() => setActiveTab(t.id)}
                   aria-pressed={isActive}
-                  className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center space-x-1.5 border active:scale-95 ${
+                  className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center space-x-1.5 border active:scale-98 ${
                     isActive
                       ? 'bg-[#D91680] text-white border-[#D91680] shadow-md ring-2 ring-[#D91680]/25'
-                      : 'bg-white text-[#4A443C] hover:bg-[#FAF8F5] border-[#D8CCB8] hover:border-[#D91680]/60 hover:text-[#D91680]'
+                      : 'bg-white text-[#4A443C] hover:bg-[#EEF3FA] border-[#D8CCB8] hover:border-[#B9C9E7] hover:text-[#1E3A8A]'
                   }`}
                 >
                   {isActive && <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />}

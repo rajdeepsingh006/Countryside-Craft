@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, RefreshCw, MessageCircle, ShieldCheck, Mail, Sparkles, AlertTriangle } from 'lucide-react';
+import { Save, RefreshCw, MessageCircle, ShieldCheck, Mail, Sparkles, AlertTriangle, QrCode } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { adminService } from '../../services/adminService';
 
@@ -62,6 +62,27 @@ export const AdminSettings = () => {
           </div>
           <p className="text-[11px] text-[#4B566E]">
             All customer orders, inquiries, and review notifications are directed to this WhatsApp number.
+          </p>
+        </div>
+
+        {/* UPI ID (for QR payments) */}
+        <div className="p-5 rounded-2xl bg-[#D91680]/10 border border-[#D91680]/30 space-y-2">
+          <label className="block text-xs font-bold text-[#1A1F2C] flex items-center space-x-1.5">
+            <QrCode className="w-4 h-4 text-[#D91680]" />
+            <span>UPI ID (for QR payments) *</span>
+          </label>
+          <div className="relative">
+            <input
+              type="text"
+              required
+              value={formData.upiId || ''}
+              onChange={(e) => setFormData({ ...formData, upiId: e.target.value })}
+              placeholder="yourstorename@oksbi"
+              className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-white border border-[#EFC0DA] text-[#1A1F2C] font-bold focus:outline-none focus:border-[#D91680]"
+            />
+          </div>
+          <p className="text-[11px] text-[#4B566E]">
+            Dynamic UPI QR codes are generated at checkout using this VPA/UPI ID to pre-fill order payment amounts.
           </p>
         </div>
 

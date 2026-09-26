@@ -83,7 +83,7 @@ export const CartDrawer = ({ onNavigate }) => {
                     closeCart();
                     onNavigate('products');
                   }}
-                  className="px-5 py-2.5 rounded-xl bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-md cursor-pointer border border-[#EFC0DA]"
+                  className="px-5 py-2.5 rounded-xl bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-md cursor-pointer border border-[#EFC0DA] active:scale-98"
                 >
                   Explore Tote Collection
                 </button>
@@ -194,7 +194,7 @@ export const CartDrawer = ({ onNavigate }) => {
                 </button>
                 <button
                   onClick={handleGoToCartPage}
-                  className="w-full py-2.5 rounded-xl bg-white hover:bg-[#EEF3FA] text-[#1A1F2C] text-xs font-bold transition-colors text-center border border-[#B9C9E7] cursor-pointer"
+                  className="w-full py-2.5 rounded-xl bg-white hover:bg-[#EEF3FA] text-[#1A1F2C] text-xs font-bold transition-colors text-center border border-[#B9C9E7] cursor-pointer active:scale-98"
                 >
                   View Full Cart Page
                 </button>

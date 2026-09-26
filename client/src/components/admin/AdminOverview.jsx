@@ -26,6 +26,7 @@ import {
   Legend,
 } from 'recharts';
 import { useStore } from '../../context/StoreContext';
+import { useAuth } from '../../context/AuthContext';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { generateWhatsAppUrl } from '../../utils/whatsappMessageBuilder';
 import { adminService } from '../../services/adminService';
@@ -41,11 +42,16 @@ const STATUS_COLORS = {
 
 export const AdminOverview = ({ onNavigateTab }) => {
   const { products, reviews, settings } = useStore();
+  const { isAuthenticated } = useAuth();
   const [orders, setOrders] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      setLoading(false);
+      return;
+    }
     Promise.allSettled([
       adminService.getOrders({ limit: 20 }),
       adminService.getStats(),

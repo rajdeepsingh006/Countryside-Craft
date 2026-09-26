@@ -8,6 +8,7 @@ import {
   Sparkles,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Check,
   Play,
   Heart,
@@ -34,6 +35,7 @@ import { reviewService } from '../services/reviewService';
 import { VideoPlayer } from '../components/common/VideoPlayer';
 import { VideoThumbnail } from '../components/common/VideoThumbnail';
 import { parseVideoUrl, isVideoUrl, getVideoThumbnail } from '../utils/videoHelpers';
+import { getAssetUrl } from '../utils/assetHelper';
 
 export const ProductDetailPage = ({ slug, onNavigate }) => {
   const { products, reviews, settings, openReviewModal, showToast } = useStore();
@@ -46,10 +48,17 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
-  const [activeTab, setActiveTab] = useState('desc');
   const [localReviews, setLocalReviews] = useState([]);
+  const [expandedSections, setExpandedSections] = useState({
+    desc: true,     // Description & Craft Story (open by default)
+    specs: false,   // Dimensions & Specifications
+    care: false,    // Care & Wash Guidelines
+    reviews: false, // Customer Reviews
+    gifting: false, // Bulk & Wedding Gifting
+    similar: true,  // Similar Designs
+  });
 
-  // Unified media gallery including photos and showcase videos (Amazon-style)
+  // Unified media gallery including photos and showcase videos
   const mediaList = useMemo(() => {
     if (!product) return [];
     const list = [];
@@ -65,7 +74,7 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
 
         if (isVideoUrl(trimmed)) {
           const parsed = parseVideoUrl(trimmed);
-          const poster = (product.videoThumbnail && product.videoThumbnail.trim()) || getVideoThumbnail(trimmed) || '';
+          const poster = (product.videoThumbnail && getAssetUrl(product.videoThumbnail.trim())) || getVideoThumbnail(trimmed) || '';
           list.push({
             type: 'video',
             url: trimmed,
@@ -76,7 +85,7 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
         } else {
           list.push({
             type: 'image',
-            url: trimmed,
+            url: getAssetUrl(trimmed),
             id: `img-${idx}`,
           });
         }
@@ -89,7 +98,7 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
       if (!seen.has(trimmed)) {
         seen.add(trimmed);
         const parsed = parseVideoUrl(trimmed);
-        const poster = (product.videoThumbnail && product.videoThumbnail.trim()) || getVideoThumbnail(trimmed) || '';
+        const poster = (product.videoThumbnail && getAssetUrl(product.videoThumbnail.trim())) || getVideoThumbnail(trimmed) || '';
         list.push({
           type: 'video',
           url: trimmed,
@@ -100,21 +109,40 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
       }
     }
 
+    // Fallback if product has no images: fallback to image field
+    if (list.length === 0 && product.image) {
+      list.push({
+        type: 'image',
+        url: getAssetUrl(product.image),
+        id: 'img-main',
+      });
+    }
+
     return list;
   }, [product]);
 
-  const activeVideo = mediaList.find((m) => m.type === 'video') || (product?.video ? { url: product.video, poster: product.videoThumbnail } : null);
+  const activeVideo = mediaList.find((m) => m.type === 'video') || (product?.video ? { url: product.video, poster: product.videoThumbnail ? getAssetUrl(product.videoThumbnail) : '' } : null);
 
-  const scrollToSection = (tabKey, elementId) => {
-    if (tabKey) {
-      setActiveTab(tabKey);
-    }
-    const el = document.getElementById(elementId);
-    if (el) {
-      const yOffset = -90;
-      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    }
+  const toggleSection = (key) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  const openAndScrollToSection = (key, elementId) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [key]: true,
+    }));
+    setTimeout(() => {
+      const el = document.getElementById(elementId);
+      if (el) {
+        const yOffset = -90;
+        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }, 50);
   };
 
   useEffect(() => {
@@ -209,7 +237,7 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] py-2 sm:py-4 selection:bg-[#EFC0DA] selection:text-[#86124F]">
+    <div className="min-h-screen bg-[#FAF8F5] py-2 sm:py-4 pb-44 sm:pb-36 md:pb-24 selection:bg-[#EFC0DA] selection:text-[#86124F]">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         
         {/* Breadcrumb Hierarchy */}
@@ -232,67 +260,8 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
           <span className="text-[#1A1F2C] font-semibold truncate max-w-xs">{product.name}</span>
         </nav>
 
-        {/* Quick Jump Action Bar (Footer Colored Buttons) */}
-        <div className="mb-2.5 bg-white rounded-2xl p-1.5 sm:p-2 border border-[#EAE4DC] shadow-xs">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5 sm:gap-2 w-full">
-            <button
-              onClick={() => scrollToSection('desc', 'product-details-section')}
-              className="w-full py-1.5 sm:py-2 px-2 rounded-xl bg-[#141926] hover:bg-[#1F2639] text-white hover:text-[#EFC0DA] text-xs sm:text-[13px] font-bold border border-[#252E42] hover:border-[#D91680] transition-all flex items-center justify-center space-x-1.5 cursor-pointer shadow-sm hover:shadow-md group active:scale-98"
-            >
-              <FileText className="w-3.5 h-3.5 text-[#EFC0DA] group-hover:text-[#DBE586] transition-colors shrink-0" />
-              <span className="truncate">Description & Craft</span>
-              <ArrowDown className="w-3 h-3 text-[#B9C9E7] group-hover:text-white group-hover:translate-y-0.5 transition-all shrink-0" />
-            </button>
-
-            <button
-              onClick={() => scrollToSection('specs', 'product-details-section')}
-              className="w-full py-1.5 sm:py-2 px-2 rounded-xl bg-[#141926] hover:bg-[#1F2639] text-white hover:text-[#EFC0DA] text-xs sm:text-[13px] font-bold border border-[#252E42] hover:border-[#D91680] transition-all flex items-center justify-center space-x-1.5 cursor-pointer shadow-sm hover:shadow-md group active:scale-98"
-            >
-              <Ruler className="w-3.5 h-3.5 text-[#EFC0DA] group-hover:text-[#DBE586] transition-colors shrink-0" />
-              <span className="truncate">Dimensions & Specs</span>
-              <ArrowDown className="w-3 h-3 text-[#B9C9E7] group-hover:text-white group-hover:translate-y-0.5 transition-all shrink-0" />
-            </button>
-
-            <button
-              onClick={() => scrollToSection('care', 'product-details-section')}
-              className="w-full py-1.5 sm:py-2 px-2 rounded-xl bg-[#141926] hover:bg-[#1F2639] text-white hover:text-[#EFC0DA] text-xs sm:text-[13px] font-bold border border-[#252E42] hover:border-[#D91680] transition-all flex items-center justify-center space-x-1.5 cursor-pointer shadow-sm hover:shadow-md group active:scale-98"
-            >
-              <Droplets className="w-3.5 h-3.5 text-[#EFC0DA] group-hover:text-[#DBE586] transition-colors shrink-0" />
-              <span className="truncate">Care & Wash</span>
-              <ArrowDown className="w-3 h-3 text-[#B9C9E7] group-hover:text-white group-hover:translate-y-0.5 transition-all shrink-0" />
-            </button>
-
-            <button
-              onClick={() => scrollToSection(null, 'product-reviews-section')}
-              className="w-full py-1.5 sm:py-2 px-2 rounded-xl bg-[#141926] hover:bg-[#1F2639] text-white hover:text-[#EFC0DA] text-xs sm:text-[13px] font-bold border border-[#252E42] hover:border-[#D91680] transition-all flex items-center justify-center space-x-1.5 cursor-pointer shadow-sm hover:shadow-md group active:scale-98"
-            >
-              <Star className="w-3.5 h-3.5 fill-[#DBE586] text-[#DBE586] group-hover:fill-amber-300 group-hover:text-amber-300 transition-colors shrink-0" />
-              <span className="truncate">Reviews ({productReviews.length})</span>
-              <ArrowDown className="w-3 h-3 text-[#B9C9E7] group-hover:text-white group-hover:translate-y-0.5 transition-all shrink-0" />
-            </button>
-
-            <button
-              onClick={() => scrollToSection('gifting', 'product-details-section')}
-              className="w-full py-1.5 sm:py-2 px-2 rounded-xl bg-[#141926] hover:bg-[#1F2639] text-white hover:text-[#EFC0DA] text-xs sm:text-[13px] font-bold border border-[#252E42] hover:border-[#D91680] transition-all flex items-center justify-center space-x-1.5 cursor-pointer shadow-sm hover:shadow-md group active:scale-98"
-            >
-              <Gift className="w-3.5 h-3.5 text-[#EFC0DA] group-hover:text-[#DBE586] transition-colors shrink-0" />
-              <span className="truncate">Bulk Gifting</span>
-              <ArrowDown className="w-3 h-3 text-[#B9C9E7] group-hover:text-white group-hover:translate-y-0.5 transition-all shrink-0" />
-            </button>
-
-            <button
-              onClick={() => scrollToSection(null, 'product-related-section')}
-              className="w-full py-1.5 sm:py-2 px-2 rounded-xl bg-[#141926] hover:bg-[#1F2639] text-white hover:text-[#EFC0DA] text-xs sm:text-[13px] font-bold border border-[#252E42] hover:border-[#D91680] transition-all flex items-center justify-center space-x-1.5 cursor-pointer shadow-sm hover:shadow-md group active:scale-98"
-            >
-              <Layers className="w-3.5 h-3.5 text-[#EFC0DA] group-hover:text-[#DBE586] transition-colors shrink-0" />
-              <span className="truncate">Similar Designs</span>
-              <ArrowDown className="w-3 h-3 text-[#B9C9E7] group-hover:text-white group-hover:translate-y-0.5 transition-all shrink-0" />
-            </button>
-          </div>
-        </div>
-
-        {/* Top Product View: Gallery (6 cols) + Buy Box (6 cols) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 bg-white rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 lg:p-6 border border-[#EAE4DC] shadow-2xs items-start">
+        {/* Top Product View: Gallery (6 cols) + Product Details (6 cols) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 bg-white rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 lg:p-6 border border-[#EAE4DC] shadow-2xs items-start texture-canvas">
           
           {/* Image & Video Gallery Left (6 cols) */}
           <div className="lg:col-span-6 space-y-2.5">
@@ -308,7 +277,7 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
                     onClick={() => {
                       if (!isVideo) setIsLightboxOpen(true);
                     }}
-                    className={`relative aspect-[16/11] max-h-[340px] sm:max-h-[370px] w-full rounded-xl sm:rounded-2xl overflow-hidden border border-[#EAE4DC] shadow-2xs group flex items-center justify-center ${
+                    className={`relative aspect-[16/11] max-h-[360px] sm:max-h-[400px] w-full rounded-xl sm:rounded-2xl overflow-hidden border border-[#EAE4DC] shadow-2xs group flex items-center justify-center ${
                       isVideo ? 'bg-black' : 'bg-[#F8F6F2] cursor-zoom-in'
                     }`}
                   >
@@ -323,11 +292,19 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
                         />
                       </div>
                     ) : (
-                      <img
-                        src={currentMedia.url}
-                        alt={product.name}
-                        className="w-full h-full object-contain p-2 sm:p-3 transition-transform duration-500 group-hover:scale-105"
-                      />
+                      <>
+                        <img
+                          src={currentMedia.url}
+                          alt=""
+                          aria-hidden="true"
+                          className="absolute inset-0 w-full h-full object-cover blur-xl opacity-20 scale-125 pointer-events-none"
+                        />
+                        <img
+                          src={currentMedia.url}
+                          alt={product.name}
+                          className="relative z-1 w-full h-full object-contain p-2 sm:p-3 transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </>
                     )}
 
                     {/* Left and Right Nav Buttons if multiple media items */}
@@ -514,7 +491,7 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
             <div className="space-y-2">
               {/* Category & Tags */}
               <div className="flex flex-wrap items-center gap-1.5">
-                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#D91680] bg-[#FDF1F7] px-2.5 py-0.5 rounded-full border border-[#EFC0DA]">
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#1E3A8A] bg-[#EEF3FA] px-2.5 py-0.5 rounded-full border border-[#B9C9E7] shadow-2xs">
                   {product.categoryName || product.category?.name || product.category}
                 </span>
                 {product.isBestseller && (
@@ -525,7 +502,7 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
               </div>
 
               {/* Title */}
-              <h1 className="text-xl sm:text-2xl lg:text-[27px] font-serif-display font-black text-[#1A1F2C] leading-snug">
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif-display font-black text-[#1A1F2C] leading-snug">
                 {product.name}
               </h1>
 
@@ -554,7 +531,7 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
                 </div>
                 <span
                   className="text-xs sm:text-sm text-[#D91680] font-bold underline cursor-pointer hover:text-[#BE0E6E]"
-                  onClick={() => scrollToSection(null, 'product-reviews-section')}
+                  onClick={() => openAndScrollToSection('reviews', 'product-reviews-accordion')}
                 >
                   ({productReviews.length} reviews)
                 </span>
@@ -639,133 +616,57 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
               </div>
             </div>
 
-            {/* Ordering Controls & WhatsApp Direct */}
-            <div className="space-y-2.5 pt-2 border-t border-[#F1E9DF]">
-              
-              {/* Quantity Stepper & Add to Bag (Desktop) */}
-              <div className="flex items-center space-x-2.5">
-                <div className="flex items-center border border-[#EADDC6] rounded-full bg-[#FAF7F2] p-1">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-8 h-8 rounded-full text-[#1A1F2C] hover:bg-white font-bold cursor-pointer text-sm"
-                    aria-label="Decrease quantity"
-                  >
-                    -
-                  </button>
-                  <span className="w-7 text-center text-xs sm:text-sm font-black">{quantity}</span>
-                  <button
-                    onClick={() => setQuantity(Math.min(product.stock || 99, quantity + 1))}
-                    className="w-8 h-8 rounded-full text-[#1A1F2C] hover:bg-white font-bold cursor-pointer text-sm"
-                    aria-label="Increase quantity"
-                  >
-                    +
-                  </button>
-                </div>
-
-                <button
-                  id="detail-add-to-cart-btn"
-                  onClick={handleAddToCart}
-                  disabled={added || (product.stock !== undefined && product.stock <= 0)}
-                  className={`flex-1 h-12 py-2.5 sm:py-3 px-4 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider transition-all flex items-center justify-center space-x-1.5 shadow-md cursor-pointer ${
-                    added
-                      ? 'bg-emerald-600 text-white'
-                      : 'bg-[#D91680] hover:bg-[#BE0E6E] text-white active:scale-98 border border-[#EFC0DA]'
-                  }`}
-                >
-                  {added ? (
-                    <>
-                      <Check className="w-4 h-4" />
-                      <span>Added to Shopping Bag!</span>
-                    </>
-                  ) : (
-                    <>
-                      <ShoppingBag className="w-4 h-4 text-[#EFC0DA]" />
-                      <span>Add to Bag • {formatCurrency(product.price * quantity)}</span>
-                    </>
-                  )}
-                </button>
-              </div>
-
-              {/* Direct WhatsApp Instant Buy Button */}
-              <button
-                id="detail-whatsapp-buy-btn"
-                onClick={handleDirectWhatsAppBuy}
-                className="w-full h-11 py-2.5 px-4 rounded-full bg-[#006C49] hover:bg-[#005a3d] text-white font-bold text-xs sm:text-sm uppercase tracking-wider shadow-sm transition-all flex items-center justify-center space-x-2 active:scale-98 cursor-pointer"
-              >
-                <MessageCircle className="w-4 h-4 text-white" />
-                <span>Instant Order via WhatsApp Concierge</span>
-              </button>
-            </div>
-
           </div>
 
         </div>
 
-        {/* Tabbed Detailed Specifications & Story */}
-        <div id="product-details-section" className="mt-8 bg-white rounded-3xl border border-[#EAE4DC] p-6 sm:p-8 shadow-2xs scroll-mt-24">
-
-          <div className="flex border-b border-[#EAE4DC] space-x-4 sm:space-x-8 overflow-x-auto no-scrollbar">
+        {/* Consolidated Stacked Accordion Panels */}
+        <div id="product-details-accordion" className="mt-8 space-y-3">
+          
+          {/* Accordion 1: Description & Craft Story */}
+          <div className="bg-white rounded-2xl border border-[#EAE4DC] overflow-hidden shadow-2xs texture-canvas">
             <button
-              onClick={() => setActiveTab('desc')}
-              className={`pb-3 text-sm sm:text-base font-bold tracking-wide transition-colors border-b-2 shrink-0 cursor-pointer ${
-                activeTab === 'desc'
-                  ? 'border-[#D91680] text-[#D91680]'
-                  : 'border-transparent text-[#6A758E] hover:text-[#1A1F2C]'
-              }`}
+              type="button"
+              id="accordion-desc-btn"
+              onClick={() => toggleSection('desc')}
+              className="w-full px-4 sm:px-6 py-4 flex items-center justify-between text-left cursor-pointer hover:bg-[#FAF8F5]/80 transition-colors select-none"
             >
-              Description & Craft Story
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-[#FDF1F7] text-[#D91680] flex items-center justify-center shrink-0 border border-[#EFC0DA]">
+                  <FileText className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-serif-display font-bold text-sm sm:text-base text-[#1A1F2C]">
+                    Description & Craft Story
+                  </h3>
+                  <p className="text-[11px] text-[#6A758E] hidden sm:block">
+                    Artisan heritage, woodblock carving, and natural botanical dyes
+                  </p>
+                </div>
+              </div>
+              <ChevronDown
+                className={`w-4 h-4 text-[#8A7E72] transition-transform duration-200 ${
+                  expandedSections.desc ? 'rotate-180 text-[#D91680]' : ''
+                }`}
+              />
             </button>
-            <button
-              onClick={() => setActiveTab('specs')}
-              className={`pb-3 text-sm sm:text-base font-bold tracking-wide transition-colors border-b-2 shrink-0 cursor-pointer ${
-                activeTab === 'specs'
-                  ? 'border-[#D91680] text-[#D91680]'
-                  : 'border-transparent text-[#6A758E] hover:text-[#1A1F2C]'
-              }`}
-            >
-              Materials & Dimensions
-            </button>
-            <button
-              onClick={() => setActiveTab('care')}
-              className={`pb-3 text-sm sm:text-base font-bold tracking-wide transition-colors border-b-2 shrink-0 cursor-pointer ${
-                activeTab === 'care'
-                  ? 'border-[#D91680] text-[#D91680]'
-                  : 'border-transparent text-[#6A758E] hover:text-[#1A1F2C]'
-              }`}
-            >
-              Care & Wash Guidelines
-            </button>
-            <button
-              onClick={() => setActiveTab('gifting')}
-              className={`pb-3 text-sm sm:text-base font-bold tracking-wide transition-colors border-b-2 shrink-0 cursor-pointer ${
-                activeTab === 'gifting'
-                  ? 'border-[#D91680] text-[#D91680]'
-                  : 'border-transparent text-[#6A758E] hover:text-[#1A1F2C]'
-              }`}
-            >
-              Custom Gifting & Bulk Orders
-            </button>
-          </div>
-
-          {/* Tab Contents */}
-          <div className="pt-6">
-            {activeTab === 'desc' && (
-              <div className="space-y-4 text-sm sm:text-base text-[#2D3748] leading-relaxed max-w-3xl">
+            {expandedSections.desc && (
+              <div className="px-4 sm:px-6 pb-6 pt-2 border-t border-[#F1E9DF]/60 space-y-4 text-xs sm:text-sm text-[#2D3748] leading-relaxed">
                 <p>{product.description}</p>
                 {product.detailedStory && (
                   <div className="p-4 sm:p-5 rounded-2xl bg-[#FAF8F5] border border-[#E8DFD2] space-y-2">
-                    <h4 className="font-serif-display font-bold text-sm sm:text-base text-[#1A1F2C]">
+                    <h4 className="font-serif-display font-bold text-xs sm:text-sm text-[#1A1F2C]">
                       The Artisan Printing Process
                     </h4>
-                    <p className="text-xs sm:text-sm text-[#4A5568] leading-relaxed italic">{product.detailedStory}</p>
+                    <p className="text-xs text-[#4A5568] leading-relaxed italic">{product.detailedStory}</p>
                   </div>
                 )}
                 {product.features && product.features.length > 0 && (
-                  <div className="space-y-2 pt-2">
-                    <h4 className="font-bold text-xs sm:text-sm uppercase tracking-wider text-[#1A1F2C]">
-                      Key Features:
+                  <div className="space-y-2 pt-1">
+                    <h4 className="font-bold text-xs uppercase tracking-wider text-[#1A1F2C]">
+                      Key Features & Handcrafted Highlights:
                     </h4>
-                    <ul className="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-[#2D3748]">
+                    <ul className="list-disc pl-5 space-y-1.5 text-xs text-[#2D3748]">
                       {product.features.map((f, i) => (
                         <li key={i}>{f}</li>
                       ))}
@@ -774,49 +675,243 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
                 )}
               </div>
             )}
+          </div>
 
-            {activeTab === 'specs' && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl text-xs sm:text-sm text-[#2D3748]">
-                <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-[#E8DFD2]">
-                  <span className="font-bold text-[#1A1F2C] block mb-1">Canvas Weight & Fabric:</span>
-                  <span>{product.material || '450 GSM Heavy Organic Canvas'}</span>
+          {/* Accordion 2: Dimensions & Specifications */}
+          <div className="bg-white rounded-2xl border border-[#EAE4DC] overflow-hidden shadow-2xs texture-canvas">
+            <button
+              type="button"
+              id="accordion-specs-btn"
+              onClick={() => toggleSection('specs')}
+              className="w-full px-4 sm:px-6 py-4 flex items-center justify-between text-left cursor-pointer hover:bg-[#FAF8F5]/80 transition-colors select-none"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-[#EEF3FA] text-[#1E3A8A] flex items-center justify-center shrink-0 border border-[#B9C9E7]">
+                  <Ruler className="w-4 h-4" />
                 </div>
-                <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-[#E8DFD2]">
-                  <span className="font-bold text-[#1A1F2C] block mb-1">Dimensions:</span>
-                  <span>{product.dimensions || '16" H x 15" W x 4" Bottom Gusset'}</span>
+                <div>
+                  <h3 className="font-serif-display font-bold text-sm sm:text-base text-[#1A1F2C]">
+                    Dimensions & Specifications
+                  </h3>
+                  <p className="text-[11px] text-[#6A758E] hidden sm:block">
+                    Exact measurements, fabric weight, and hardware details
+                  </p>
                 </div>
-                <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-[#E8DFD2]">
-                  <span className="font-bold text-[#1A1F2C] block mb-1">Closure & Fasteners:</span>
-                  <span>{product.closureType || 'Antiqued Brass Zipper'}</span>
-                </div>
-                <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-[#E8DFD2]">
-                  <span className="font-bold text-[#1A1F2C] block mb-1">Handle Drop Length:</span>
-                  <span>11.5 inches (Comfortable shoulder carry)</span>
+              </div>
+              <ChevronDown
+                className={`w-4 h-4 text-[#8A7E72] transition-transform duration-200 ${
+                  expandedSections.specs ? 'rotate-180 text-[#D91680]' : ''
+                }`}
+              />
+            </button>
+            {expandedSections.specs && (
+              <div className="px-4 sm:px-6 pb-6 pt-2 border-t border-[#F1E9DF]/60">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs sm:text-sm text-[#2D3748]">
+                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E8DFD2]">
+                    <span className="font-bold text-[#1A1F2C] block mb-1">Canvas Weight & Fabric</span>
+                    <span className="text-[#4A5568]">{product.material || '450 GSM Heavy Organic Canvas'}</span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E8DFD2]">
+                    <span className="font-bold text-[#1A1F2C] block mb-1">Dimensions</span>
+                    <span className="text-[#4A5568]">{product.dimensions || '16" H x 15" W x 4" Bottom Gusset'}</span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E8DFD2]">
+                    <span className="font-bold text-[#1A1F2C] block mb-1">Closure & Fasteners</span>
+                    <span className="text-[#4A5568]">{product.closureType || 'Antiqued Brass Zipper'}</span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E8DFD2]">
+                    <span className="font-bold text-[#1A1F2C] block mb-1">Handle Drop Length</span>
+                    <span className="text-[#4A5568]">11.5 inches (Comfortable shoulder carry)</span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E8DFD2]">
+                    <span className="font-bold text-[#1A1F2C] block mb-1">Interior Configuration</span>
+                    <span className="text-[#4A5568]">1 Zippered Pocket + 2 Slip Pockets for Phone & Keys</span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E8DFD2]">
+                    <span className="font-bold text-[#1A1F2C] block mb-1">Reinforcement</span>
+                    <span className="text-[#4A5568]">Cross-box stitching tested for 12+ kg daily carry</span>
+                  </div>
                 </div>
               </div>
             )}
+          </div>
 
-            {activeTab === 'care' && (
-              <div className="space-y-3 text-xs sm:text-sm text-[#2D3748] max-w-2xl leading-relaxed">
-                <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm">
-                  <li>Spot clean gently with cold water and mild eco-friendly detergent.</li>
+          {/* Accordion 3: Materials & Care Guidelines */}
+          <div className="bg-white rounded-2xl border border-[#EAE4DC] overflow-hidden shadow-2xs texture-canvas">
+            <button
+              type="button"
+              id="accordion-care-btn"
+              onClick={() => toggleSection('care')}
+              className="w-full px-4 sm:px-6 py-4 flex items-center justify-between text-left cursor-pointer hover:bg-[#FAF8F5]/80 transition-colors select-none"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-[#F7F9E4] text-[#3D4706] flex items-center justify-center shrink-0 border border-[#DBE586]">
+                  <Droplets className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-serif-display font-bold text-sm sm:text-base text-[#1A1F2C]">
+                    Materials & Care Guidelines
+                  </h3>
+                  <p className="text-[11px] text-[#6A758E] hidden sm:block">
+                    Washing, spot cleaning, and preserving natural dye luminosity
+                  </p>
+                </div>
+              </div>
+              <ChevronDown
+                className={`w-4 h-4 text-[#8A7E72] transition-transform duration-200 ${
+                  expandedSections.care ? 'rotate-180 text-[#D91680]' : ''
+                }`}
+              />
+            </button>
+            {expandedSections.care && (
+              <div className="px-4 sm:px-6 pb-6 pt-2 border-t border-[#F1E9DF]/60 space-y-3 text-xs sm:text-sm text-[#2D3748] leading-relaxed">
+                <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-[#3E475C]">
+                  <li>Spot clean gently with cold water and mild eco-friendly or soapnut detergent.</li>
+                  <li>Natural vegetable indigo and botanical dyes may crock slightly in initial washes; wash separately from light garments.</li>
                   <li>Do not bleach, machine tumble dry, or dry clean.</li>
-                  <li>Hang to dry in shaded area to protect natural vegetable dye vibrancy.</li>
+                  <li>Hang flat to dry in shaded area to protect natural dye vibrancy from harsh direct sunlight.</li>
                   <li>Warm iron on reverse side if desired.</li>
                 </ul>
               </div>
             )}
+          </div>
 
-            {activeTab === 'gifting' && (
-              <div className="space-y-3 text-xs sm:text-sm text-[#2D3748] max-w-2xl leading-relaxed">
-                <p>Looking to order this design in bulk (25+ units) for weddings, company retreats, or festive hampers?</p>
-                <p>We offer customized gold foil initials, personalized bride/groom tags, and custom colorways.</p>
+          {/* Accordion 4: Customer Reviews */}
+          <div id="product-reviews-accordion" className="bg-white rounded-2xl border border-[#EAE4DC] overflow-hidden shadow-2xs texture-canvas">
+            <button
+              type="button"
+              id="accordion-reviews-btn"
+              onClick={() => toggleSection('reviews')}
+              className="w-full px-4 sm:px-6 py-4 flex items-center justify-between text-left cursor-pointer hover:bg-[#FAF8F5]/80 transition-colors select-none"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-200">
+                  <Star className="w-4 h-4 fill-amber-400 text-amber-500" />
+                </div>
+                <div>
+                  <h3 className="font-serif-display font-bold text-sm sm:text-base text-[#1A1F2C]">
+                    Customer Reviews ({productReviews.length})
+                  </h3>
+                  <p className="text-[11px] text-[#6A758E] hidden sm:block">
+                    Authentic feedback from verified buyers
+                  </p>
+                </div>
+              </div>
+              <ChevronDown
+                className={`w-4 h-4 text-[#8A7E72] transition-transform duration-200 ${
+                  expandedSections.reviews ? 'rotate-180 text-[#D91680]' : ''
+                }`}
+              />
+            </button>
+            {expandedSections.reviews && (
+              <div className="px-4 sm:px-6 pb-6 pt-2 border-t border-[#F1E9DF]/60 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#F1E9DF] gap-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl font-black text-[#1A1F2C]">{product.ratingAverage || 5.0}</span>
+                      <div className="flex text-amber-500">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${
+                              i < Math.floor(product.ratingAverage || 5)
+                                ? 'fill-amber-400 text-amber-500'
+                                : 'text-neutral-200'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-xs text-[#6A758E]">({productReviews.length} reviews)</span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => openReviewModal(product)}
+                    className="px-4 py-2 rounded-xl bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center space-x-1.5 cursor-pointer border border-[#EFC0DA] active:scale-98 w-fit"
+                  >
+                    <MessageSquare className="w-3.5 h-3.5" />
+                    <span>Write a Review</span>
+                  </button>
+                </div>
+
+                <div className="space-y-3">
+                  {productReviews.length === 0 ? (
+                    <div className="py-6 text-center text-xs text-[#6A758E]">
+                      <p>No reviews yet for this specific design. Be the first to share your thoughts!</p>
+                      <button
+                        onClick={() => openReviewModal(product)}
+                        className="mt-2 text-[#D91680] font-bold underline cursor-pointer text-xs"
+                      >
+                        Write first review →
+                      </button>
+                    </div>
+                  ) : (
+                    productReviews.map((rev) => (
+                      <div key={rev._id} className="p-3.5 sm:p-4 rounded-xl bg-[#FAF8F5] border border-[#EAE4DC] space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xs sm:text-sm font-bold text-[#1A1F2C]">{rev.customerName}</span>
+                            {rev.isVerifiedPurchase && (
+                              <span className="text-[10px] text-emerald-800 bg-emerald-100 font-bold px-2 py-0.5 rounded-full">
+                                Verified Buyer
+                              </span>
+                            )}
+                            <span className="text-[11px] text-[#6A758E]">({rev.customerLocation || 'India'})</span>
+                          </div>
+                          <div className="flex items-center text-amber-500">
+                            {[...Array(rev.rating)].map((_, idx) => (
+                              <Star key={idx} className="w-3 h-3 fill-amber-400 text-amber-500" />
+                            ))}
+                          </div>
+                        </div>
+                        <p className="text-xs sm:text-[13px] text-[#2D3748] leading-relaxed">"{rev.comment}"</p>
+                        <span className="text-[10px] text-[#8E9DBE] block">{formatDate(rev.createdAt)}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Accordion 5: Bulk & Wedding Gifting (25+ Units) */}
+          <div className="bg-white rounded-2xl border border-[#EAE4DC] overflow-hidden shadow-2xs texture-canvas">
+            <button
+              type="button"
+              id="accordion-gifting-btn"
+              onClick={() => toggleSection('gifting')}
+              className="w-full px-4 sm:px-6 py-4 flex items-center justify-between text-left cursor-pointer hover:bg-[#FAF8F5]/80 transition-colors select-none"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-[#FDF1F7] text-[#D91680] flex items-center justify-center shrink-0 border border-[#EFC0DA]">
+                  <Gift className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-serif-display font-bold text-sm sm:text-base text-[#1A1F2C]">
+                    Bulk & Wedding Gifting (25+ Units)
+                  </h3>
+                  <p className="text-[11px] text-[#6A758E] hidden sm:block">
+                    Custom monograms, gold foil tags, and volume pricing
+                  </p>
+                </div>
+              </div>
+              <ChevronDown
+                className={`w-4 h-4 text-[#8A7E72] transition-transform duration-200 ${
+                  expandedSections.gifting ? 'rotate-180 text-[#D91680]' : ''
+                }`}
+              />
+            </button>
+            {expandedSections.gifting && (
+              <div className="px-4 sm:px-6 pb-6 pt-2 border-t border-[#F1E9DF]/60 space-y-3 text-xs sm:text-sm text-[#2D3748] leading-relaxed">
+                <p>
+                  Planning an artisanal Indian wedding favor, corporate sustainable hamper, or eco-retreat gift? We offer custom gold foil initials, personalized bride/groom tags, custom colorways, and wholesale volume pricing starting at 25 pieces.
+                </p>
                 <button
                   onClick={() => {
                     const msg = buildWhatsAppInquiryMessage('custom-bulk', product.name);
                     window.open(generateWhatsAppUrl(settings.whatsappNumber, msg), '_blank');
                   }}
-                  className="mt-2 inline-flex items-center space-x-2 px-5 py-3 rounded-2xl bg-[#25D366] text-white font-bold text-xs sm:text-sm shadow-md cursor-pointer"
+                  className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-[#006C49] hover:bg-[#005a3d] text-white font-bold text-xs uppercase tracking-wider shadow-sm cursor-pointer active:scale-98 transition-all"
                 >
                   <MessageCircle className="w-4 h-4" />
                   <span>Inquire Bulk Pricing on WhatsApp</span>
@@ -824,101 +919,48 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
               </div>
             )}
           </div>
-        </div>
 
-        {/* Customer Reviews Section */}
-        <div id="product-reviews-section" className="mt-8 bg-white rounded-3xl border border-[#EAE4DC] p-6 sm:p-8 shadow-2xs scroll-mt-24">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-[#EAE4DC] gap-4">
-
-            <div>
-              <h3 className="text-xl sm:text-2xl font-serif-display font-bold text-[#1A1F2C]">
-                Customer Reviews ({productReviews.length})
-              </h3>
-              <p className="text-xs sm:text-sm text-[#5C677D] mt-0.5">
-                Authentic feedback from verified buyers who own this tote bag.
-              </p>
-            </div>
-
-            <button
-              onClick={() => openReviewModal(product)}
-              className="px-5 py-2.5 rounded-2xl bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs sm:text-sm font-bold uppercase tracking-wider transition-colors shadow-md flex items-center justify-center space-x-2 cursor-pointer border border-[#EFC0DA]"
-            >
-              <MessageSquare className="w-3.5 h-3.5" />
-              <span>Write a Review</span>
-            </button>
-          </div>
-
-          {/* Reviews List */}
-          <div className="mt-6 space-y-4">
-            {productReviews.length === 0 ? (
-              <div className="py-8 text-center text-xs sm:text-sm text-[#6A758E]">
-                <p>No reviews yet for this specific design. Be the first to share your thoughts!</p>
-                <button
-                  onClick={() => openReviewModal(product)}
-                  className="mt-2 text-[#D91680] font-bold underline cursor-pointer text-xs sm:text-sm"
-                >
-                  Write first review →
-                </button>
-              </div>
-            ) : (
-              productReviews.map((rev) => (
-                <div key={rev._id} className="p-4 sm:p-5 rounded-2xl bg-[#FAF8F5] border border-[#EAE4DC] space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm font-bold text-[#1A1F2C]">{rev.customerName}</span>
-                      {rev.isVerifiedPurchase && (
-                        <span className="text-[10px] sm:text-xs text-emerald-800 bg-emerald-100 font-bold px-2 py-0.5 rounded-full">
-                          Verified Buyer
-                        </span>
-                      )}
-                      <span className="text-xs text-[#6A758E]">({rev.customerLocation || 'India'})</span>
-                    </div>
-                    <div className="flex items-center text-amber-500">
-                      {[...Array(rev.rating)].map((_, idx) => (
-                        <Star key={idx} className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
-                      ))}
-                    </div>
-                  </div>
-                  <p className="text-sm sm:text-[15px] text-[#2D3748] leading-relaxed">"{rev.comment}"</p>
-                  <span className="text-xs text-[#8E9DBE] block">{formatDate(rev.createdAt)}</span>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-
-
-        {/* Related Products Grid */}
-        {relatedProducts.length > 0 && (
-          <div id="product-related-section" className="mt-12 scroll-mt-24">
-
-            <div className="mb-6 flex items-center justify-between">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-widest text-[#D91680] block">
-                  You May Also Love
-                </span>
-                <h3 className="text-xl sm:text-2xl font-serif-display font-bold text-[#1A1F2C]">
-                  More Handcrafted Botanical & Block Print Totes
-                </h3>
-              </div>
+          {/* Accordion 6: Similar Handcrafted Designs */}
+          {relatedProducts.length > 0 && (
+            <div className="bg-white rounded-2xl border border-[#EAE4DC] overflow-hidden shadow-2xs texture-canvas">
               <button
-                onClick={() => {
-                  onNavigate('products');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="hidden sm:inline-flex items-center space-x-1 text-xs font-bold text-[#D91680] hover:underline cursor-pointer"
+                type="button"
+                id="accordion-similar-btn"
+                onClick={() => toggleSection('similar')}
+                className="w-full px-4 sm:px-6 py-4 flex items-center justify-between text-left cursor-pointer hover:bg-[#FAF8F5]/80 transition-colors select-none"
               >
-                <span>View Full Catalog</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[#EEF3FA] text-[#1E3A8A] flex items-center justify-center shrink-0 border border-[#B9C9E7]">
+                    <Layers className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="font-serif-display font-bold text-sm sm:text-base text-[#1A1F2C]">
+                      Similar Handcrafted Designs
+                    </h3>
+                    <p className="text-[11px] text-[#6A758E] hidden sm:block">
+                      More botanical, Kalamkari, and block print totes
+                    </p>
+                  </div>
+                </div>
+                <ChevronDown
+                  className={`w-4 h-4 text-[#8A7E72] transition-transform duration-200 ${
+                    expandedSections.similar ? 'rotate-180 text-[#D91680]' : ''
+                  }`}
+                />
               </button>
+              {expandedSections.similar && (
+                <div className="px-4 sm:px-6 pb-6 pt-2 border-t border-[#F1E9DF]/60">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                    {relatedProducts.map((p) => (
+                      <ProductCard key={p._id} product={p} onNavigate={onNavigate} />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6">
-              {relatedProducts.map((p) => (
-                <ProductCard key={p._id} product={p} onNavigate={onNavigate} />
-              ))}
-            </div>
-          </div>
-        )}
+          )}
+
+        </div>
 
         {/* Video Preview Modal */}
         {isVideoModalOpen && activeVideo && (
@@ -1073,50 +1115,73 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
 
       </div>
 
-      {/* Mobile Sticky Add to Cart Bar (Pinned above bottom tab bar) */}
-      <div className="fixed bottom-15 left-0 right-0 z-30 md:hidden bg-white/95 backdrop-blur-md border-t border-[#F1E9DF] px-4 py-2.5 shadow-[0_-4px_16px_rgba(30,41,59,0.08)] flex items-center justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <p className="text-[10px] uppercase font-bold text-[#8A7E72] tracking-wider truncate">Total</p>
-          <div className="flex items-baseline space-x-1.5">
-            <span className="text-[17px] font-black text-[#1A1F2C] leading-tight">
-              {formatCurrency(product.price * quantity)}
-            </span>
-            {product.originalPrice && product.originalPrice > product.price && (
-              <span className="text-[10px] text-[#8E9DBE] line-through">
-                {formatCurrency(product.originalPrice * quantity)}
-              </span>
-            )}
-          </div>
-        </div>
+      {/* Sticky Bottom Purchasing Bar (The single unified conversion dock) */}
+      <div className="fixed bottom-15 md:bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-[#F1E9DF] px-3 sm:px-6 py-2.5 shadow-[0_-4px_20px_rgba(30,41,59,0.1)] pb-[calc(0.625rem+env(safe-area-inset-bottom,0px))]">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5">
+          
+          {/* Main cluster: Total + Stepper + Primary Add to Bag */}
+          <div className="w-full sm:w-auto flex-1 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-[10px] uppercase font-bold text-[#8A7E72] tracking-wider truncate">Total</p>
+              <div className="flex items-baseline space-x-1.5">
+                <span className="text-[17px] sm:text-xl font-black text-[#1A1F2C] leading-tight">
+                  {formatCurrency(product.price * quantity)}
+                </span>
+                {product.originalPrice && product.originalPrice > product.price && (
+                  <span className="text-[10px] sm:text-xs text-[#8E9DBE] line-through">
+                    {formatCurrency(product.originalPrice * quantity)}
+                  </span>
+                )}
+              </div>
+            </div>
 
-        <div className="flex items-center space-x-2 shrink-0">
-          {/* Quantity Stepper */}
-          <div className="flex items-center border border-[#E5E7EB] rounded-full bg-[#FAF7F2] h-9 px-1 shadow-inner">
-            <button
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="w-7 h-7 flex items-center justify-center text-[#1A1F2C] active:scale-90 font-bold cursor-pointer text-xs"
-              aria-label="Decrease quantity"
-            >
-              -
-            </button>
-            <span className="px-2 text-xs font-bold text-[#1A1F2C] min-w-[18px] text-center">{quantity}</span>
-            <button
-              onClick={() => setQuantity(Math.min(product.stock || 99, quantity + 1))}
-              className="w-7 h-7 flex items-center justify-center text-[#1A1F2C] active:scale-90 font-bold cursor-pointer text-xs"
-              aria-label="Increase quantity"
-            >
-              +
-            </button>
+            <div className="flex items-center space-x-2 shrink-0">
+              {/* Quantity Stepper */}
+              <div className="flex items-center border border-[#E5E7EB] rounded-full bg-[#FAF7F2] h-9 sm:h-10 px-1 shadow-inner">
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="w-7 sm:w-8 h-7 sm:h-8 flex items-center justify-center text-[#1A1F2C] active:scale-90 font-bold cursor-pointer text-xs select-none"
+                  aria-label="Decrease quantity"
+                >
+                  -
+                </button>
+                <span className="px-1.5 sm:px-2 text-xs font-bold text-[#1A1F2C] min-w-[18px] text-center select-none">
+                  {quantity}
+                </span>
+                <button
+                  onClick={() => setQuantity(Math.min(product.stock || 99, quantity + 1))}
+                  className="w-7 sm:w-8 h-7 sm:h-8 flex items-center justify-center text-[#1A1F2C] active:scale-90 font-bold cursor-pointer text-xs select-none"
+                  aria-label="Increase quantity"
+                >
+                  +
+                </button>
+              </div>
+
+              {/* Add to Bag Primary CTA */}
+              <button
+                id="sticky-add-to-cart-btn"
+                onClick={handleAddToCart}
+                disabled={added || (product.stock !== undefined && product.stock <= 0)}
+                className={`h-9 sm:h-10 px-4 sm:px-6 rounded-full text-xs font-bold uppercase tracking-wider shadow-md active:scale-98 transition-all flex items-center space-x-1.5 cursor-pointer ${
+                  added
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-[#D91680] hover:bg-[#BE0E6E] text-white border border-[#EFC0DA]'
+                }`}
+              >
+                <ShoppingBag className="w-3.5 h-3.5 text-[#EFC0DA]" />
+                <span>{added ? 'Added! ✓' : 'Add to Bag'}</span>
+              </button>
+            </div>
           </div>
 
-          {/* Add to Bag Button */}
+          {/* Secondary WhatsApp Instant Buy Button (Directly below on mobile, beside on sm:) */}
           <button
-            id="sticky-mobile-add-to-cart-btn"
-            onClick={handleAddToCart}
-            className="h-10 px-4 rounded-full bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs font-bold uppercase tracking-wider shadow-md active:scale-95 transition-all flex items-center space-x-1.5 border border-[#EFC0DA] cursor-pointer"
+            id="sticky-whatsapp-buy-btn"
+            onClick={handleDirectWhatsAppBuy}
+            className="w-full sm:w-auto h-8 sm:h-10 px-3 sm:px-4 rounded-full bg-[#006C49] hover:bg-[#005a3d] text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center justify-center space-x-1.5 active:scale-98 cursor-pointer shrink-0 border border-emerald-700/40"
           >
-            <ShoppingBag className="w-3.5 h-3.5 text-[#EFC0DA]" />
-            <span>{added ? 'Added! ✓' : 'Add to Bag'}</span>
+            <MessageCircle className="w-3.5 h-3.5 text-white" />
+            <span>Instant Order via WhatsApp</span>
           </button>
         </div>
       </div>

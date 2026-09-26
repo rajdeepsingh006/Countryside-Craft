@@ -136,8 +136,11 @@ const createProduct = async (req, res) => {
   const { error, value } = createProductSchema.validate(req.body, { abortEarly: false, stripUnknown: true });
   if (error) return sendError(res, error.details.map((d) => d.message).join('. '), 422);
 
-  // Resolve Category ID if a slug or name was sent
+  // Resolve Category ID if a slug, name, or object was sent
   let categoryId = value.category;
+  if (categoryId && typeof categoryId === 'object' && categoryId._id) {
+    categoryId = categoryId._id;
+  }
   if (!mongoose.Types.ObjectId.isValid(categoryId)) {
     const foundCat = await Category.findOne({
       $or: [{ slug: categoryId }, { name: categoryId }],
@@ -152,6 +155,8 @@ const createProduct = async (req, res) => {
     }
   }
   value.category = categoryId;
+  if (value.price !== undefined) value.price = Number(value.price) || 0;
+  if (value.originalPrice !== undefined) value.originalPrice = Number(value.originalPrice) || 0;
 
   // Handle uploaded images and explicit image URLs
   let imageUrls = Array.isArray(value.images) ? [...value.images] : [];
@@ -179,12 +184,20 @@ const updateProduct = async (req, res) => {
   if (!product) return sendError(res, 'Product not found.', 404);
 
   // Resolve Category ID if needed
-  if (value.category && !mongoose.Types.ObjectId.isValid(value.category)) {
-    const foundCat = await Category.findOne({
-      $or: [{ slug: value.category }, { name: value.category }],
-    });
-    if (foundCat) value.category = foundCat._id;
+  if (value.category) {
+    if (typeof value.category === 'object' && value.category._id) {
+      value.category = value.category._id;
+    }
+    if (!mongoose.Types.ObjectId.isValid(value.category)) {
+      const foundCat = await Category.findOne({
+        $or: [{ slug: value.category }, { name: value.category }],
+      });
+      if (foundCat) value.category = foundCat._id;
+    }
   }
+
+  if (value.price !== undefined) value.price = Number(value.price) || 0;
+  if (value.originalPrice !== undefined) value.originalPrice = Number(value.originalPrice) || 0;
 
   // Handle new image uploads
   if (req.files && req.files.length > 0) {

@@ -56,7 +56,7 @@ const createOrder = async (req, res) => {
 
   return sendSuccess(
     res,
-    { order: { orderNumber: order.orderNumber, totalAmount: order.totalAmount }, whatsappUrl },
+    { order: { _id: order._id, orderNumber: order.orderNumber, totalAmount: order.totalAmount }, whatsappUrl },
     'Order created successfully',
     201
   );

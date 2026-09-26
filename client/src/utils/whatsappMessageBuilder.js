@@ -29,9 +29,10 @@ ${itemsText}
 ━━━━━━━━━━━━━━━━━━━━
 💰 *Subtotal:* ${formatCurrency(order.subtotal)}
 ${order.discount > 0 ? `🏷️ *Discount:* -${formatCurrency(order.discount)}\n` : ''}💵 *Total Product Amount:* ${formatCurrency(order.totalAmount)}
+Payment: UPI QR (customer-confirmed, please verify)
 ⚠️ *Note:* Shipping & delivery charges will be calculated and confirmed via this chat.
 
-Please share your payment details (UPI/Bank Transfer/QR Code) and estimated dispatch date. Thank you! 🙏`;
+Please confirm receipt of payment and estimated dispatch date. Thank you! 🙏`;
 };
 
 export const generateWhatsAppUrl = (phone, message) => {

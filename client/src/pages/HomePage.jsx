@@ -1,5 +1,6 @@
 import React from 'react';
 import { HeroSlider } from '../components/home/HeroSlider';
+import { CraftFeaturesTiles } from '../components/home/CraftFeaturesTiles';
 import { CategoryTiles } from '../components/home/CategoryTiles';
 import { FeaturedCarousel } from '../components/home/FeaturedCarousel';
 import { SignatureSpotlight } from '../components/home/SignatureSpotlight';
@@ -10,6 +11,7 @@ export const HomePage = ({ onNavigate }) => {
   return (
     <div className="space-y-0">
       <HeroSlider onNavigate={onNavigate} />
+      <CraftFeaturesTiles onNavigate={onNavigate} />
       <CategoryTiles onNavigate={onNavigate} />
       <FeaturedCarousel onNavigate={onNavigate} />
       <SignatureSpotlight onNavigate={onNavigate} />

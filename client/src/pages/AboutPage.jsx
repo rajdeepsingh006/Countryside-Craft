@@ -32,12 +32,12 @@ export const AboutPage = ({ onNavigate }) => {
         {/* Hero Brand Story */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-6 space-y-6">
-            <div className="inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-widest text-[#D91680] bg-[#FDF1F7] px-3 py-1 rounded-full border border-[#EFC0DA]">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-widest text-[#1E3A8A] bg-[#EEF3FA] px-3 py-1 rounded-full border border-[#B9C9E7] shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#1E3A8A]" />
               <span>Our Artisan Philosophy</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif-display font-bold text-[#1A1F2C] leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif-display font-bold text-[#1A1F2C] leading-tight">
               Rooted in Indian Heritage, Hand-Printed for Modern Slow Living.
             </h1>
 
@@ -62,7 +62,7 @@ export const AboutPage = ({ onNavigate }) => {
           </div>
 
           <div className="lg:col-span-6 relative">
-            <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-[#B9C9E7]/60 bg-[#161C2A]">
+            <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-[#B9C9E7]/60 bg-[#161C2A] texture-canvas">
               <img
                 src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=80"
                 alt="Artisan block printing in workshop"
@@ -83,10 +83,11 @@ export const AboutPage = ({ onNavigate }) => {
         {/* 4-Step Craft Process */}
         <div className="py-12 border-y border-[#B9C9E7]/40">
           <div className="text-center max-w-xl mx-auto mb-12 space-y-2">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#D91680]">
-              The Meditative Journey
+            <span className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#3D4706] bg-[#F7F9E4] px-3 py-1 rounded-full border border-[#DBE586] shadow-2xs mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-[#3D4706]" />
+              <span>The Meditative Journey</span>
             </span>
-            <h2 className="text-2xl sm:text-3xl font-serif-display font-bold text-[#1A1F2C]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif-display font-bold text-[#1A1F2C]">
               How Each Countryside Craft Tote is Born
             </h2>
           </div>
@@ -134,15 +135,15 @@ export const AboutPage = ({ onNavigate }) => {
         </div>
 
         {/* Custom Bulk & Wedding Favors Inquiry Section */}
-        <div className="bg-white rounded-3xl border border-[#B9C9E7]/50 p-8 sm:p-12 shadow-sm">
+        <div className="bg-white rounded-3xl border border-[#B9C9E7]/50 p-8 sm:p-12 shadow-sm texture-canvas">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             
             <div className="lg:col-span-5 space-y-4">
-              <div className="inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-widest text-[#D91680] bg-[#FDF1F7] px-3 py-1 rounded-full border border-[#EFC0DA]">
-                <Award className="w-3.5 h-3.5" />
+              <div className="inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-widest text-[#1E3A8A] bg-[#EEF3FA] px-3 py-1 rounded-full border border-[#B9C9E7] shadow-2xs">
+                <Award className="w-3.5 h-3.5 text-[#1E3A8A]" />
                 <span>Celebration & Corporate Gifting</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-serif-display font-bold text-[#1A1F2C]">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif-display font-bold text-[#1A1F2C]">
                 Customized Wedding Favors & Corporate Hampers
               </h2>
               <p className="text-xs sm:text-sm text-[#525E77] leading-relaxed">
@@ -250,7 +251,7 @@ export const AboutPage = ({ onNavigate }) => {
 
               <button
                 type="submit"
-                className="w-full py-3.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                className="w-full py-3.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center space-x-2 cursor-pointer active:scale-98"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>Submit Inquiry via WhatsApp</span>

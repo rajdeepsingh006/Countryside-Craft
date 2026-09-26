@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Filter, SlidersHorizontal, ArrowUpDown, X, Sparkles, Search, Check } from 'lucide-react';
+import { Filter, SlidersHorizontal, ArrowUpDown, X, Sparkles, Search, Check, LayoutGrid, List } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { ProductCard } from '../components/product/ProductCard';
 
@@ -7,22 +7,36 @@ export const ProductsPage = ({ initialCategory, onNavigate }) => {
   const { products, categories } = useStore();
   const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'all');
   const [sortBy, setSortBy] = useState('popularity');
-  const [maxPrice, setMaxPrice] = useState(2000);
+  const [maxPrice, setMaxPrice] = useState(500);
   const [selectedTag, setSelectedTag] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-
-  useEffect(() => {
-    if (initialCategory) {
-      setSelectedCategory(initialCategory);
-    }
-  }, [initialCategory]);
+  const [cardLayout, setCardLayout] = useState('grid');
 
   const allTags = useMemo(() => {
     const set = new Set();
     products.forEach((p) => (p.tags || []).forEach((t) => set.add(t)));
     return Array.from(set);
   }, [products]);
+
+  useEffect(() => {
+    if (initialCategory) {
+      const isKnownCategory = categories.some((c) => c.slug === initialCategory);
+      if (isKnownCategory || initialCategory === 'all') {
+        setSelectedCategory(initialCategory);
+        setSelectedTag('all');
+        setSearchQuery('');
+      } else if (allTags.includes(initialCategory)) {
+        setSelectedCategory('all');
+        setSelectedTag(initialCategory);
+        setSearchQuery('');
+      } else {
+        setSelectedCategory('all');
+        setSelectedTag('all');
+        setSearchQuery(initialCategory);
+      }
+    }
+  }, [initialCategory, categories, allTags]);
 
   const filteredProducts = useMemo(() => {
     return products
@@ -54,31 +68,31 @@ export const ProductsPage = ({ initialCategory, onNavigate }) => {
   const activeFiltersCount =
     (selectedCategory !== 'all' ? 1 : 0) +
     (selectedTag !== 'all' ? 1 : 0) +
-    (maxPrice < 2000 ? 1 : 0) +
+    (maxPrice < 500 ? 1 : 0) +
     (searchQuery.trim() ? 1 : 0);
 
   const handleResetFilters = () => {
     setSelectedCategory('all');
     setSelectedTag('all');
-    setMaxPrice(2000);
+    setMaxPrice(500);
     setSearchQuery('');
   };
 
   return (
-    <div className="bg-[#FDFBF7] min-h-screen py-4 sm:py-10">
+    <div className="bg-[#FDFBF7] min-h-screen py-4 sm:py-10 pb-24 sm:pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Story & Category Header */}
         <div className="pt-2 pb-3 flex flex-col gap-1.5 border-b border-[#EADDC6]/40 mb-4">
-          <div className="flex items-center gap-1.5 text-[#D91680]">
-            <Sparkles className="w-3.5 h-3.5 text-[#D91680]" />
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#D91680]">Artisan Catalog</span>
+          <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#1E3A8A] bg-[#EEF3FA] px-2.5 py-0.5 rounded-full border border-[#B9C9E7] shadow-2xs w-fit">
+            <Sparkles className="w-3.5 h-3.5 text-[#1E3A8A]" />
+            <span>Artisan Catalog</span>
           </div>
-          <h1 className="text-xl sm:text-4xl font-serif-display font-bold text-[#1A1F2C]">
+          <h1 className="text-xl sm:text-4xl md:text-5xl font-serif-display font-bold text-[#1A1F2C]">
             Handcrafted Artisan Collection
           </h1>
           <p className="text-xs sm:text-sm text-[#6A5E54] leading-relaxed max-w-2xl">
-            Explore our curated range of handcrafted stationery kits, traditional Shagun cards, artisan hand-painted jute bags, and durable eco-friendly carriers.
+            Explore our handcrafted collection of sustainable Jute creations and premium Canvas bags, pouches, kits, and personalized print designs.
           </p>
         </div>
 
@@ -150,6 +164,34 @@ export const ProductsPage = ({ initialCategory, onNavigate }) => {
             </span>
 
             <div className="flex items-center gap-2">
+              {/* Layout Switcher (Grid vs Horizontal Rows) */}
+              <div className="flex items-center bg-white border border-[#F1E9DF] rounded-full p-0.5 shadow-2xs">
+                <button
+                  type="button"
+                  onClick={() => setCardLayout('grid')}
+                  title="Grid View (Horizontal Image Cards)"
+                  className={`p-1.5 rounded-full transition-colors cursor-pointer ${
+                    cardLayout === 'grid'
+                      ? 'bg-[#D91680] text-white shadow-2xs'
+                      : 'text-[#6A758E] hover:text-[#1A1F2C]'
+                  }`}
+                >
+                  <LayoutGrid className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCardLayout('horizontal')}
+                  title="Horizontal Row Cards"
+                  className={`p-1.5 rounded-full transition-colors cursor-pointer ${
+                    cardLayout === 'horizontal'
+                      ? 'bg-[#D91680] text-white shadow-2xs'
+                      : 'text-[#6A758E] hover:text-[#1A1F2C]'
+                  }`}
+                >
+                  <List className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
               {/* Sort Selector Trigger */}
               <div className="h-8 px-3 rounded-full bg-white border border-[#F1E9DF] shadow-sm flex items-center gap-1 text-[#1A1F2C] text-[11px] font-bold">
                 <span className="text-amber-500">🔥</span>
@@ -198,17 +240,17 @@ export const ProductsPage = ({ initialCategory, onNavigate }) => {
               </h4>
               <input
                 type="range"
-                min="400"
-                max="2000"
-                step="50"
+                min="50"
+                max="500"
+                step="10"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(Number(e.target.value))}
                 className="w-full accent-[#D91680] cursor-pointer"
               />
               <div className="flex justify-between text-[10px] text-[#6A5E54] font-semibold">
-                <span>₹400</span>
-                <span>₹1,200</span>
-                <span>₹2,000+</span>
+                <span>₹50</span>
+                <span>₹250</span>
+                <span>₹500+</span>
               </div>
             </div>
 
@@ -245,7 +287,7 @@ export const ProductsPage = ({ initialCategory, onNavigate }) => {
             </div>
 
             {/* Custom Bulk Ordering Promo Card */}
-            <div className="p-5 rounded-3xl bg-gradient-to-br from-[#161C2A] to-[#252E42] text-white space-y-3 border border-[#B9C9E7]/30 shadow-md">
+            <div className="p-5 rounded-3xl bg-gradient-to-br from-[#161C2A] to-[#252E42] text-white space-y-3 border border-[#B9C9E7]/30 shadow-md texture-canvas">
               <span className="text-[10px] font-black uppercase tracking-widest text-[#DBE586]">
                 Bulk & Wedding Favors
               </span>
@@ -257,7 +299,7 @@ export const ProductsPage = ({ initialCategory, onNavigate }) => {
               </p>
               <button
                 onClick={() => onNavigate('about')}
-                className="w-full py-2.5 rounded-xl bg-[#DBE586] hover:bg-[#c9d46e] text-[#2C3504] text-xs font-bold uppercase tracking-wider transition-colors shadow-sm cursor-pointer"
+                className="w-full py-2.5 rounded-xl bg-[#DBE586] hover:bg-[#c9d46e] text-[#2C3504] text-xs font-bold uppercase tracking-wider transition-colors shadow-sm cursor-pointer active:scale-98"
               >
                 Inquire for Bulk →
               </button>
@@ -280,15 +322,31 @@ export const ProductsPage = ({ initialCategory, onNavigate }) => {
                 </p>
                 <button
                   onClick={handleResetFilters}
-                  className="px-6 py-2.5 rounded-xl bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer border border-[#EFC0DA]"
+                  className="px-6 py-2.5 rounded-xl bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer border border-[#EFC0DA] active:scale-98"
                 >
                   Reset All Filters
                 </button>
               </div>
+            ) : cardLayout === 'horizontal' ? (
+              <div className="flex flex-col gap-3 sm:gap-4">
+                {filteredProducts.map((product) => (
+                  <ProductCard
+                    key={product._id}
+                    product={product}
+                    onNavigate={onNavigate}
+                    layout="horizontal"
+                  />
+                ))}
+              </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5 lg:gap-6">
                 {filteredProducts.map((product) => (
-                  <ProductCard key={product._id} product={product} onNavigate={onNavigate} />
+                  <ProductCard
+                    key={product._id}
+                    product={product}
+                    onNavigate={onNavigate}
+                    layout="grid"
+                  />
                 ))}
               </div>
             )}
@@ -372,17 +430,17 @@ export const ProductsPage = ({ initialCategory, onNavigate }) => {
                 </div>
                 <input
                   type="range"
-                  min="400"
-                  max="2000"
-                  step="50"
+                  min="50"
+                  max="500"
+                  step="10"
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(Number(e.target.value))}
                   className="w-full accent-[#D91680] cursor-pointer"
                 />
                 <div className="flex justify-between text-[10px] text-[#6A758E] font-semibold">
-                  <span>₹400</span>
-                  <span>₹1,200</span>
-                  <span>₹2,000+</span>
+                  <span>₹50</span>
+                  <span>₹250</span>
+                  <span>₹500+</span>
                 </div>
               </div>
 
@@ -429,7 +487,7 @@ export const ProductsPage = ({ initialCategory, onNavigate }) => {
               </button>
               <button
                 onClick={() => setMobileFilterOpen(false)}
-                className="flex-2 py-3 rounded-xl bg-[#D91680] text-white text-xs font-bold uppercase tracking-wider shadow-md hover:bg-[#BE0E6E] cursor-pointer min-h-[44px]"
+                className="flex-2 py-3 rounded-xl bg-[#D91680] text-white text-xs font-bold uppercase tracking-wider shadow-md hover:bg-[#BE0E6E] cursor-pointer min-h-[44px] active:scale-98"
               >
                 Apply Filters ({filteredProducts.length})
               </button>

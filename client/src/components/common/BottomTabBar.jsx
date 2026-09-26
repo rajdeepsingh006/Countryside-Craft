@@ -46,7 +46,7 @@ export const BottomTabBar = ({ currentView, onNavigate }) => {
               key={tab.id}
               id={`mobile-tab-${tab.id}`}
               onClick={tab.action}
-              className={`flex flex-col items-center justify-center min-h-[48px] py-1 transition-all relative select-none active:scale-95 ${
+              className={`flex flex-col items-center justify-center min-h-[48px] py-1 transition-all relative select-none active:scale-95 outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 shadow-none focus:shadow-none [-webkit-tap-highlight-color:transparent] ${
                 tab.isActive
                   ? 'text-[#D91680] font-bold'
                   : tab.isHighlight
@@ -57,7 +57,7 @@ export const BottomTabBar = ({ currentView, onNavigate }) => {
               <div className="relative">
                 <Icon
                   className={`w-5 h-5 transition-transform ${
-                    tab.isActive ? 'scale-110 stroke-[2.5]' : 'stroke-[1.8]'
+                    tab.isActive ? 'scale-110 stroke-[2.5] text-[#D91680]' : 'stroke-[1.8]'
                   }`}
                 />
                 {tab.badge !== undefined && tab.badge > 0 && (
@@ -69,7 +69,7 @@ export const BottomTabBar = ({ currentView, onNavigate }) => {
                   </span>
                 )}
               </div>
-              <span className="text-[10px] mt-1 font-medium tracking-tight">
+              <span className={`text-[10px] mt-1 tracking-tight ${tab.isActive ? 'font-bold text-[#D91680]' : 'font-medium'}`}>
                 {tab.label}
               </span>
               {tab.isActive && (

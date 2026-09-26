@@ -169,7 +169,7 @@ export const ReviewModal = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="px-6 py-2.5 rounded-xl bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs font-bold uppercase tracking-wider shadow-md transition-colors flex items-center space-x-1.5 disabled:opacity-60 cursor-pointer border border-[#EFC0DA]"
+              className="px-6 py-2.5 rounded-xl bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs font-bold uppercase tracking-wider shadow-md transition-colors flex items-center space-x-1.5 disabled:opacity-60 cursor-pointer border border-[#EFC0DA] active:scale-98"
             >
               <span>{submitting ? 'Submitting...' : 'Submit Review'}</span>
               <Send className="w-3 h-3" />

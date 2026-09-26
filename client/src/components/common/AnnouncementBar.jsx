@@ -8,7 +8,7 @@ export const AnnouncementBar = () => {
   if (!settings.announcementEnabled || !settings.announcementBarText) return null;
 
   return (
-    <div className="bg-[#1A1F2C] text-[#FAF9F6] px-4 py-2 text-xs md:text-sm font-medium tracking-wide border-b border-[#2C3345]">
+    <div className="bg-[#1A1F2C] text-[#FAF9F6] px-4 py-2 text-xs md:text-sm font-medium tracking-wide border-b border-[#2C3345] texture-canvas">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="hidden sm:flex items-center space-x-2 text-[#DBE586] font-semibold">
           <Sparkles className="w-3.5 h-3.5" />

@@ -12,6 +12,7 @@ import {
   Layers,
   RefreshCw,
   Sparkles,
+  Loader2,
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { formatDate } from '../../utils/formatters';
@@ -25,6 +26,7 @@ export const AdminGallery = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [uploadingImages, setUploadingImages] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -133,17 +135,31 @@ export const AdminGallery = () => {
     setImageList((prev) => prev.filter((_, idx) => idx !== indexToRemove));
   };
 
-  const handleMultiFileUpload = (e) => {
-    const files = Array.from(e.target.files);
+  const handleMultiFileUpload = async (e) => {
+    const files = Array.from(e.target.files || []);
     if (!files.length) return;
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (loadEvt) => {
-        setImageList((prev) => [...prev, loadEvt.target.result]);
-      };
-      reader.readAsDataURL(file);
-    });
-    showToast(`Loaded ${files.length} local photos for upload`, 'success');
+
+    const uploadData = new FormData();
+    files.forEach((file) => uploadData.append('files', file));
+
+    setUploadingImages(true);
+    showToast(`Uploading ${files.length} photo(s) to Cloudinary... Please wait`, 'info');
+    try {
+      const res = await adminService.uploadFiles(uploadData);
+      const urls = (res?.files || []).map((f) => f.url).filter(Boolean);
+      if (urls.length > 0) {
+        setImageList((prev) => [...prev, ...urls]);
+        showToast(`Successfully uploaded ${urls.length} photo(s)!`, 'success');
+      } else {
+        showToast('No photo URLs returned from server', 'warning');
+      }
+    } catch (err) {
+      console.error('Image upload failed:', err);
+      showToast(err.response?.data?.message || 'Failed to upload photos to server', 'error');
+    } finally {
+      setUploadingImages(false);
+      e.target.value = '';
+    }
   };
 
   const handleSave = async (e) => {
@@ -501,13 +517,20 @@ export const AdminGallery = () => {
 
                   {/* Multi File Picker */}
                   <div className="flex items-center space-x-2 pt-1">
-                    <label className="cursor-pointer inline-flex items-center space-x-1.5 px-3.5 py-2 bg-white hover:bg-[#EEF3FA] text-[#1A1F2C] border border-[#B9C9E7] rounded-xl text-xs font-bold transition-colors shadow-2xs">
-                      <UploadCloud className="w-3.5 h-3.5 text-[#D91680]" />
-                      <span>Upload Multiple Photo Files</span>
+                    <label className={`cursor-pointer inline-flex items-center space-x-1.5 px-3.5 py-2 bg-white hover:bg-[#EEF3FA] text-[#1A1F2C] border border-[#B9C9E7] rounded-xl text-xs font-bold transition-colors shadow-2xs ${
+                      uploadingImages ? 'opacity-60 pointer-events-none' : ''
+                    }`}>
+                      {uploadingImages ? (
+                        <Loader2 className="w-3.5 h-3.5 text-[#D91680] animate-spin" />
+                      ) : (
+                        <UploadCloud className="w-3.5 h-3.5 text-[#D91680]" />
+                      )}
+                      <span>{uploadingImages ? 'Uploading photos to Cloudinary...' : 'Upload Multiple Photo Files'}</span>
                       <input
                         type="file"
                         multiple
                         accept="image/*,video/*"
+                        disabled={uploadingImages}
                         onChange={handleMultiFileUpload}
                         className="hidden"
                       />

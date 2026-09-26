@@ -16,6 +16,7 @@ import {
   Layers,
   ArrowUp,
   RefreshCw,
+  Loader2,
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { formatCurrency } from '../../utils/formatters';
@@ -33,6 +34,7 @@ export const AdminProducts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [videoUploading, setVideoUploading] = useState(false);
+  const [uploadingImages, setUploadingImages] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -214,18 +216,31 @@ export const AdminProducts = () => {
     showToast('Cover photo updated!', 'info');
   };
 
-  const handleMultiFileUpload = (e) => {
+  const handleMultiFileUpload = async (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
 
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (loadEvt) => {
-        setImageList((prev) => [...prev, loadEvt.target.result]);
-      };
-      reader.readAsDataURL(file);
-    });
-    showToast(`Loaded ${files.length} local images for upload`, 'success');
+    const uploadData = new FormData();
+    files.forEach((file) => uploadData.append('files', file));
+
+    setUploadingImages(true);
+    showToast(`Uploading ${files.length} photo(s) to Cloudinary... Please wait`, 'info');
+    try {
+      const res = await adminService.uploadFiles(uploadData);
+      const urls = (res?.files || []).map((f) => f.url).filter(Boolean);
+      if (urls.length > 0) {
+        setImageList((prev) => [...prev, ...urls]);
+        showToast(`Successfully uploaded ${urls.length} photo(s)!`, 'success');
+      } else {
+        showToast('No photo URLs returned from server', 'warning');
+      }
+    } catch (err) {
+      console.error('Image upload failed:', err);
+      showToast(err.response?.data?.message || 'Failed to upload photos to server', 'error');
+    } finally {
+      setUploadingImages(false);
+      e.target.value = '';
+    }
   };
 
   const handleVideoUrlChange = (url) => {
@@ -299,9 +314,17 @@ export const AdminProducts = () => {
         ? Math.round(((formData.originalPrice - formData.price) / formData.originalPrice) * 100)
         : 0;
 
+    const categoryVal =
+      formData.category?._id ||
+      formData.category?.slug ||
+      (typeof formData.category === 'string' ? formData.category : '') ||
+      (categories[0]?._id || categories[0]?.slug || '');
+
     const payload = {
       ...formData,
-      category: formData.category || (categories[0]?._id || categories[0]?.slug || ''),
+      category: categoryVal,
+      price: Number(formData.price) || 0,
+      originalPrice: Number(formData.originalPrice) || 0,
       slug,
       images: imageList,
       video: formData.video?.trim() || '',
@@ -777,13 +800,20 @@ export const AdminProducts = () => {
                   )}
 
                   <div className="flex items-center space-x-2 pt-1">
-                    <label className="cursor-pointer inline-flex items-center space-x-1.5 px-3.5 py-2 bg-white hover:bg-[#EEF3FA] text-[#1A1F2C] border border-[#B9C9E7] rounded-xl text-xs font-bold transition-colors shadow-2xs">
-                      <UploadCloud className="w-3.5 h-3.5 text-[#D91680]" />
-                      <span>Upload Multiple Photo Files</span>
+                    <label className={`cursor-pointer inline-flex items-center space-x-1.5 px-3.5 py-2 bg-white hover:bg-[#EEF3FA] text-[#1A1F2C] border border-[#B9C9E7] rounded-xl text-xs font-bold transition-colors shadow-2xs ${
+                      uploadingImages ? 'opacity-60 pointer-events-none' : ''
+                    }`}>
+                      {uploadingImages ? (
+                        <Loader2 className="w-3.5 h-3.5 text-[#D91680] animate-spin" />
+                      ) : (
+                        <UploadCloud className="w-3.5 h-3.5 text-[#D91680]" />
+                      )}
+                      <span>{uploadingImages ? 'Uploading photos to Cloudinary...' : 'Upload Multiple Photo Files'}</span>
                       <input
                         type="file"
                         multiple
                         accept="image/*"
+                        disabled={uploadingImages}
                         onChange={handleMultiFileUpload}
                         className="hidden"
                       />

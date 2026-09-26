@@ -77,7 +77,7 @@ export const HeroSlider = ({ onNavigate }) => {
   return (
     <div className="w-full max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4 pb-4">
       {/* 1. Hero Slide Banner (Compact on Mobile, Side-by-Side on Desktop) */}
-      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl border border-white/20 h-[92vw] max-h-[520px] sm:h-[440px] sm:max-h-[520px] lg:h-auto lg:max-h-none lg:min-h-[460px]">
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl border border-white/20 h-[92vw] max-h-[520px] sm:h-[440px] sm:max-h-[520px] lg:h-auto lg:max-h-none lg:min-h-[460px] texture-canvas">
         
         {/* Mobile Background: Full product image across entire card */}
         <div className="lg:hidden absolute inset-0">
@@ -145,12 +145,12 @@ export const HeroSlider = ({ onNavigate }) => {
             </div>
 
             {/* Brand Title */}
-            <h1 className="text-[21px] sm:text-3xl md:text-4xl lg:text-[48px] font-brand-script font-bold text-white tracking-wide leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+            <h1 className="text-[21px] sm:text-3xl md:text-5xl lg:text-[52px] font-brand-script font-bold text-white tracking-wide leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
               Countryside Craft
             </h1>
 
             {/* Tagline */}
-            <h2 className="text-[14.5px] sm:text-xl lg:text-2xl font-serif-display font-bold text-[#FDF0A6] leading-snug drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+            <h2 className="text-[14.5px] sm:text-xl md:text-2xl lg:text-3xl font-serif-display font-bold text-[#FDF0A6] leading-snug drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
               {slide.tagline}
             </h2>
 
@@ -247,14 +247,14 @@ export const HeroSlider = ({ onNavigate }) => {
       <div className="mt-3 sm:mt-4 p-3 sm:p-4 rounded-2xl sm:rounded-3xl bg-white border border-[#EADDC6]/70 shadow-sm">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 max-w-7xl mx-auto">
           {[
-            { icon: '⭐', bg: 'bg-[#FDF2F8] text-[#BE185D]', title: '5,000+ Totes', sub: 'Small batch craft' },
-            { icon: '★', bg: 'bg-[#FEF3C7] text-[#B45309]', title: '4.9★ Rating', sub: 'Verified buyers' },
-            { icon: '🚚', bg: 'bg-[#EFF6FF] text-[#1D4ED8]', title: '48-Hr Dispatch', sub: 'Pan-India delivery' },
-            { icon: '🌿', bg: 'bg-[#ECFDF5] text-[#047857]', title: 'Eco Cotton', sub: 'Zero-plastic pack' },
+            { icon: '⭐', bg: 'bg-[#FDF2F8] text-[#BE185D] border border-[#EFC0DA]', title: '5,000+ Totes', sub: 'Small batch craft' },
+            { icon: '★', bg: 'bg-[#FEF3C7] text-[#B45309] border border-[#FDE68A]', title: '4.9★ Rating', sub: 'Verified buyers' },
+            { icon: '🚚', bg: 'bg-[#EEF3FA] text-[#1E3A8A] border border-[#B9C9E7]', title: '48-Hr Dispatch', sub: 'Pan-India delivery' },
+            { icon: '🌿', bg: 'bg-[#F7F9E4] text-[#3D4706] border border-[#DBE586]', title: 'Eco Cotton', sub: 'Zero-plastic pack' },
           ].map(({ icon, bg, title, sub }) => (
             <div
               key={title}
-              className="flex items-center space-x-2.5 sm:space-x-3.5 p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-[#FAF7F2] border border-[#F1E9DF] hover:border-[#D91680]/30 transition-all hover:bg-white shadow-2xs"
+              className="flex items-center space-x-2.5 sm:space-x-3.5 p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-[#FAF7F2] border border-[#F1E9DF] hover:border-[#B9C9E7] transition-all hover:bg-white shadow-2xs"
             >
               <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full ${bg} flex items-center justify-center text-sm sm:text-base shrink-0 shadow-2xs`}>
                 <span>{icon}</span>

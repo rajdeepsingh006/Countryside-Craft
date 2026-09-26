@@ -22,6 +22,10 @@ const settingsSchema = new mongoose.Schema(
       type: String,
       default: '917009361881',
     },
+    upiId: {
+      type: String,
+      default: 'yourstorename@oksbi',
+    },
     email: {
       type: String,
       default: 'hello@countrysidecraft.in',

@@ -94,7 +94,7 @@ export const WhatsAppFloating = ({ currentView }) => {
       <button
         id="floating-whatsapp-btn"
         onClick={() => setIsOpen(!isOpen)}
-        className="group flex items-center space-x-2.5 bg-[#25D366] hover:bg-[#20ba5a] text-white p-3.5 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 border-2 border-white/80 cursor-pointer"
+        className="group flex items-center space-x-2.5 bg-[#25D366] hover:bg-[#20ba5a] text-white p-3.5 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 active:scale-98 border-2 border-white/80 cursor-pointer"
         aria-label="Chat with us on WhatsApp"
       >
         <MessageCircle className="w-6 h-6 fill-white text-[#25D366]" />

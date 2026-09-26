@@ -36,4 +36,6 @@ module.exports = {
   ADMIN_WHATSAPP_NUMBER: process.env.ADMIN_WHATSAPP_NUMBER,
   CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
   ADMIN_URL: process.env.ADMIN_URL || 'http://localhost:5174',
+  RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID,
+  RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET,
 };

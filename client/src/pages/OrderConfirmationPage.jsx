@@ -38,11 +38,11 @@ export const OrderConfirmationPage = ({ orderId, onNavigate }) => {
             <div className="w-16 h-16 rounded-3xl bg-[#DBE586]/30 text-[#343C05] mx-auto flex items-center justify-center shadow-inner border border-[#DBE586]">
               <CheckCircle2 className="w-10 h-10 text-emerald-600" />
             </div>
-            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#D91680] bg-[#FDF1F7] px-3 py-1 rounded-full border border-[#EFC0DA]">
+            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#1E3A8A] bg-[#EEF3FA] px-3 py-1 rounded-full border border-[#B9C9E7] shadow-2xs">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Order Received Successfully</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-serif-display font-bold text-[#1A1F2C]">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif-display font-bold text-[#1A1F2C]">
               Thank You for Your Order!
             </h1>
             <p className="text-xs sm:text-sm text-[#6A758E] max-w-md mx-auto">
@@ -89,7 +89,7 @@ export const OrderConfirmationPage = ({ orderId, onNavigate }) => {
 
             <button
               onClick={handleReopenWhatsApp}
-              className="w-full py-3.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs uppercase tracking-wider shadow-md transition-colors flex items-center justify-center space-x-2 cursor-pointer"
+              className="w-full py-3.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs uppercase tracking-wider shadow-md transition-colors flex items-center justify-center space-x-2 cursor-pointer active:scale-98"
             >
               <MessageCircle className="w-4 h-4 fill-white text-[#25D366]" />
               <span>Open WhatsApp Chat for Order #{orderId}</span>

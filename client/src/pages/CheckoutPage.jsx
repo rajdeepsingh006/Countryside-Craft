@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { MessageCircle, ShieldCheck, ArrowRight, Lock, Truck, MapPin, Phone, Building, Home, Sparkles } from 'lucide-react';
+import { MessageCircle, ShieldCheck, ArrowRight, Lock, Truck, MapPin, Phone, Building, Home, Sparkles, CreditCard, QrCode } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useStore } from '../context/StoreContext';
 import { formatCurrency } from '../utils/formatters';
 import { orderService } from '../services/orderService';
+import { razorpayService } from '../services/razorpayService';
 import { buildWhatsAppOrderMessage, generateWhatsAppUrl } from '../utils/whatsappMessageBuilder';
+import { UpiQrPayment } from '../components/checkout/UpiQrPayment';
+import { RazorpayCheckoutButton } from '../components/checkout/RazorpayCheckoutButton';
 
 export const CheckoutPage = ({ onNavigate }) => {
   const { cart, subtotal, clearCart, totalItems } = useCart();
@@ -23,6 +26,9 @@ export const CheckoutPage = ({ onNavigate }) => {
     pincode: '',
   });
 
+  const [tempOrderNumber] = useState(() => `CC-${Date.now().toString().slice(-6)}`);
+  const [paymentMode, setPaymentMode] = useState('razorpay'); // 'razorpay' | 'upi_whatsapp'
+  const [upiPaid, setUpiPaid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -33,11 +39,11 @@ export const CheckoutPage = ({ onNavigate }) => {
     'Bihar', 'Odisha', 'Assam', 'Goa', 'Uttarakhand', 'Jharkhand', 'Chhattisgarh',
   ];
 
-  const validate = () => {
+  const validateShipping = () => {
     const errs = {};
     if (!formData.name.trim()) errs.name = 'Full name is required';
     if (!formData.phone.trim()) {
-      errs.phone = 'WhatsApp mobile number is required';
+      errs.phone = 'Mobile number is required';
     } else if (formData.phone.replace(/[^0-9]/g, '').length < 10) {
       errs.phone = 'Please enter a valid 10-digit mobile number';
     }
@@ -48,6 +54,74 @@ export const CheckoutPage = ({ onNavigate }) => {
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
+  };
+
+  const validate = () => {
+    const isValid = validateShipping();
+    if (paymentMode === 'upi_whatsapp' && !upiPaid) {
+      setErrors((prev) => ({
+        ...prev,
+        upiPaid: 'Please complete the UPI payment and confirm by checking this box',
+      }));
+      return false;
+    }
+    return isValid;
+  };
+
+  const handleRazorpayPaymentSuccess = async (paymentResult) => {
+    try {
+      setIsSubmitting(true);
+      const itemsPayload = cart.map((item) => ({
+        product: item.product._id,
+        quantity: item.quantity,
+      }));
+
+      const fullAddress = `${formData.address}${
+        formData.landmark ? `, Landmark: ${formData.landmark}` : ''
+      } (${formData.addressType}), ${formData.city}, ${formData.state} - ${formData.pincode}`;
+
+      const customerPayload = {
+        name: formData.name.trim(),
+        phone: formData.phone.replace(/[^0-9]/g, ''),
+        address: fullAddress,
+        city: formData.city.trim(),
+        state: formData.state,
+        pincode: formData.pincode.trim(),
+        email: formData.email.trim(),
+        note: formData.altPhone ? `Alt Phone: ${formData.altPhone}` : '',
+      };
+
+      const response = await orderService.createOrder({
+        customer: customerPayload,
+        items: itemsPayload,
+      });
+
+      const orderResult = response.order || response;
+      const orderNumber = orderResult.orderNumber || tempOrderNumber || `ORD-${Date.now().toString().slice(-5)}`;
+
+      if (orderResult._id) {
+        await razorpayService.verifyPayment({
+          razorpay_order_id: paymentResult.razorpay_order_id,
+          razorpay_payment_id: paymentResult.razorpay_payment_id,
+          razorpay_signature: paymentResult.razorpay_signature,
+          orderId: orderResult._id,
+        }).catch((err) => console.warn('Payment record notice:', err));
+      }
+
+      await clearCart();
+      showToast('Order confirmed and paid with Razorpay! 🎉', 'success');
+
+      setTimeout(() => {
+        setIsSubmitting(false);
+        onNavigate('order-confirmation', orderNumber);
+      }, 500);
+    } catch (err) {
+      console.error('Error completing Razorpay order flow:', err);
+      setIsSubmitting(false);
+      showToast('Payment successful! Redirecting to confirmation...', 'info');
+      await clearCart();
+      onNavigate('order-confirmation', tempOrderNumber);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -93,23 +167,20 @@ export const CheckoutPage = ({ onNavigate }) => {
       });
 
       const orderResult = response.order || response;
-      const orderNumber = orderResult.orderNumber || `ORD-${Date.now().toString().slice(-5)}`;
-      let finalWhatsappUrl = response.whatsappUrl;
+      const orderNumber = orderResult.orderNumber || tempOrderNumber || `ORD-${Date.now().toString().slice(-5)}`;
 
-      // Fallback builder if not provided
-      if (!finalWhatsappUrl) {
-        const orderSnapshot = {
-          orderNumber,
-          createdAt: new Date().toISOString(),
-          customer: { ...formData, address: fullAddress },
-          items: cart.map((i) => ({ name: i.product.name, price: i.product.price, quantity: i.quantity })),
-          subtotal,
-          discount: 0,
-          totalAmount: subtotal,
-        };
-        const whatsappMsg = buildWhatsAppOrderMessage(orderSnapshot, settings.storeName);
-        finalWhatsappUrl = generateWhatsAppUrl(settings.whatsappNumber, whatsappMsg);
-      }
+      // Ensure client WhatsApp message includes customer details, order items, and customer-confirmed UPI line
+      const orderSnapshot = {
+        orderNumber,
+        createdAt: new Date().toISOString(),
+        customer: { ...formData, address: fullAddress },
+        items: cart.map((i) => ({ name: i.product.name, price: i.product.price, quantity: i.quantity })),
+        subtotal,
+        discount: 0,
+        totalAmount: subtotal,
+      };
+      const whatsappMsg = buildWhatsAppOrderMessage(orderSnapshot, settings.storeName);
+      const finalWhatsappUrl = generateWhatsAppUrl(settings.whatsappNumber, whatsappMsg) || response.whatsappUrl;
 
       // Open WhatsApp
       window.open(finalWhatsappUrl, '_blank', 'noopener,noreferrer');
@@ -427,25 +498,139 @@ export const CheckoutPage = ({ onNavigate }) => {
                 </div>
               </div>
 
-              {/* Checkout Button & Note */}
-              <div className="space-y-2 pt-2">
-                <button
-                  id="place-order-whatsapp-btn"
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-4 px-4 rounded-2xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all flex items-center justify-center space-x-2 active:scale-98 disabled:opacity-50 cursor-pointer"
-                >
-                  <MessageCircle className="w-5 h-5 fill-white text-[#25D366]" />
-                  <span>
-                    {isSubmitting ? 'Saving Order...' : `Proceed to WhatsApp (${formatCurrency(subtotal)})`}
-                  </span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+              {/* Payment Method Selector */}
+              <div className="pt-2 space-y-2.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1F2C]">
+                  Select Payment Option
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMode('razorpay')}
+                    className={`p-3 rounded-2xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
+                      paymentMode === 'razorpay'
+                        ? 'border-[#D91680] bg-[#FDF1F7] shadow-sm'
+                        : 'border-[#B9C9E7]/60 bg-white hover:border-[#B9C9E7]'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between w-full mb-1">
+                      <CreditCard className={`w-4 h-4 ${paymentMode === 'razorpay' ? 'text-[#D91680]' : 'text-[#6A758E]'}`} />
+                      <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full ${
+                        paymentMode === 'razorpay' ? 'bg-[#D91680] text-white' : 'bg-neutral-100 text-neutral-500'
+                      }`}>
+                        Instant
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-[#1A1F2C]">Razorpay Checkout</p>
+                      <p className="text-[10px] text-[#6A758E] leading-tight mt-0.5">Cards, UPI, NetBanking</p>
+                    </div>
+                  </button>
 
-                <p className="text-[11px] text-[#6A758E] text-center leading-relaxed px-1 font-medium">
-                  ✦ Clicking this button saves your order and redirects you to WhatsApp with your pre-filled order details to coordinate courier payment & delivery dispatch.
-                </p>
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMode('upi_whatsapp')}
+                    className={`p-3 rounded-2xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
+                      paymentMode === 'upi_whatsapp'
+                        ? 'border-[#D91680] bg-[#FDF1F7] shadow-sm'
+                        : 'border-[#B9C9E7]/60 bg-white hover:border-[#B9C9E7]'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between w-full mb-1">
+                      <QrCode className={`w-4 h-4 ${paymentMode === 'upi_whatsapp' ? 'text-[#D91680]' : 'text-[#6A758E]'}`} />
+                      <span className="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">
+                        WhatsApp
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-[#1A1F2C]">UPI QR &amp; Chat</p>
+                      <p className="text-[10px] text-[#6A758E] leading-tight mt-0.5">Manual Verification</p>
+                    </div>
+                  </button>
+                </div>
               </div>
+
+              {/* Razorpay Standard Web Checkout Option */}
+              {paymentMode === 'razorpay' && (
+                <div className="pt-2">
+                  <RazorpayCheckoutButton
+                    amount={subtotal}
+                    customer={formData}
+                    onBeforePay={validateShipping}
+                    disabled={isSubmitting}
+                    buttonText={`Pay with Razorpay (${formatCurrency(subtotal)})`}
+                    onPaymentSuccess={handleRazorpayPaymentSuccess}
+                  />
+                </div>
+              )}
+
+              {/* Manual UPI QR Payment Option */}
+              {paymentMode === 'upi_whatsapp' && (
+                <>
+                  <div className="pt-2">
+                    <UpiQrPayment
+                      upiId={settings?.upiId}
+                      payeeName={settings?.storeName}
+                      amount={subtotal}
+                      orderNumber={tempOrderNumber}
+                    />
+                  </div>
+
+                  {/* Required UPI Payment Confirmation Checkbox */}
+                  <div className="pt-2">
+                    <label className="flex items-start space-x-3 cursor-pointer select-none group p-3.5 rounded-2xl bg-[#FCFBFA] border border-[#B9C9E7]/60 hover:border-[#D91680]/50 transition-colors">
+                      <input
+                        type="checkbox"
+                        id="upi-payment-completed-checkbox"
+                        checked={upiPaid}
+                        onChange={(e) => {
+                          setUpiPaid(e.target.checked);
+                          if (e.target.checked && errors.upiPaid) {
+                            setErrors((prev) => {
+                              const rest = { ...prev };
+                              delete rest.upiPaid;
+                              return rest;
+                            });
+                          }
+                        }}
+                        className="mt-0.5 w-4 h-4 rounded text-[#D91680] border-[#B9C9E7] focus:ring-[#D91680] focus:ring-offset-0 cursor-pointer accent-[#D91680]"
+                      />
+                      <div className="flex-1">
+                        <span className="text-xs font-bold text-[#1A1F2C] group-hover:text-[#D91680] transition-colors flex items-center space-x-1">
+                          <span>I have completed the UPI payment</span>
+                          <span className="text-red-500 font-bold">*</span>
+                        </span>
+                        <p className="text-[11px] text-[#6A758E] mt-0.5 leading-snug">
+                          Please scan the QR code and complete your payment before proceeding to WhatsApp for verification.
+                        </p>
+                      </div>
+                    </label>
+                    {errors.upiPaid && (
+                      <p className="text-[10px] text-red-600 font-semibold mt-1.5 pl-2">{errors.upiPaid}</p>
+                    )}
+                  </div>
+
+                  {/* WhatsApp Submit Button */}
+                  <div className="space-y-2 pt-1">
+                    <button
+                      id="place-order-whatsapp-btn"
+                      type="submit"
+                      disabled={isSubmitting || !upiPaid}
+                      className="w-full py-4 px-4 rounded-2xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all flex items-center justify-center space-x-2 active:scale-98 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+                    >
+                      <MessageCircle className="w-5 h-5 fill-white text-[#25D366]" />
+                      <span>
+                        {isSubmitting ? 'Saving Order...' : `Proceed to WhatsApp (${formatCurrency(subtotal)})`}
+                      </span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+
+                    <p className="text-[11px] text-[#6A758E] text-center leading-relaxed px-1 font-medium">
+                      ✦ Clicking this button saves your order and redirects you to WhatsApp with your pre-filled order details to coordinate courier payment &amp; delivery dispatch.
+                    </p>
+                  </div>
+                </>
+              )}
 
               <div className="pt-3 border-t border-[#EEF3FA] flex items-center justify-center space-x-4 text-[11px] text-[#6A758E]">
                 <span className="flex items-center space-x-1">

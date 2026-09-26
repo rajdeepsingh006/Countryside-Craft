@@ -23,7 +23,7 @@ export const Footer = ({ onNavigate }) => {
   };
 
   return (
-    <footer className="bg-[#141926] text-[#E8ECF5] pt-16 pb-12 border-t border-[#252E42]">
+    <footer className="bg-[#141926] text-[#E8ECF5] pt-16 pb-28 md:pb-12 border-t border-[#252E42] texture-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Trust Badges */}
@@ -45,7 +45,7 @@ export const Footer = ({ onNavigate }) => {
         </div>
 
         {/* Newsletter */}
-        <div className="my-12 py-8 px-6 sm:px-10 rounded-3xl bg-gradient-to-r from-[#1B2234] via-[#21293F] to-[#1B2234] border border-[#B9C9E7]/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+        <div className="my-12 py-8 px-6 sm:px-10 rounded-3xl bg-gradient-to-r from-[#1B2234] via-[#21293F] to-[#1B2234] border border-[#B9C9E7]/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl texture-canvas">
           <div className="max-w-md">
             <span className="text-xs font-bold uppercase tracking-widest text-[#DBE586] font-mono">
               Artisan Journal
@@ -68,7 +68,7 @@ export const Footer = ({ onNavigate }) => {
             />
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center space-x-2 shadow-md active:scale-95 cursor-pointer"
+              className="px-6 py-2.5 rounded-xl bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center space-x-2 shadow-md active:scale-98 cursor-pointer border border-[#EFC0DA]"
             >
               <span>Subscribe</span>
               <Send className="w-3.5 h-3.5" />
@@ -114,7 +114,7 @@ export const Footer = ({ onNavigate }) => {
               <li className="pt-1.5">
                 <button
                   onClick={() => openWhatsApp('custom-bulk')}
-                  className="text-[#D91680] hover:text-white hover:bg-[#D91680] transition-all font-bold cursor-pointer inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#D91680]/15 border border-[#D91680]/40 shadow-xs active:scale-95"
+                  className="text-[#D91680] hover:text-white hover:bg-[#D91680] transition-all font-bold cursor-pointer inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#D91680]/15 border border-[#D91680]/40 shadow-xs active:scale-98"
                 >
                   <span>Custom Bulk Gifting</span>
                   <span className="text-xs font-black">↗</span>
@@ -142,7 +142,7 @@ export const Footer = ({ onNavigate }) => {
             </div>
             <button
               onClick={() => openWhatsApp('general')}
-              className="mt-3 w-full py-2 px-3 rounded-xl bg-[#25D366]/20 hover:bg-[#25D366]/30 text-[#25D366] text-xs font-bold border border-[#25D366]/40 flex items-center justify-center space-x-2 transition-colors cursor-pointer"
+              className="mt-3 w-full py-2 px-3 rounded-xl bg-[#25D366]/20 hover:bg-[#25D366]/30 text-[#25D366] text-xs font-bold border border-[#25D366]/40 flex items-center justify-center space-x-2 transition-colors cursor-pointer active:scale-98"
             >
               <MessageCircle className="w-3.5 h-3.5" />
               <span>Chat on WhatsApp</span>

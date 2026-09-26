@@ -202,7 +202,14 @@ const AppContent = () => {
         )}
 
         {currentView === 'admin' && (
-          <AdminDashboard onNavigateHome={() => handleNavigate('home')} />
+          isAuthenticated ? (
+            <AdminDashboard onNavigateHome={() => handleNavigate('home')} />
+          ) : (
+            <AdminLoginPage
+              onLoginSuccess={() => handleNavigate('admin')}
+              onNavigateHome={() => handleNavigate('home')}
+            />
+          )
         )}
       </main>
 
