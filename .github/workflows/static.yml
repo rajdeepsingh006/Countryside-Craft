@@ -40,9 +40,11 @@ jobs:
           cd client
           npm run build
 
-      - name: Create 404.html for Single Page Routing
+      - name: Ensure 404.html for Single Page Routing
         run: |
-          cp client/dist/index.html client/dist/404.html
+          if [ ! -f client/dist/404.html ]; then
+            cp client/dist/index.html client/dist/404.html
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

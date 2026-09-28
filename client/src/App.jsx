@@ -29,6 +29,7 @@ import { AdminDashboard } from './pages/admin/AdminDashboard';
 
 // Helper to detect if running under GitHub Pages repository subpath (e.g. /Countryside-Craft)
 const getRepoBase = () => {
+  if (typeof window === 'undefined') return '';
   const match = window.location.pathname.match(/^\/([^/]+)/);
   if (match && match[1].toLowerCase() === 'countryside-craft') {
     return `/${match[1]}`;
@@ -36,29 +37,71 @@ const getRepoBase = () => {
   return '';
 };
 
-// Helper to parse route from the current URL path or fallback
+// Helper to save current route for session & refresh persistence
+const saveCurrentRoute = (route) => {
+  try {
+    const serialized = JSON.stringify(route);
+    sessionStorage.setItem('cc_current_route', serialized);
+    localStorage.setItem('cc_current_route', serialized);
+  } catch {}
+};
+
+// Helper to parse route from current URL (path, query redirect, hash) or fallback storage
 const parseRouteFromUrl = () => {
+  if (typeof window === 'undefined') return { view: 'home', param: undefined };
+
   const repoBase = getRepoBase();
   let pathname = window.location.pathname;
-  if (repoBase && pathname.startsWith(repoBase)) {
+
+  // Strip repo base path (e.g. /Countryside-Craft)
+  if (repoBase && pathname.toLowerCase().startsWith(repoBase.toLowerCase())) {
     pathname = pathname.slice(repoBase.length);
   }
   pathname = pathname.replace(/^\/+|\/+$/g, '');
-  const searchParams = new URLSearchParams(window.location.search);
-  const categoryParam = searchParams.get('category');
 
+  // 1. Check if redirected by GitHub Pages 404 query string (e.g. ?/product/jute-shagun-envelope)
+  if ((!pathname || pathname === 'home') && window.location.search && window.location.search.startsWith('?/')) {
+    const queryPart = window.location.search.slice(2).split('&')[0];
+    if (queryPart) {
+      pathname = decodeURIComponent(queryPart).replace(/^\/+|\/+$/g, '');
+    }
+  }
+
+  // 2. Check if route was specified in hash (e.g. #/product/jute-shagun-envelope)
+  if ((!pathname || pathname === 'home') && window.location.hash) {
+    const hashPart = window.location.hash.replace(/^#[/?]*/, '').split('?')[0];
+    if (hashPart) {
+      pathname = decodeURIComponent(hashPart).replace(/^\/+|\/+$/g, '');
+    }
+  }
+
+  // 3. If root path without route in URL, check session/local storage to preserve page on browser refresh
   if (!pathname || pathname === 'home') {
+    try {
+      const saved = sessionStorage.getItem('cc_current_route') || localStorage.getItem('cc_current_route');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.view && parsed.view !== 'home') {
+          return parsed;
+        }
+      }
+    } catch {}
     return { view: 'home', param: undefined };
   }
 
-  const parts = pathname.split('/');
-  const base = parts[0];
+  const searchParams = new URLSearchParams(window.location.search);
+  const categoryParam = searchParams.get('category') || searchParams.get('cat');
+  const slugParam = searchParams.get('slug') || searchParams.get('id');
 
-  if (base === 'products' || base === 'collection') {
-    return { view: 'products', param: parts[1] || categoryParam || undefined };
+  const parts = pathname.split('/');
+  const base = parts[0].toLowerCase();
+  const param = parts[1] ? decodeURIComponent(parts.slice(1).join('/')) : (slugParam || categoryParam || undefined);
+
+  if (base === 'products' || base === 'collection' || base === 'collections') {
+    return { view: 'products', param: param || undefined };
   }
-  if (base === 'product' || base === 'product-detail') {
-    return { view: 'product-detail', param: parts[1] || undefined };
+  if (base === 'product' || base === 'product-detail' || base === 'item') {
+    return { view: 'product-detail', param: param || undefined };
   }
   if (base === 'cart' || base === 'bag') {
     return { view: 'cart', param: undefined };
@@ -67,7 +110,7 @@ const parseRouteFromUrl = () => {
     return { view: 'checkout', param: undefined };
   }
   if (base === 'order-confirmation' || base === 'order') {
-    return { view: 'order-confirmation', param: parts[1] || undefined };
+    return { view: 'order-confirmation', param: param || undefined };
   }
   if (base === 'gallery' || base === 'workshops') {
     return { view: 'gallery', param: undefined };
@@ -81,14 +124,14 @@ const parseRouteFromUrl = () => {
   if (base === 'admin-login') {
     return { view: 'admin-login', param: undefined };
   }
+  if (base === 'home') {
+    return { view: 'home', param: undefined };
+  }
 
-  try {
-    const saved = localStorage.getItem('cc_current_route');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed.view) return parsed;
-    }
-  } catch {}
+  // Fallback: If base is a direct product slug (e.g. /Countryside-Craft/jute-shagun-envelope)
+  if (base) {
+    return { view: 'product-detail', param: decodeURIComponent(pathname) };
+  }
 
   return { view: 'home', param: undefined };
 };
@@ -118,15 +161,13 @@ const AppContent = () => {
 
   const handleNavigate = (view, param, replace = false) => {
     setCurrentRoute({ view, param });
+    saveCurrentRoute({ view, param });
     const url = getUrlForRoute(view, param);
     if (replace) {
       window.history.replaceState({ view, param }, '', url);
     } else {
       window.history.pushState({ view, param }, '', url);
     }
-    try {
-      localStorage.setItem('cc_current_route', JSON.stringify({ view, param }));
-    } catch {}
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -144,10 +185,10 @@ const AppContent = () => {
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
-  // Update URL on initial mount if on root or custom path
+  // Ensure the browser URL accurately reflects current route on initial mount or after reload
   useEffect(() => {
     const url = getUrlForRoute(currentView, viewParam);
-    if (window.location.pathname !== url && window.location.pathname === '/') {
+    if (window.location.pathname !== url) {
       window.history.replaceState({ view: currentView, param: viewParam }, '', url);
     }
   }, []);
