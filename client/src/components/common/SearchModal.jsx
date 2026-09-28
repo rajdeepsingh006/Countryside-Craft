@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Search, X, Star, Tag, Sparkles } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { formatCurrency } from '../../utils/formatters';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const SearchModal = ({ onNavigate }) => {
   const { isSearchOpen, closeSearch, products, categories } = useStore();
@@ -107,7 +108,7 @@ export const SearchModal = ({ onNavigate }) => {
               >
                 {prod.images?.[0] ? (
                   <img
-                    src={prod.images[0]}
+                    src={getAssetUrl(prod.images[0])}
                     alt={prod.name}
                     className="w-14 h-14 object-cover rounded-xl bg-white border border-[#B9C9E7]/60 shrink-0"
                   />

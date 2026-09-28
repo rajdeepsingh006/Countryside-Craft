@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Star, Sparkles, Send } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { reviewService } from '../../services/reviewService';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const ReviewModal = () => {
   const { isReviewModalOpen, closeReviewModal, reviewModalProduct, products, showToast } = useStore();
@@ -62,7 +63,7 @@ export const ReviewModal = () => {
           {currentProduct && (
             <div className="flex items-center space-x-3 p-2.5 rounded-2xl bg-[#FCFBFA] border border-[#B9C9E7]/50">
               <img
-                src={currentProduct.images?.[0]}
+                src={getAssetUrl(currentProduct.images?.[0])}
                 alt={currentProduct.name}
                 className="w-12 h-12 object-cover rounded-xl border border-[#B9C9E7]/60"
               />
