@@ -5,11 +5,13 @@ import { useStore } from '../../context/StoreContext';
 import { formatCurrency } from '../../utils/formatters';
 import { VideoThumbnail } from '../common/VideoThumbnail';
 import { isVideoUrl, getVideoThumbnail } from '../../utils/videoHelpers';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const ProductCard = ({ product, onNavigate, layout = 'grid' }) => {
   const { addToCart } = useCart();
   const { openQuickView } = useStore();
   const [added, setAdded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleCardClick = () => {
     onNavigate('product-detail', product.slug);
@@ -31,7 +33,8 @@ export const ProductCard = ({ product, onNavigate, layout = 'grid' }) => {
   const firstVideo = images.find((img) => isVideoUrl(img)) || (product.video && product.video.trim() ? product.video.trim() : null);
 
   const hasVideo = Boolean(firstVideo);
-  const primaryImage = firstPhoto || (firstVideo ? getVideoThumbnail(firstVideo, product.videoThumbnail) : null);
+  const rawPrimaryImage = firstPhoto || (firstVideo ? getVideoThumbnail(firstVideo, product.videoThumbnail) : null);
+  const primaryImage = rawPrimaryImage ? getAssetUrl(rawPrimaryImage) : null;
 
   // ─── Horizontal Row Layout ───────────────────────────────────────────────
   if (layout === 'horizontal') {
@@ -42,13 +45,11 @@ export const ProductCard = ({ product, onNavigate, layout = 'grid' }) => {
       >
         {/* Left Horizontal Image */}
         <div className="relative w-full sm:w-56 md:w-64 aspect-[16/10] shrink-0 rounded-xl sm:rounded-2xl overflow-hidden bg-[#FAF7F2]">
-          {primaryImage ? (
+          {primaryImage && !imageError ? (
             <img
               src={primaryImage}
               alt={product.name}
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
+              onError={() => setImageError(true)}
               className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
             />
           ) : firstVideo ? (
@@ -63,6 +64,9 @@ export const ProductCard = ({ product, onNavigate, layout = 'grid' }) => {
             <div className="w-full h-full flex flex-col items-center justify-center p-3 text-center bg-gradient-to-br from-[#FDFBF7] via-[#F6EFE5] to-[#EAE0D2]">
               <Sparkles className="w-6 h-6 text-[#D91680] mb-1" />
               <span className="font-brand-script text-base text-[#1A1F2C]">Countryside Craft</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#8A7A6C] mt-0.5">
+                Handcrafted Piece
+              </span>
             </div>
           )}
 
@@ -171,13 +175,11 @@ export const ProductCard = ({ product, onNavigate, layout = 'grid' }) => {
       className="group relative bg-white rounded-2xl sm:rounded-3xl border border-[#F1E9DF] hover:border-[#EADDC6] overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer p-2 sm:p-3"
     >
       <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-[#FAF7F2]">
-        {primaryImage ? (
+        {primaryImage && !imageError ? (
           <img
             src={primaryImage}
             alt={product.name}
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
+            onError={() => setImageError(true)}
             className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
           />
         ) : firstVideo ? (

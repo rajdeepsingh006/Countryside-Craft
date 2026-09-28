@@ -6,6 +6,7 @@ import { formatCurrency } from '../../utils/formatters';
 import { VideoPlayer } from './VideoPlayer';
 import { VideoThumbnail } from './VideoThumbnail';
 import { parseVideoUrl, isVideoUrl, getVideoThumbnail } from '../../utils/videoHelpers';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const QuickViewModal = ({ onNavigate }) => {
   const { activeQuickViewProduct, closeQuickView } = useStore();
@@ -40,10 +41,11 @@ export const QuickViewModal = ({ onNavigate }) => {
 
         if (isVideoUrl(trimmed)) {
           const parsed = parseVideoUrl(trimmed);
-          const poster = (product.videoThumbnail && product.videoThumbnail.trim()) || getVideoThumbnail(trimmed) || '';
+          const rawPoster = (product.videoThumbnail && product.videoThumbnail.trim()) || getVideoThumbnail(trimmed) || '';
+          const poster = rawPoster ? getAssetUrl(rawPoster) : '';
           list.push({
             type: 'video',
-            url: trimmed,
+            url: getAssetUrl(trimmed),
             parsed,
             poster,
             id: `video-${idx}`,
@@ -51,7 +53,7 @@ export const QuickViewModal = ({ onNavigate }) => {
         } else {
           list.push({
             type: 'image',
-            url: trimmed,
+            url: getAssetUrl(trimmed),
             id: `img-${idx}`,
           });
         }
@@ -63,10 +65,11 @@ export const QuickViewModal = ({ onNavigate }) => {
       if (!seen.has(trimmed)) {
         seen.add(trimmed);
         const parsed = parseVideoUrl(trimmed);
-        const poster = (product.videoThumbnail && product.videoThumbnail.trim()) || getVideoThumbnail(trimmed) || '';
+        const rawPoster = (product.videoThumbnail && product.videoThumbnail.trim()) || getVideoThumbnail(trimmed) || '';
+        const poster = rawPoster ? getAssetUrl(rawPoster) : '';
         list.push({
           type: 'video',
-          url: trimmed,
+          url: getAssetUrl(trimmed),
           parsed,
           poster,
           id: 'video-main',

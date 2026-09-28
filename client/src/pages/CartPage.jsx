@@ -3,6 +3,7 @@ import { ShoppingBag, Trash2, Plus, Minus, ArrowRight, ShieldCheck, Tag, Sparkle
 import { useCart } from '../context/CartContext';
 import { useStore } from '../context/StoreContext';
 import { formatCurrency } from '../utils/formatters';
+import { getAssetUrl } from '../utils/assetHelper';
 
 export const CartPage = ({ onNavigate }) => {
   const { cart, updateQuantity, removeFromCart, clearCart, subtotal, totalSavings, totalItems } = useCart();
@@ -118,8 +119,11 @@ export const CartPage = ({ onNavigate }) => {
                 >
                   {item.product.images?.[0] ? (
                     <img
-                      src={item.product.images[0]}
+                      src={getAssetUrl(item.product.images[0])}
                       alt={item.product.name}
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
                       className="w-16 h-20 sm:w-20 sm:h-24 object-cover rounded-xl bg-[#FAF7F2] border border-[#F1E9DF] shrink-0"
                     />
                   ) : (

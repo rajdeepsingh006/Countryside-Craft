@@ -4,6 +4,7 @@ import { useStore } from '../../context/StoreContext';
 import { useCart } from '../../context/CartContext';
 import { formatCurrency } from '../../utils/formatters';
 import { isVideoUrl, getVideoThumbnail } from '../../utils/videoHelpers';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const SignatureSpotlight = ({ onNavigate }) => {
   const { products } = useStore();
@@ -18,6 +19,8 @@ export const SignatureSpotlight = ({ onNavigate }) => {
     ? getVideoThumbnail(primaryMedia, spotlightProduct.videoThumbnail)
     : primaryMedia;
 
+  const displayPrimaryThumb = primaryThumb ? getAssetUrl(primaryThumb) : '';
+
   return (
     <section className="py-12 sm:py-20 bg-[#FAF8F5] text-[#2D2A26] overflow-hidden relative border-y border-[#EADDC6]/70 texture-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -28,7 +31,7 @@ export const SignatureSpotlight = ({ onNavigate }) => {
             <div className="lg:col-span-7 space-y-3 sm:space-y-4">
               <div className="relative rounded-3xl overflow-hidden shadow-md border border-[#EADDC6] bg-[#FAF8F5] aspect-[4/3] group">
                 <img
-                  src={primaryThumb || 'https://res.cloudinary.com/u1jnbrwg/image/upload/v1789142235/WhatsApp_Image_2026-09-08_at_12.54.45_PM.jpg'}
+                  src={displayPrimaryThumb || 'https://res.cloudinary.com/u1jnbrwg/image/upload/v1789142235/WhatsApp_Image_2026-09-08_at_12.54.45_PM.jpg'}
                   alt={spotlightProduct.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
@@ -44,12 +47,13 @@ export const SignatureSpotlight = ({ onNavigate }) => {
               <div className="grid grid-cols-3 gap-2 sm:gap-3">
                 {rawImages.slice(0, 3).map((img, i) => {
                   const thumb = isVideoUrl(img) ? getVideoThumbnail(img, spotlightProduct.videoThumbnail) : img;
+                  const thumbSrc = thumb ? getAssetUrl(thumb) : getAssetUrl(img);
                   return (
                     <div
                       key={i}
                       className="rounded-2xl overflow-hidden aspect-[4/3] border border-[#EADDC6] bg-[#FAF8F5]"
                     >
-                      <img src={thumb || img} alt="detail" className="w-full h-full object-cover" />
+                      <img src={thumbSrc} alt="detail" className="w-full h-full object-cover" />
                     </div>
                   );
                 })}

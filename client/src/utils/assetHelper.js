@@ -14,10 +14,21 @@ export const getAssetUrl = (path) => {
     return trimmed;
   }
 
-  // Detect GitHub Pages repo subpath from current window location
-  const match = typeof window !== 'undefined' ? window.location.pathname.match(/^\/([^/]+)/) : null;
-  const repoBase = match && match[1].toLowerCase() === 'countryside-craft' ? `/${match[1]}` : '';
+  // Remove leading './' if present
+  const normalized = trimmed.startsWith('./') ? trimmed.slice(1) : trimmed;
 
-  const clean = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+  // Detect GitHub Pages repo subpath from current window location
+  let repoBase = '';
+  if (typeof window !== 'undefined') {
+    const match = window.location.pathname.match(/^\/([^/]+)/);
+    if (match && match[1].toLowerCase() === 'countryside-craft') {
+      repoBase = `/${match[1]}`;
+    }
+  }
+
+  const clean = normalized.startsWith('/') ? normalized : `/${normalized}`;
+  if (repoBase && clean.toLowerCase().startsWith(repoBase.toLowerCase())) {
+    return clean;
+  }
   return `${repoBase}${clean}`;
 };

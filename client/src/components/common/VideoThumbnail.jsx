@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Play } from 'lucide-react';
 import { parseVideoUrl } from '../../utils/videoHelpers';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const VideoThumbnail = ({
   videoUrl,
@@ -20,7 +21,8 @@ export const VideoThumbnail = ({
   const [imgError, setImgError] = useState(false);
 
   const candidatePoster = actualPoster && !/\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(actualPoster) ? actualPoster : '';
-  const thumbUrl = candidatePoster || parsed?.thumbnailUrl || null;
+  const rawThumbUrl = candidatePoster || parsed?.thumbnailUrl || null;
+  const thumbUrl = rawThumbUrl ? getAssetUrl(rawThumbUrl) : null;
 
   const iconSizes = {
     sm: 'w-5 h-5',

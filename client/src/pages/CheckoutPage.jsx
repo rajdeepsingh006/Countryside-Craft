@@ -3,6 +3,7 @@ import { MessageCircle, ShieldCheck, ArrowRight, Lock, Truck, MapPin, Phone, Bui
 import { useCart } from '../context/CartContext';
 import { useStore } from '../context/StoreContext';
 import { formatCurrency } from '../utils/formatters';
+import { getAssetUrl } from '../utils/assetHelper';
 import { orderService } from '../services/orderService';
 import { razorpayService } from '../services/razorpayService';
 import { buildWhatsAppOrderMessage, generateWhatsAppUrl } from '../utils/whatsappMessageBuilder';
@@ -458,8 +459,11 @@ export const CheckoutPage = ({ onNavigate }) => {
                   <div key={item.product._id} className="flex items-center space-x-3 text-xs">
                     {item.product.images?.[0] ? (
                       <img
-                        src={item.product.images[0]}
+                        src={getAssetUrl(item.product.images[0])}
                         alt={item.product.name}
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
                         className="w-12 h-14 object-cover rounded-xl bg-[#FAF7F2] border border-[#B9C9E7]/50 shrink-0"
                       />
                     ) : (

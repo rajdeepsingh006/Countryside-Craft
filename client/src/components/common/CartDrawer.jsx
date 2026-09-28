@@ -3,6 +3,7 @@ import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Tag, Spar
 import { useCart } from '../../context/CartContext';
 import { useStore } from '../../context/StoreContext';
 import { formatCurrency } from '../../utils/formatters';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const CartDrawer = ({ onNavigate }) => {
   const { cart, isCartOpen, closeCart, updateQuantity, removeFromCart, subtotal, totalSavings, totalItems } = useCart();
@@ -96,8 +97,11 @@ export const CartDrawer = ({ onNavigate }) => {
                 >
                   {item.product.images?.[0] ? (
                     <img
-                      src={item.product.images[0]}
+                      src={getAssetUrl(item.product.images[0])}
                       alt={item.product.name}
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
                       className="w-20 h-20 object-cover rounded-xl bg-[#FAF7F2] border border-[#B9C9E7]/50 shrink-0"
                     />
                   ) : (
