@@ -78,18 +78,30 @@ const addGalleryItem = async (req, res) => {
     }
   }
 
-  if (collectedImages.length === 0) {
-    return sendError(res, 'At least one photo URL or file is required.', 422);
+  if (collectedImages.length === 0 && !mediaUrl) {
+    return sendError(res, 'At least one photo URL, video URL, or file is required.', 422);
   }
 
-  const primaryMediaUrl = collectedImages[0];
+  const primaryMediaUrl = (finalMediaType === 'video' && mediaUrl && mediaUrl.trim())
+    ? mediaUrl.trim()
+    : (collectedImages[0] || (mediaUrl ? mediaUrl.trim() : ''));
+
+  let derivedThumbnail = thumbnailUrl && thumbnailUrl.trim() ? thumbnailUrl.trim() : '';
+  if (!derivedThumbnail) {
+    if (finalMediaType === 'video' && primaryMediaUrl.includes('cloudinary.com')) {
+      derivedThumbnail = primaryMediaUrl.replace(/\.(mp4|webm|mov|m4v)(\?.*)?$/i, '.jpg');
+    } else {
+      derivedThumbnail = primaryMediaUrl;
+    }
+  }
+
   const item = await GalleryItem.create({
     title: title.trim(),
     description: description ? description.trim() : '',
     mediaType: finalMediaType,
     mediaUrl: primaryMediaUrl,
-    images: collectedImages,
-    thumbnailUrl: thumbnailUrl && thumbnailUrl.trim() ? thumbnailUrl.trim() : primaryMediaUrl,
+    images: collectedImages.length > 0 ? collectedImages : [primaryMediaUrl],
+    thumbnailUrl: derivedThumbnail,
     category: category || 'workshops',
     location: location || 'India',
     tags: Array.isArray(tags) ? tags : (typeof tags === 'string' ? tags.split(',').map((t) => t.trim()) : []),
@@ -153,12 +165,25 @@ const updateGalleryItem = async (req, res) => {
     item.tags = Array.isArray(tags) ? tags : tags.split(',').map((t) => t.trim()).filter(Boolean);
   }
 
+  if (mediaUrl && mediaUrl.trim()) {
+    item.mediaUrl = mediaUrl.trim();
+  }
+
   if (collectedImages.length > 0) {
     item.images = collectedImages;
-    item.mediaUrl = collectedImages[0];
-    item.thumbnailUrl = thumbnailUrl && thumbnailUrl.trim() ? thumbnailUrl.trim() : collectedImages[0];
-  } else if (thumbnailUrl) {
+    if (!mediaUrl) {
+      item.mediaUrl = collectedImages[0];
+    }
+  }
+
+  if (thumbnailUrl && thumbnailUrl.trim()) {
     item.thumbnailUrl = thumbnailUrl.trim();
+  } else if (!item.thumbnailUrl || (item.mediaType === 'video' && item.thumbnailUrl === item.mediaUrl)) {
+    if (item.mediaType === 'video' && item.mediaUrl && item.mediaUrl.includes('cloudinary.com')) {
+      item.thumbnailUrl = item.mediaUrl.replace(/\.(mp4|webm|mov|m4v)(\?.*)?$/i, '.jpg');
+    } else {
+      item.thumbnailUrl = item.mediaUrl || (item.images && item.images[0]) || '';
+    }
   }
 
   await item.save();

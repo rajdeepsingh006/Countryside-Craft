@@ -73,8 +73,15 @@ export const parseVideoUrl = (url) => {
       trimmed.includes('/video/') ||
       /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(trimmed))
   ) {
-    // Cloudinary automatically generates an image frame by changing extension to .jpg
-    const posterUrl = trimmed.replace(/\.(mp4|webm|mov|m4v)(\?.*)?$/i, '.jpg');
+    let posterUrl = trimmed;
+    if (/\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(trimmed)) {
+      posterUrl = trimmed.replace(/\.(mp4|webm|mov|m4v)(\?.*)?$/i, '.jpg');
+    } else if (trimmed.includes('/video/upload/')) {
+      posterUrl = trimmed.replace('/video/upload/', '/video/upload/so_0.jpg/');
+    } else {
+      posterUrl = `${trimmed}.jpg`;
+    }
+
     return {
       type: 'html5',
       id: null,

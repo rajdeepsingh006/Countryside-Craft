@@ -3,7 +3,7 @@ import { Play, Sparkles, MapPin, Calendar, MessageCircle, X, ChevronRight, Chevr
 import { useStore } from '../context/StoreContext';
 import { formatDate } from '../utils/formatters';
 import { buildWhatsAppInquiryMessage, generateWhatsAppUrl } from '../utils/whatsappMessageBuilder';
-import { isVideoUrl, getVideoThumbnail } from '../utils/videoHelpers';
+import { isVideoUrl, getVideoThumbnail, parseVideoUrl } from '../utils/videoHelpers';
 
 export const GalleryPage = ({ onNavigate }) => {
   const { gallery, settings } = useStore();
@@ -185,14 +185,31 @@ export const GalleryPage = ({ onNavigate }) => {
                 </button>
 
                 <div className="relative p-4 sm:p-6 flex items-center justify-center bg-black min-h-[300px]">
-                  {activeMediaModal.mediaType === 'video' ? (
-                    <video
-                      src={activeMediaModal.mediaUrl}
-                      controls
-                      autoPlay
-                      className="w-full rounded-2xl aspect-video bg-black"
-                    />
-                  ) : (
+                  {activeMediaModal.mediaType === 'video' ? (() => {
+                    const parsedVideo = parseVideoUrl(activeMediaModal.mediaUrl);
+                    if (parsedVideo && (parsedVideo.type === 'youtube' || parsedVideo.type === 'vimeo')) {
+                      return (
+                        <iframe
+                          src={parsedVideo.embedUrl}
+                          title={activeMediaModal.title}
+                          className="w-full rounded-2xl aspect-video bg-black"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      );
+                    }
+                    const poster = activeMediaModal.thumbnailUrl || getVideoThumbnail(activeMediaModal.mediaUrl);
+                    return (
+                      <video
+                        src={activeMediaModal.mediaUrl}
+                        poster={poster || undefined}
+                        controls
+                        autoPlay
+                        playsInline
+                        className="w-full rounded-2xl aspect-video bg-black"
+                      />
+                    );
+                  })() : (
                     <>
                       <img
                         src={currentImgUrl}

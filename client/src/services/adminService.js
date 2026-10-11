@@ -80,6 +80,9 @@ export const adminService = {
       return data.data;
     }
   },
+  async createGalleryItem(payload) {
+    return this.uploadGalleryItem(payload);
+  },
   async updateGalleryItem(id, payload) {
     if (payload instanceof FormData) {
       const { data } = await api.put(`/admin/gallery/${id}`, payload, {
