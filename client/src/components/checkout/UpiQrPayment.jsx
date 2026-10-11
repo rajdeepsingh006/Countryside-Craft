@@ -3,6 +3,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Smartphone, QrCode, Sparkles, CheckCircle2, ShieldCheck, ExternalLink } from 'lucide-react';
 import { buildUpiPaymentLink } from '../../utils/upiPaymentBuilder';
 import { formatCurrency } from '../../utils/formatters';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 class QrErrorBoundary extends React.Component {
   constructor(props) {
@@ -76,8 +77,12 @@ export const UpiQrPayment = ({
             />
             {/* Subtle center logo / brand indicator */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-9 h-9 rounded-full bg-white shadow-md border border-[#EFC0DA] flex items-center justify-center">
-                <span className="font-brand font-black text-[10px] text-[#D91680]">CC</span>
+              <div className="w-10 h-10 rounded-full bg-white shadow-md border border-[#EFC0DA] overflow-hidden p-0.5 flex items-center justify-center">
+                <img
+                  src={getAssetUrl('/images/logo.jpg')}
+                  alt="Countryside Craft Logo"
+                  className="w-full h-full object-contain rounded-full"
+                />
               </div>
             </div>
           </QrErrorBoundary>

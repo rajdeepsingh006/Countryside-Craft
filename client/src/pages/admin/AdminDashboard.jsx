@@ -22,6 +22,7 @@ import { AdminReviews } from '../../components/admin/AdminReviews';
 import { AdminGallery } from '../../components/admin/AdminGallery';
 import { AdminSettings } from '../../components/admin/AdminSettings';
 import { AdminManage } from '../../components/admin/AdminManage';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const AdminDashboard = ({ onNavigateHome }) => {
   const { admin, logout, isMainAdmin, isAuthenticated } = useAuth();
@@ -57,8 +58,14 @@ export const AdminDashboard = ({ onNavigateHome }) => {
 
       {/* Mobile Top Navbar */}
       <div className="md:hidden bg-[#161C2A] text-white p-4 flex items-center justify-between border-b border-[#B9C9E7]/20">
-        <div className="flex items-center space-x-2">
-          <Sparkles className="w-4 h-4 text-[#DBE586]" />
+        <div className="flex items-center space-x-2.5">
+          <div className="w-7 h-7 rounded-full overflow-hidden bg-white p-0.5 shrink-0 shadow-sm flex items-center justify-center">
+            <img
+              src={getAssetUrl('/images/logo.jpg')}
+              alt="Countryside Craft"
+              className="w-full h-full object-contain rounded-full"
+            />
+          </div>
           <span className="font-serif-display font-bold text-sm tracking-wider">COUNTRYSIDE CRAFT</span>
         </div>
         <div className="flex items-center space-x-2">
@@ -94,16 +101,26 @@ export const AdminDashboard = ({ onNavigateHome }) => {
 
         <div className="space-y-6">
           {/* Brand Header */}
-          <div className="pb-6 border-b border-white/10">
-            <div className="flex items-center space-x-2 text-[#DBE586] text-xs font-bold uppercase tracking-widest">
-              <Sparkles className="w-4 h-4" />
-              <span>Artisan Portal</span>
+          <div className="pb-6 border-b border-white/10 space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-full overflow-hidden bg-white p-0.5 shrink-0 shadow-md flex items-center justify-center">
+                <img
+                  src={getAssetUrl('/images/logo.jpg')}
+                  alt="Countryside Craft"
+                  className="w-full h-full object-contain rounded-full"
+                />
+              </div>
+              <div>
+                <div className="flex items-center space-x-1.5 text-[#DBE586] text-[10px] font-bold uppercase tracking-widest">
+                  <span>Artisan Portal</span>
+                </div>
+                <h2 className="font-brand-script text-xl text-white leading-tight">
+                  Countryside Craft
+                </h2>
+              </div>
             </div>
-            <h2 className="font-brand-script text-2xl text-white mt-1">
-              Countryside Craft
-            </h2>
 
-            <div className="mt-1 flex items-center space-x-1.5">
+            <div className="flex items-center space-x-1.5">
               <p className="text-[11px] text-[#A9B8D4]">
                 Signed in as <strong>{admin?.username || 'Administrator'}</strong>
               </p>

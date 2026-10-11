@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Heart, Sparkles, Truck, ShieldCheck, MessageCircle, Send, Phone, Mail, MapPin } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { buildWhatsAppInquiryMessage, generateWhatsAppUrl } from '../../utils/whatsappMessageBuilder';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const Footer = ({ onNavigate }) => {
   const { settings, categories, showToast } = useStore();
@@ -80,12 +81,21 @@ export const Footer = ({ onNavigate }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pt-4 pb-12 border-b border-[#252E42]">
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center space-x-3.5">
-              <div className="w-10 h-10 rounded-2xl bg-[#D91680] text-white flex items-center justify-center font-brand-script font-bold text-lg border border-[#EFC0DA]">
-                CC
+              <div className="w-12 h-12 rounded-full overflow-hidden bg-white shadow-md border border-[#EADDC6] p-0.5 shrink-0 flex items-center justify-center">
+                <img
+                  src={getAssetUrl('/images/logo.jpg')}
+                  alt="Countryside Craft Logo"
+                  className="w-full h-full object-contain rounded-full"
+                />
               </div>
-              <span className="font-brand-script text-2xl sm:text-3xl tracking-wide text-white">
-                Countryside Craft
-              </span>
+              <div className="flex flex-col">
+                <span className="font-brand-script text-2xl sm:text-3xl tracking-wide text-white leading-none">
+                  Countryside Craft
+                </span>
+                <span className="text-[10px] text-[#DBE586] font-mono tracking-widest uppercase mt-0.5">
+                  By Rupinder
+                </span>
+              </div>
             </div>
 
             <p className="text-xs sm:text-sm text-[#9CAAC5] leading-relaxed max-w-sm">

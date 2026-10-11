@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Lock, User, Sparkles, ShieldCheck, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useStore } from '../../context/StoreContext';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const AdminLoginPage = ({ onLoginSuccess, onNavigateHome }) => {
   const { login } = useAuth();
@@ -33,8 +34,12 @@ export const AdminLoginPage = ({ onLoginSuccess, onNavigateHome }) => {
         
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="w-14 h-14 rounded-2xl bg-[#1A1F2C] text-[#DBE586] mx-auto flex items-center justify-center shadow-lg border border-[#B9C9E7]/40">
-            <Lock className="w-6 h-6" />
+          <div className="w-16 h-16 rounded-full overflow-hidden bg-white mx-auto shadow-md border border-[#EADDC6] p-0.5 flex items-center justify-center">
+            <img
+              src={getAssetUrl('/images/logo.jpg')}
+              alt="Countryside Craft"
+              className="w-full h-full object-contain rounded-full"
+            />
           </div>
           <div className="inline-flex items-center space-x-1 text-xs font-bold uppercase tracking-widest text-[#D91680]">
             <Sparkles className="w-3 h-3" />

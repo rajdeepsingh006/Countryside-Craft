@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ShoppingBag, Search, Menu, X, ChevronDown, ChevronLeft, ChevronRight, Sparkles, ShieldCheck, Gift, Phone, ExternalLink } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useStore } from '../../context/StoreContext';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const Navbar = ({ currentView, onNavigate }) => {
   const { totalItems, openCart } = useCart();
@@ -143,9 +144,13 @@ export const Navbar = ({ currentView, onNavigate }) => {
                 onClick={() => handleNav('home')}
               >
                 <div className="flex items-center gap-2 sm:gap-3">
-                  {/* Monogram */}
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#D91680] to-[#9C0A58] text-white flex items-center justify-center shadow-md font-brand-script font-bold text-base sm:text-lg border border-[#EFC0DA]/50 group-hover:scale-105 transition-transform shrink-0">
-                    CC
+                  {/* Brand Logo Stamp */}
+                  <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white shadow-md border border-[#EADDC6] group-hover:scale-105 group-hover:border-[#D91680] transition-all shrink-0 p-0.5 flex items-center justify-center overflow-hidden">
+                    <img
+                      src={getAssetUrl('/images/logo.jpg')}
+                      alt="Countryside Craft Logo"
+                      className="w-full h-full object-contain rounded-full"
+                    />
                   </div>
                   {/* Name */}
                   <div className="flex flex-col min-w-0">
@@ -238,12 +243,20 @@ export const Navbar = ({ currentView, onNavigate }) => {
 
             {/* Drawer Header */}
             <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between shrink-0">
-              <div>
-                <div className="flex items-center gap-1.5 text-[#DBE586] text-[10px] font-bold uppercase tracking-widest">
-                  <Sparkles className="w-3 h-3" />
-                  <span>Countryside Craft</span>
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-full bg-white shadow-md border border-[#EADDC6] p-0.5 shrink-0 flex items-center justify-center overflow-hidden">
+                  <img
+                    src={getAssetUrl('/images/logo.jpg')}
+                    alt="Countryside Craft Logo"
+                    className="w-full h-full object-contain rounded-full"
+                  />
                 </div>
-                <p className="text-[#A9B8D4] text-[11px] mt-0.5">Browse our handmade collection</p>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5 text-[#DBE586] text-[10px] font-bold uppercase tracking-widest truncate">
+                    <span>Countryside Craft</span>
+                  </div>
+                  <p className="text-[#A9B8D4] text-[11px] mt-0.5 truncate">By Rupinder • Handmade</p>
+                </div>
               </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}
