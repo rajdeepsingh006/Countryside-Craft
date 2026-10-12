@@ -2,6 +2,7 @@ const Order = require('../models/order.model');
 const Product = require('../models/product.model');
 const { buildWhatsAppUrl } = require('../services/whatsapp.service');
 const { exportOrdersToCSV } = require('../services/export.service');
+const { calculateShipping, getOrInitShippingRates } = require('../services/shipping.service');
 const { sendSuccess, sendError } = require('../utils/apiResponse');
 
 // POST /api/orders — Create order from cart data, return WhatsApp link
@@ -38,20 +39,21 @@ const createOrder = async (req, res) => {
     };
   });
 
-const { calculateShipping } = require('../services/shipping.service');
   const cartItemsForShipping = items.map((item) => {
     const product = productMap[item.product];
     return {
-      weightGrams: product.weightGrams || 250,
+      weightGrams: product.weightGrams || 150,
       quantity: item.quantity,
     };
   });
 
+  const rateDoc = await getOrInitShippingRates();
   const shippingResult = calculateShipping({
     state: customer.state,
     city: customer.city,
     pincode: customer.pincode,
     cartItems: cartItemsForShipping,
+    rateDoc,
   });
 
   const shippingCharge = shippingResult.charge || 0;
@@ -63,6 +65,11 @@ const { calculateShipping } = require('../services/shipping.service');
     shippingCharge,
     shippingZone: shippingResult.zoneLabel || shippingResult.zone,
     totalWeightGrams: shippingResult.totalGrams,
+    shipping: {
+      weightGrams: shippingResult.totalGrams,
+      zone: shippingResult.zone,
+      charge: shippingCharge,
+    },
     totalAmount: grandTotal,
     sessionToken: req.session?.sessionToken,
     whatsappMessageSent: true,

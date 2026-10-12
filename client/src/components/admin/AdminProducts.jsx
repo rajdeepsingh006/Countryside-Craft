@@ -115,7 +115,7 @@ export const AdminProducts = () => {
       category: defaultCat,
       price: 799,
       originalPrice: 999,
-      weightGrams: 250,
+      weightGrams: 150,
       description: '',
       tagline: '',
       detailedStory: '',
@@ -689,9 +689,9 @@ export const AdminProducts = () => {
                     type="number"
                     min="1"
                     required
-                    value={formData.weightGrams || 250}
+                    value={formData.weightGrams ?? 150}
                     onChange={(e) => setFormData({ ...formData, weightGrams: Number(e.target.value) })}
-                    placeholder="250"
+                    placeholder="150"
                     className="w-full px-3 py-2.5 rounded-xl bg-[#EEF3FA]/40 border border-[#B9C9E7] text-[#1A1F2C] focus:outline-none"
                   />
                 </div>

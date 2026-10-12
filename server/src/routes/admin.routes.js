@@ -14,6 +14,7 @@ const { listAdmins, createAdmin, updateAdmin, deleteAdmin } = require('../contro
 const { getDashboardStats } = require('../controllers/dashboard.controller');
 const { uploadFiles } = require('../controllers/upload.controller');
 const { getSettings, updateSettings } = require('../controllers/settings.controller');
+const { getRates, updateRates, resetRates } = require('../controllers/shipping.controller');
 
 // Validators
 const { validate } = require('../middlewares/validateRequest.middleware');
@@ -59,6 +60,11 @@ router.delete('/gallery/:id', deleteGalleryItem);
 // ─── Settings ────────────────────────────────────────────────────
 router.get('/settings', getSettings);
 router.put('/settings', updateSettings);
+
+// ─── Shipping Rates (Phase 2 FR-11 to FR-16) ────────────────────
+router.get('/shipping/rates', getRates);
+router.put('/shipping/rates', updateRates);
+router.post('/shipping/rates/reset', resetRates);
 
 // ─── Admin Management (Main Admin only) ───────────────────────
 router.use('/manage', requireRole('main_admin'));

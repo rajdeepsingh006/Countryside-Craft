@@ -132,4 +132,18 @@ export const adminService = {
     });
     return data.data;
   },
+
+  // Speed Post Shipping Rates (Phase 2 FR-11 to FR-16)
+  async getShippingRates() {
+    const { data } = await api.get('/admin/shipping/rates');
+    return data.data;
+  },
+  async updateShippingRates(payload) {
+    const { data } = await api.put('/admin/shipping/rates', payload);
+    return data.data;
+  },
+  async resetShippingRates() {
+    const { data } = await api.post('/admin/shipping/rates/reset');
+    return data.data;
+  },
 };

@@ -60,7 +60,7 @@ const productSchema = new mongoose.Schema(
     weightGrams: {
       type: Number,
       required: true,
-      default: 250, // Handcrafted bags are < 500g each
+      default: 150, // Default 150g matching lightweight pouches & bags (PRD FR-1)
       min: [1, 'Weight must be at least 1 gram'],
     },
     price: {

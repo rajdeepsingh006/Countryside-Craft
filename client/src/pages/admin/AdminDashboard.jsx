@@ -12,6 +12,7 @@ import {
   X,
   Sparkles,
   Users,
+  Truck,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useStore } from '../../context/StoreContext';
@@ -21,6 +22,7 @@ import { AdminProducts } from '../../components/admin/AdminProducts';
 import { AdminReviews } from '../../components/admin/AdminReviews';
 import { AdminGallery } from '../../components/admin/AdminGallery';
 import { AdminSettings } from '../../components/admin/AdminSettings';
+import { AdminShippingRates } from '../../components/admin/AdminShippingRates';
 import { AdminManage } from '../../components/admin/AdminManage';
 import { getAssetUrl } from '../../utils/assetHelper';
 
@@ -48,6 +50,7 @@ export const AdminDashboard = ({ onNavigateHome }) => {
     { id: 'products', label: 'Tote Bags Catalog', icon: Package },
     { id: 'reviews', label: 'Customer Reviews', icon: Star, badge: pendingReviewsCount },
     { id: 'gallery', label: 'Workshops & Events', icon: ImageIcon },
+    { id: 'shipping', label: 'Speed Post Rates', icon: Truck },
     { id: 'settings', label: 'Store Settings', icon: Settings },
     // FR-19: Admin management only visible to main_admin
     ...(isMainAdmin ? [{ id: 'manage', label: 'Manage Admins', icon: Users }] : []),
@@ -197,6 +200,7 @@ export const AdminDashboard = ({ onNavigateHome }) => {
         {activeTab === 'products' && <AdminProducts />}
         {activeTab === 'reviews' && <AdminReviews />}
         {activeTab === 'gallery' && <AdminGallery />}
+        {activeTab === 'shipping' && <AdminShippingRates />}
         {activeTab === 'settings' && <AdminSettings />}
         {activeTab === 'manage' && isMainAdmin && <AdminManage />}
       </main>

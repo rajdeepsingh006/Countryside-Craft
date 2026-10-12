@@ -1,18 +1,60 @@
-import React, { useState } from 'react';
-import { ShoppingBag, Trash2, Plus, Minus, ArrowRight, ShieldCheck, Tag, Sparkles } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { ShoppingBag, Trash2, Plus, Minus, ArrowRight, ShieldCheck, Tag, Sparkles, Truck, Loader2, CheckCircle2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useStore } from '../context/StoreContext';
 import { formatCurrency } from '../utils/formatters';
 import { getAssetUrl } from '../utils/assetHelper';
+import { calculateSpeedPostShipping } from '../utils/shippingCalculator';
+import { lookupPincode } from '../services/pincodeService';
 
 export const CartPage = ({ onNavigate }) => {
   const { cart, updateQuantity, removeFromCart, clearCart, subtotal, totalSavings, totalItems } = useCart();
   const { settings, showToast } = useStore();
   const [couponCode, setCouponCode] = useState('');
   const [couponApplied, setCouponApplied] = useState(false);
+  const [shippingPincode, setShippingPincode] = useState('');
+  const [shippingLocation, setShippingLocation] = useState(null);
+  const [pincodeLoading, setPincodeLoading] = useState(false);
 
   const discountAmount = couponApplied ? Math.round(subtotal * 0.1) : 0;
-  const finalTotal = subtotal - discountAmount;
+  const itemsAfterDiscount = Math.max(0, subtotal - discountAmount);
+
+  // Calculate live Speed Post shipping based on cart weight & destination
+  const cartShipping = useMemo(() => {
+    return calculateSpeedPostShipping({
+      state: shippingLocation?.state || 'Punjab',
+      city: shippingLocation?.city || 'Sirhind',
+      pincode: shippingPincode,
+      cartItems: cart,
+    });
+  }, [shippingLocation, shippingPincode, cart]);
+
+  const deliveryCharge = cartShipping.charge || 42;
+  const finalTotal = itemsAfterDiscount + deliveryCharge;
+
+  const handlePincodeEstimate = async (val) => {
+    const clean = val.replace(/[^0-9]/g, '').slice(0, 6);
+    setShippingPincode(clean);
+
+    if (clean.length === 6) {
+      setPincodeLoading(true);
+      try {
+        const loc = await lookupPincode(clean);
+        if (loc) {
+          setShippingLocation(loc);
+          showToast(`Speed Post updated for ${loc.city}, ${loc.state}`, 'info');
+        } else {
+          setShippingLocation(null);
+        }
+      } catch (err) {
+        console.warn('Cart PIN lookup notice:', err);
+      } finally {
+        setPincodeLoading(false);
+      }
+    } else {
+      setShippingLocation(null);
+    }
+  };
 
   const handleApplyCoupon = (e) => {
     e.preventDefault();
@@ -260,6 +302,41 @@ export const CartPage = ({ onNavigate }) => {
                 </div>
               )}
 
+              {/* Delivery PIN Code Estimator */}
+              <div className="p-3.5 rounded-2xl bg-[#EEF3FA]/70 border border-[#B9C9E7]/60 space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5 font-bold text-[#1A1F2C]">
+                    <Truck className="w-3.5 h-3.5 text-[#1E3A8A]" />
+                    <span>Speed Post Delivery Estimator</span>
+                  </div>
+                  {pincodeLoading && (
+                    <span className="text-[10px] text-[#D91680] flex items-center gap-1 font-semibold">
+                      <Loader2 className="w-3 h-3 animate-spin" /> Checking PIN...
+                    </span>
+                  )}
+                </div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    maxLength={6}
+                    value={shippingPincode}
+                    onChange={(e) => handlePincodeEstimate(e.target.value)}
+                    placeholder="Enter 6-digit delivery PIN code..."
+                    className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-[#B9C9E7] text-[#1A1F2C] focus:outline-none focus:border-[#D91680]"
+                  />
+                  {shippingLocation && !pincodeLoading && (
+                    <span className="absolute right-2.5 top-2 text-emerald-600" title="Detected">
+                      <CheckCircle2 className="w-4 h-4" />
+                    </span>
+                  )}
+                </div>
+                <p className="text-[10px] text-[#6A758E]">
+                  {shippingLocation
+                    ? `✓ Destination: ${shippingLocation.city}, ${shippingLocation.state} (${cartShipping.zoneLabel})`
+                    : `Parcel Weight: ~${cartShipping.totalGrams}g • Dispatch Origin: Punjab (Sirhind)`}
+                </p>
+              </div>
+
               {/* Price Details */}
               <div className="space-y-2 pt-1 text-xs text-[#3E475C]">
                 <div className="flex justify-between">
@@ -288,17 +365,33 @@ export const CartPage = ({ onNavigate }) => {
                   </span>
                 </div>
 
+                {/* FR-7: Speed Post Delivery Line Item */}
+                <div className="flex justify-between items-center py-1 border-t border-dashed border-[#B9C9E7]/40">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="font-semibold text-[#1A1F2C]">Speed Post Delivery</span>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#1E3A8A]/10 text-[#1E3A8A]">
+                      {cartShipping.zoneLabel} • ~{cartShipping.totalGrams}g
+                    </span>
+                  </div>
+                  <span className="text-[#1E3A8A] font-bold">
+                    {formatCurrency(deliveryCharge)}
+                  </span>
+                </div>
+
                 <div className="pt-3 border-t border-[#F1E9DF] flex justify-between text-base font-bold text-[#1A1F2C]">
-                  <span>Total Amount</span>
+                  <div>
+                    <span>Total Amount</span>
+                    <p className="text-[10px] text-[#6A758E] font-normal">Products + Speed Post Postage</p>
+                  </div>
                   <span className="text-xl font-black text-[#D91680]">{formatCurrency(finalTotal)}</span>
                 </div>
               </div>
 
               {/* Mandated Delivery Note */}
               <div className="p-3 rounded-2xl bg-[#FAF7F2] border border-[#F1E9DF] text-[11px] text-[#6A5E54] leading-relaxed flex items-start space-x-2">
-                <ShieldCheck className="w-4 h-4 text-[#D91680] shrink-0 mt-0.5" />
+                <Truck className="w-4 h-4 text-[#D91680] shrink-0 mt-0.5" />
                 <span>
-                  <strong>Shipping Note:</strong> Delivery charges are extra and will be confirmed on WhatsApp based on your delivery PIN code.
+                  <strong>Speed Post Guaranteed:</strong> Exact postage auto-calculated per India Post tariffs. No surprise courier charges on WhatsApp.
                 </span>
               </div>
 

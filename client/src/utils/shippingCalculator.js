@@ -75,7 +75,7 @@ export const ZONE_LABELS = {
 /**
  * Determine the Speed Post zone based on destination
  */
-export function getShippingZone({ state = '', city = '', pincode = '' }) {
+export function getShippingZone({ state = '', city = '', pincode = '', customMetroStates = null }) {
   const normState = String(state || '').trim().toLowerCase();
   const normCity = String(city || '').trim().toLowerCase();
   const normPin = String(pincode || '').trim();
@@ -95,7 +95,8 @@ export function getShippingZone({ state = '', city = '', pincode = '' }) {
   }
 
   // 3. Check Zone / Metro States
-  if (ZONE_METRO_STATES.includes(normState)) {
+  const metroList = Array.isArray(customMetroStates) ? customMetroStates : ZONE_METRO_STATES;
+  if (metroList.includes(normState)) {
     return 'zoneMetro';
   }
 
@@ -106,10 +107,11 @@ export function getShippingZone({ state = '', city = '', pincode = '' }) {
 /**
  * Get tariff row for total weight in grams
  */
-export function getRateForWeight(totalGrams) {
-  const safeGrams = Math.max(1, Number(totalGrams) || 250);
-  const slab = SPEED_POST_RATES.find((row) => safeGrams <= row.maxGrams);
-  return slab || SPEED_POST_RATES[SPEED_POST_RATES.length - 1];
+export function getRateForWeight(totalGrams, slabs = SPEED_POST_RATES) {
+  const safeGrams = Math.max(1, Number(totalGrams) || 150);
+  const activeSlabs = Array.isArray(slabs) && slabs.length > 0 ? slabs : SPEED_POST_RATES;
+  const slab = activeSlabs.find((row) => safeGrams <= row.maxGrams);
+  return slab || activeSlabs[activeSlabs.length - 1];
 }
 
 /**
@@ -118,28 +120,35 @@ export function getRateForWeight(totalGrams) {
  * @param {string} params.state
  * @param {string} params.city
  * @param {string} params.pincode
- * @param {Array} params.cartItems - Array of { product: { weightGrams }, quantity } or { weightGrams, quantity }
+ * @param {Array} [params.cartItems] - Array of { product: { weightGrams }, quantity } or { weightGrams, quantity }
+ * @param {number} [params.totalWeightGrams] - Direct weight in grams (optional override)
+ * @param {Array} [params.customSlabs] - Optional dynamic slabs
+ * @param {Array} [params.customMetroStates] - Optional dynamic metro states
  */
-export function calculateSpeedPostShipping({ state = '', city = '', pincode = '', cartItems = [] }) {
-  if (!cartItems || cartItems.length === 0) {
-    return {
-      totalGrams: 0,
-      zone: 'otherStates',
-      zoneLabel: 'Speed Post',
-      charge: 0,
-      slabMaxGrams: 500,
-    };
+export function calculateSpeedPostShipping({
+  state = '',
+  city = '',
+  pincode = '',
+  cartItems = [],
+  totalWeightGrams = null,
+  customSlabs = null,
+  customMetroStates = null,
+}) {
+  let totalGrams = 0;
+
+  if (totalWeightGrams !== null && totalWeightGrams !== undefined) {
+    totalGrams = Number(totalWeightGrams) || 0;
+  } else if (Array.isArray(cartItems) && cartItems.length > 0) {
+    totalGrams = cartItems.reduce((sum, item) => {
+      const rawWeight = item.product?.weightGrams ?? item.weightGrams ?? 150;
+      const w = Number(rawWeight) || 150;
+      const q = Number(item.quantity) || 1;
+      return sum + w * q;
+    }, 0);
   }
 
-  const totalGrams = cartItems.reduce((sum, item) => {
-    const rawWeight = item.product?.weightGrams ?? item.weightGrams ?? 250;
-    const w = Number(rawWeight) || 250;
-    const q = Number(item.quantity) || 1;
-    return sum + w * q;
-  }, 0);
-
-  const zone = getShippingZone({ state, city, pincode });
-  const rateRow = getRateForWeight(totalGrams);
+  const zone = getShippingZone({ state, city, pincode, customMetroStates });
+  const rateRow = getRateForWeight(totalGrams, customSlabs);
   const charge = Number(rateRow[zone]) || 55;
 
   return {
@@ -150,3 +159,6 @@ export function calculateSpeedPostShipping({ state = '', city = '', pincode = ''
     slabMaxGrams: rateRow.maxGrams,
   };
 }
+
+export const calculateShipping = calculateSpeedPostShipping;
+
