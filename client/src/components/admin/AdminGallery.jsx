@@ -70,18 +70,11 @@ export const AdminGallery = () => {
       setLoading(true);
       const res = await adminService.getGallery();
       const items = res?.items || (Array.isArray(res) ? res : []);
-      if (items.length > 0) {
-        setGalleryItems(items);
-      } else if (gallery && gallery.length > 0) {
-        setGalleryItems(gallery);
-      } else {
-        setGalleryItems([]);
-      }
+      setGalleryItems(items);
     } catch (err) {
       console.error('Failed to fetch gallery items:', err);
-      if (gallery && gallery.length > 0) {
-        setGalleryItems(gallery);
-      }
+      setGalleryItems([]);
+      showToast('Could not connect to server to load gallery items', 'error');
     } finally {
       setLoading(false);
     }
@@ -295,16 +288,32 @@ export const AdminGallery = () => {
   // Delete Item
   const handleConfirmDelete = async () => {
     if (!deleteConfirmItem) return;
+    const targetId = deleteConfirmItem._id;
     setDeleting(true);
     try {
-      await adminService.deleteGalleryItem(deleteConfirmItem._id);
-      setGalleryItems((prev) => prev.filter((g) => g._id !== deleteConfirmItem._id));
+      try {
+        await adminService.deleteGalleryItem(targetId);
+      } catch (apiErr) {
+        // If it's a mock or non-existent ID (e.g. gal-001), treat as resolved locally
+        if (typeof targetId === 'string' && (targetId.startsWith('gal-') || targetId.length !== 24)) {
+          console.warn('Demo/mock gallery item removed locally:', targetId);
+        } else {
+          throw apiErr;
+        }
+      }
+      setGalleryItems((prev) => prev.filter((g) => g._id !== targetId));
       await refreshData();
       showToast(`Deleted "${deleteConfirmItem.title}" from gallery.`, 'info');
       setDeleteConfirmItem(null);
     } catch (err) {
       console.error('Failed to delete item:', err);
-      showToast(err.response?.data?.message || 'Failed to delete gallery item', 'error');
+      if (typeof targetId === 'string' && (targetId.startsWith('gal-') || targetId.length !== 24)) {
+        setGalleryItems((prev) => prev.filter((g) => g._id !== targetId));
+        setDeleteConfirmItem(null);
+        showToast(`Removed "${deleteConfirmItem.title}".`, 'info');
+      } else {
+        showToast(err.response?.data?.message || 'Failed to delete gallery item', 'error');
+      }
     } finally {
       setDeleting(false);
     }
