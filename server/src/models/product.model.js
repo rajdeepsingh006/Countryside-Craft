@@ -57,6 +57,12 @@ const productSchema = new mongoose.Schema(
       type: String, // Custom Video Thumbnail/Poster URL (optional)
       default: '',
     },
+    weightGrams: {
+      type: Number,
+      required: true,
+      default: 250, // Handcrafted bags are < 500g each
+      min: [1, 'Weight must be at least 1 gram'],
+    },
     price: {
       type: Number,
       required: [true, 'Price is required'],

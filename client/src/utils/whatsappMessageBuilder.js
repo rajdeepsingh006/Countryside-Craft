@@ -27,12 +27,13 @@ ${order.customer.note ? `• *Customer Note:* "${order.customer.note}"\n` : ''}$
 ${itemsText}
 
 ━━━━━━━━━━━━━━━━━━━━
-💰 *Subtotal:* ${formatCurrency(order.subtotal)}
-${order.discount > 0 ? `🏷️ *Discount:* -${formatCurrency(order.discount)}\n` : ''}💵 *Total Product Amount:* ${formatCurrency(order.totalAmount)}
-Payment: UPI QR (customer-confirmed, please verify)
-⚠️ *Note:* Shipping & delivery charges will be calculated and confirmed via this chat.
+💰 *Product Subtotal:* ${formatCurrency(order.subtotal)}
+${order.discount > 0 ? `🏷️ *Discount:* -${formatCurrency(order.discount)}\n` : ''}🚚 *Speed Post Delivery (${order.shippingZone || 'Speed Post'} | ~${order.totalWeightGrams || 0}g):* ${formatCurrency(order.shippingCharge || 0)}
+💵 *Total Amount:* ${formatCurrency(order.finalTotal || (order.subtotal + (order.shippingCharge || 0)))}
+Payment: ${order.paymentMode === 'razorpay' ? 'Razorpay (Paid Online)' : 'UPI QR (customer-confirmed, please verify)'}
+✓ Speed Post postage auto-calculated for ${order.customer.state || 'destination'}.
 
-Please confirm receipt of payment and estimated dispatch date. Thank you! 🙏`;
+Please confirm receipt of order & dispatch schedule. Thank you! 🙏`;
 };
 
 export const generateWhatsAppUrl = (phone, message) => {

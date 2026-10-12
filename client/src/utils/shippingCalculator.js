@@ -1,0 +1,152 @@
+/**
+ * India Post Speed Post Rates Schedule (Inclusive of GST)
+ * Effective Rate Card up to 35 kg
+ */
+export const SPEED_POST_RATES = [
+  { maxGrams: 500,   local: 34,  withinState: 42,  zoneMetro: 48,   otherStates: 55 },
+  { maxGrams: 1000,  local: 37,  withinState: 57,  zoneMetro: 77,   otherStates: 83 },
+  { maxGrams: 1500,  local: 42,  withinState: 76,  zoneMetro: 130,  otherStates: 178 },
+  { maxGrams: 2000,  local: 53,  withinState: 105, zoneMetro: 166,  otherStates: 224 },
+  { maxGrams: 3000,  local: 67,  withinState: 131, zoneMetro: 224,  otherStates: 296 },
+  { maxGrams: 4000,  local: 81,  withinState: 157, zoneMetro: 277,  otherStates: 359 },
+  { maxGrams: 5000,  local: 95,  withinState: 184, zoneMetro: 325,  otherStates: 414 },
+  { maxGrams: 6000,  local: 114, withinState: 213, zoneMetro: 395,  otherStates: 489 },
+  { maxGrams: 7000,  local: 131, withinState: 244, zoneMetro: 467,  otherStates: 566 },
+  { maxGrams: 8000,  local: 148, withinState: 273, zoneMetro: 537,  otherStates: 643 },
+  { maxGrams: 9000,  local: 167, withinState: 302, zoneMetro: 607,  otherStates: 720 },
+  { maxGrams: 10000, local: 184, withinState: 331, zoneMetro: 679,  otherStates: 797 },
+  { maxGrams: 11000, local: 201, withinState: 362, zoneMetro: 749,  otherStates: 874 },
+  { maxGrams: 12000, local: 220, withinState: 391, zoneMetro: 821,  otherStates: 949 },
+  { maxGrams: 13000, local: 237, withinState: 420, zoneMetro: 891,  otherStates: 1026 },
+  { maxGrams: 14000, local: 254, withinState: 449, zoneMetro: 961,  otherStates: 1103 },
+  { maxGrams: 15000, local: 273, withinState: 480, zoneMetro: 1033, otherStates: 1180 },
+  { maxGrams: 16000, local: 290, withinState: 509, zoneMetro: 1103, otherStates: 1257 },
+  { maxGrams: 17000, local: 307, withinState: 538, zoneMetro: 1175, otherStates: 1334 },
+  { maxGrams: 18000, local: 326, withinState: 567, zoneMetro: 1245, otherStates: 1411 },
+  { maxGrams: 19000, local: 343, withinState: 598, zoneMetro: 1315, otherStates: 1486 },
+  { maxGrams: 20000, local: 362, withinState: 627, zoneMetro: 1387, otherStates: 1563 },
+  { maxGrams: 21000, local: 379, withinState: 656, zoneMetro: 1457, otherStates: 1640 },
+  { maxGrams: 22000, local: 396, withinState: 685, zoneMetro: 1529, otherStates: 1717 },
+  { maxGrams: 23000, local: 415, withinState: 716, zoneMetro: 1599, otherStates: 1794 },
+  { maxGrams: 24000, local: 432, withinState: 745, zoneMetro: 1669, otherStates: 1871 },
+  { maxGrams: 25000, local: 449, withinState: 774, zoneMetro: 1741, otherStates: 1948 },
+  { maxGrams: 26000, local: 468, withinState: 803, zoneMetro: 1811, otherStates: 2023 },
+  { maxGrams: 27000, local: 485, withinState: 834, zoneMetro: 1883, otherStates: 2100 },
+  { maxGrams: 28000, local: 502, withinState: 863, zoneMetro: 1953, otherStates: 2177 },
+  { maxGrams: 29000, local: 521, withinState: 892, zoneMetro: 2023, otherStates: 2254 },
+  { maxGrams: 30000, local: 538, withinState: 921, zoneMetro: 2095, otherStates: 2331 },
+  { maxGrams: 31000, local: 555, withinState: 952, zoneMetro: 2165, otherStates: 2408 },
+  { maxGrams: 32000, local: 574, withinState: 981, zoneMetro: 2237, otherStates: 2483 },
+  { maxGrams: 33000, local: 591, withinState: 1010, zoneMetro: 2307, otherStates: 2560 },
+  { maxGrams: 34000, local: 608, withinState: 1039, zoneMetro: 2377, otherStates: 2637 },
+  { maxGrams: 35000, local: 627, withinState: 1070, zoneMetro: 2449, otherStates: 2714 },
+];
+
+export const STORE_ORIGIN = {
+  state: 'Punjab',
+  city: 'Sirhind',
+  district: 'Fatehgarh Sahib',
+  localCities: ['sirhind', 'nandpur kalour', 'fatehgarh sahib', 'sirhind fatehgarh sahib'],
+  localPincodes: ['140406', '140407', '140412'],
+};
+
+// Neighboring & Metro circle states (Postal circle agreement)
+export const ZONE_METRO_STATES = [
+  'delhi',
+  'chandigarh',
+  'haryana',
+  'himachal pradesh',
+  'rajasthan',
+  'uttar pradesh',
+  'maharashtra',
+  'karnataka',
+  'west bengal',
+  'tamil nadu',
+  'telangana',
+];
+
+export const ZONE_LABELS = {
+  local: 'Local (Sirhind Area)',
+  withinState: 'Within Punjab',
+  zoneMetro: 'Zone / Metro',
+  otherStates: 'Other States',
+};
+
+/**
+ * Determine the Speed Post zone based on destination
+ */
+export function getShippingZone({ state = '', city = '', pincode = '' }) {
+  const normState = String(state || '').trim().toLowerCase();
+  const normCity = String(city || '').trim().toLowerCase();
+  const normPin = String(pincode || '').trim();
+
+  // 1. Check Local (Sirhind area)
+  if (
+    STORE_ORIGIN.localPincodes.includes(normPin) ||
+    (normState === STORE_ORIGIN.state.toLowerCase() &&
+      STORE_ORIGIN.localCities.some((c) => normCity.includes(c)))
+  ) {
+    return 'local';
+  }
+
+  // 2. Check Within Punjab
+  if (normState === STORE_ORIGIN.state.toLowerCase()) {
+    return 'withinState';
+  }
+
+  // 3. Check Zone / Metro States
+  if (ZONE_METRO_STATES.includes(normState)) {
+    return 'zoneMetro';
+  }
+
+  // 4. Default to Other States
+  return 'otherStates';
+}
+
+/**
+ * Get tariff row for total weight in grams
+ */
+export function getRateForWeight(totalGrams) {
+  const safeGrams = Math.max(1, Number(totalGrams) || 250);
+  const slab = SPEED_POST_RATES.find((row) => safeGrams <= row.maxGrams);
+  return slab || SPEED_POST_RATES[SPEED_POST_RATES.length - 1];
+}
+
+/**
+ * Calculate Speed Post delivery charges
+ * @param {Object} params
+ * @param {string} params.state
+ * @param {string} params.city
+ * @param {string} params.pincode
+ * @param {Array} params.cartItems - Array of { product: { weightGrams }, quantity } or { weightGrams, quantity }
+ */
+export function calculateSpeedPostShipping({ state = '', city = '', pincode = '', cartItems = [] }) {
+  if (!cartItems || cartItems.length === 0) {
+    return {
+      totalGrams: 0,
+      zone: 'otherStates',
+      zoneLabel: 'Speed Post',
+      charge: 0,
+      slabMaxGrams: 500,
+    };
+  }
+
+  const totalGrams = cartItems.reduce((sum, item) => {
+    const rawWeight = item.product?.weightGrams ?? item.weightGrams ?? 250;
+    const w = Number(rawWeight) || 250;
+    const q = Number(item.quantity) || 1;
+    return sum + w * q;
+  }, 0);
+
+  const zone = getShippingZone({ state, city, pincode });
+  const rateRow = getRateForWeight(totalGrams);
+  const charge = Number(rateRow[zone]) || 55;
+
+  return {
+    totalGrams,
+    zone,
+    zoneLabel: ZONE_LABELS[zone] || 'Speed Post',
+    charge,
+    slabMaxGrams: rateRow.maxGrams,
+  };
+}

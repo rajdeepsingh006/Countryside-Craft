@@ -49,6 +49,20 @@ const orderSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+    shippingCharge: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    shippingZone: {
+      type: String,
+      default: '',
+    },
+    totalWeightGrams: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     status: {
       type: String,
       enum: ['pending', 'pending_whatsapp', 'confirmed', 'shipped', 'delivered', 'cancelled'],

@@ -16,6 +16,7 @@ const createProductSchema = Joi.object({
   videoThumbnail: Joi.string().allow(''),
   price: Joi.number().min(0).required(),
   originalPrice: Joi.alternatives().try(Joi.number().min(0), Joi.string().allow('', null)),
+  weightGrams: Joi.number().min(1).default(250),
   discountPercent: Joi.number().min(0).max(100).default(0),
   stock: Joi.number().integer().min(0).default(0),
   category: Joi.alternatives().try(
@@ -45,6 +46,7 @@ const updateProductSchema = Joi.object({
   videoThumbnail: Joi.string().allow(''),
   price: Joi.alternatives().try(Joi.number().min(0), Joi.string().allow('')),
   originalPrice: Joi.alternatives().try(Joi.number().min(0), Joi.string().allow('', null)),
+  weightGrams: Joi.number().min(1),
   discountPercent: Joi.number().min(0).max(100),
   stock: Joi.number().integer().min(0),
   category: Joi.alternatives().try(

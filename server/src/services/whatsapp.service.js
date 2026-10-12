@@ -28,11 +28,13 @@ ${order.customer.note ? `  Note: ${order.customer.note}` : ''}
 ${itemLines}
 
 ━━━━━━━━━━━━━━━━━━━━
-*Subtotal:* ₹${order.totalAmount.toLocaleString('en-IN')}
+💰 *Products Subtotal:* ₹${(order.totalAmount - (order.shippingCharge || 0)).toLocaleString('en-IN')}
+🚚 *Speed Post Delivery (${order.shippingZone || 'Zone'} | ~${order.totalWeightGrams || 0}g):* ₹${(order.shippingCharge || 0).toLocaleString('en-IN')}
+💵 *Final Order Total:* ₹${order.totalAmount.toLocaleString('en-IN')}
 Payment: UPI QR (customer-confirmed, please verify)
-⚠️ Shipping charges are extra and will be confirmed.
+✓ Speed Post delivery fee calculated automatically for ${order.customer.state || 'destination'}.
 
-Please confirm this order and let me know the delivery charges. Thank you! 🙏
+Please confirm receipt of order & dispatch schedule. Thank you! 🙏
 `.trim();
 
   const encoded = encodeURIComponent(message);

@@ -38,10 +38,32 @@ const createOrder = async (req, res) => {
     };
   });
 
+const { calculateShipping } = require('../services/shipping.service');
+  const cartItemsForShipping = items.map((item) => {
+    const product = productMap[item.product];
+    return {
+      weightGrams: product.weightGrams || 250,
+      quantity: item.quantity,
+    };
+  });
+
+  const shippingResult = calculateShipping({
+    state: customer.state,
+    city: customer.city,
+    pincode: customer.pincode,
+    cartItems: cartItemsForShipping,
+  });
+
+  const shippingCharge = shippingResult.charge || 0;
+  const grandTotal = parseFloat((totalAmount + shippingCharge).toFixed(2));
+
   const order = await Order.create({
     customer,
     items: orderItems,
-    totalAmount: parseFloat(totalAmount.toFixed(2)),
+    shippingCharge,
+    shippingZone: shippingResult.zoneLabel || shippingResult.zone,
+    totalWeightGrams: shippingResult.totalGrams,
+    totalAmount: grandTotal,
     sessionToken: req.session?.sessionToken,
     whatsappMessageSent: true,
   });

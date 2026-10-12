@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { MessageCircle, ShieldCheck, ArrowRight, Lock, Truck, MapPin, Phone, Building, Home, Sparkles, CreditCard, QrCode } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { MessageCircle, ShieldCheck, ArrowRight, Lock, Truck, MapPin, Phone, Building, Home, Sparkles, CreditCard, QrCode, Loader2, CheckCircle2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useStore } from '../context/StoreContext';
 import { formatCurrency } from '../utils/formatters';
@@ -9,6 +9,9 @@ import { razorpayService } from '../services/razorpayService';
 import { buildWhatsAppOrderMessage, generateWhatsAppUrl } from '../utils/whatsappMessageBuilder';
 import { UpiQrPayment } from '../components/checkout/UpiQrPayment';
 import { RazorpayCheckoutButton } from '../components/checkout/RazorpayCheckoutButton';
+import { INDIAN_STATES } from '../data/indianStates';
+import { lookupPincode } from '../services/pincodeService';
+import { calculateSpeedPostShipping } from '../utils/shippingCalculator';
 
 export const CheckoutPage = ({ onNavigate }) => {
   const { cart, subtotal, clearCart, totalItems } = useCart();
@@ -22,9 +25,9 @@ export const CheckoutPage = ({ onNavigate }) => {
     address: '',
     landmark: '',
     addressType: 'Home',
-    city: '',
+    city: 'Sirhind',
     state: 'Punjab',
-    pincode: '',
+    pincode: '140406',
   });
 
   const [tempOrderNumber] = useState(() => `CC-${Date.now().toString().slice(-6)}`);
@@ -32,13 +35,55 @@ export const CheckoutPage = ({ onNavigate }) => {
   const [upiPaid, setUpiPaid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+  const [pincodeLoading, setPincodeLoading] = useState(false);
+  const [autoDetectedLocation, setAutoDetectedLocation] = useState(null);
 
-  const INDIAN_STATES = [
-    'Punjab', 'Haryana', 'Delhi', 'Rajasthan', 'Uttar Pradesh', 'Himachal Pradesh',
-    'Chandigarh', 'Jammu & Kashmir', 'Maharashtra', 'Karnataka', 'Tamil Nadu',
-    'Telangana', 'Andhra Pradesh', 'Gujarat', 'West Bengal', 'Kerala', 'Madhya Pradesh',
-    'Bihar', 'Odisha', 'Assam', 'Goa', 'Uttarakhand', 'Jharkhand', 'Chhattisgarh',
-  ];
+  // Speed Post dynamic calculation based on total weight and destination zone
+  const shippingData = useMemo(() => {
+    return calculateSpeedPostShipping({
+      state: formData.state,
+      city: formData.city,
+      pincode: formData.pincode,
+      cartItems: cart,
+    });
+  }, [formData.state, formData.city, formData.pincode, cart]);
+
+  const shippingCharge = shippingData.charge || 0;
+  const finalTotal = subtotal + shippingCharge;
+
+  const handlePincodeChange = async (val) => {
+    const clean = val.replace(/[^0-9]/g, '').slice(0, 6);
+    setFormData((prev) => ({ ...prev, pincode: clean }));
+
+    if (clean.length === 6) {
+      setPincodeLoading(true);
+      try {
+        const location = await lookupPincode(clean);
+        if (location) {
+          setFormData((prev) => ({
+            ...prev,
+            city: location.city || prev.city,
+            state: location.state || prev.state,
+          }));
+          setAutoDetectedLocation(`${location.city}, ${location.state}`);
+          setErrors((prev) => {
+            const rest = { ...prev };
+            delete rest.pincode;
+            delete rest.city;
+            return rest;
+          });
+        } else {
+          setAutoDetectedLocation(null);
+        }
+      } catch (err) {
+        console.warn('Pincode lookup notice:', err);
+      } finally {
+        setPincodeLoading(false);
+      }
+    } else {
+      setAutoDetectedLocation(null);
+    }
+  };
 
   const validateShipping = () => {
     const errs = {};
@@ -95,6 +140,10 @@ export const CheckoutPage = ({ onNavigate }) => {
       const response = await orderService.createOrder({
         customer: customerPayload,
         items: itemsPayload,
+        shippingCharge,
+        shippingZone: shippingData.zoneLabel,
+        totalWeightGrams: shippingData.totalGrams,
+        totalAmount: finalTotal,
       });
 
       const orderResult = response.order || response;
@@ -165,12 +214,16 @@ export const CheckoutPage = ({ onNavigate }) => {
       const response = await orderService.createOrder({
         customer: customerPayload,
         items: itemsPayload,
+        shippingCharge,
+        shippingZone: shippingData.zoneLabel,
+        totalWeightGrams: shippingData.totalGrams,
+        totalAmount: finalTotal,
       });
 
       const orderResult = response.order || response;
       const orderNumber = orderResult.orderNumber || tempOrderNumber || `ORD-${Date.now().toString().slice(-5)}`;
 
-      // Ensure client WhatsApp message includes customer details, order items, and customer-confirmed UPI line
+      // Client WhatsApp message with Speed Post charges and final total
       const orderSnapshot = {
         orderNumber,
         createdAt: new Date().toISOString(),
@@ -178,7 +231,12 @@ export const CheckoutPage = ({ onNavigate }) => {
         items: cart.map((i) => ({ name: i.product.name, price: i.product.price, quantity: i.quantity })),
         subtotal,
         discount: 0,
-        totalAmount: subtotal,
+        shippingCharge,
+        shippingZone: shippingData.zoneLabel,
+        totalWeightGrams: shippingData.totalGrams,
+        totalAmount: finalTotal,
+        finalTotal,
+        paymentMode,
       };
       const whatsappMsg = buildWhatsAppOrderMessage(orderSnapshot, settings.storeName);
       const finalWhatsappUrl = generateWhatsAppUrl(settings.whatsappNumber, whatsappMsg) || response.whatsappUrl;
@@ -388,16 +446,53 @@ export const CheckoutPage = ({ onNavigate }) => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {/* 6-Digit PIN Code with Autofill */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-[#1A1F2C]">
+                      6-Digit PIN Code *
+                    </label>
+                    {pincodeLoading && (
+                      <span className="text-[10px] text-[#D91680] flex items-center gap-1 font-semibold">
+                        <Loader2 className="w-3 h-3 animate-spin" /> Looking up...
+                      </span>
+                    )}
+                  </div>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      required
+                      maxLength={6}
+                      value={formData.pincode}
+                      onChange={(e) => handlePincodeChange(e.target.value)}
+                      placeholder="e.g. 140406"
+                      className={`w-full px-3 py-2.5 text-xs rounded-xl bg-[#EEF3FA]/40 border text-[#1A1F2C] focus:outline-none ${
+                        errors.pincode ? 'border-red-500' : 'border-[#B9C9E7] focus:border-[#D91680]'
+                      }`}
+                    />
+                    {autoDetectedLocation && !pincodeLoading && (
+                      <span className="absolute right-2.5 top-2.5 text-emerald-600" title="Auto-detected">
+                        <CheckCircle2 className="w-4 h-4" />
+                      </span>
+                    )}
+                  </div>
+                  {errors.pincode && <p className="text-[10px] text-red-600 mt-1">{errors.pincode}</p>}
+                </div>
+
+                {/* City / District */}
                 <div>
                   <label className="block text-xs font-bold text-[#1A1F2C] mb-1">
-                    City / Town *
+                    City / District *
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.city}
-                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    placeholder="Ludhiana"
+                    onChange={(e) => {
+                      setFormData({ ...formData, city: e.target.value });
+                      setAutoDetectedLocation(null);
+                    }}
+                    placeholder="e.g. Sirhind / Ludhiana"
                     className={`w-full px-3 py-2.5 text-xs rounded-xl bg-[#EEF3FA]/40 border text-[#1A1F2C] focus:outline-none ${
                       errors.city ? 'border-red-500' : 'border-[#B9C9E7] focus:border-[#D91680]'
                     }`}
@@ -405,13 +500,17 @@ export const CheckoutPage = ({ onNavigate }) => {
                   {errors.city && <p className="text-[10px] text-red-600 mt-1">{errors.city}</p>}
                 </div>
 
+                {/* State Dropdown */}
                 <div>
                   <label className="block text-xs font-bold text-[#1A1F2C] mb-1">
-                    State *
+                    State / UT *
                   </label>
                   <select
                     value={formData.state}
-                    onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, state: e.target.value });
+                      setAutoDetectedLocation(null);
+                    }}
                     className="w-full px-3 py-2.5 text-xs rounded-xl bg-[#EEF3FA]/40 border border-[#B9C9E7] text-[#1A1F2C] focus:outline-none focus:border-[#D91680]"
                   >
                     {INDIAN_STATES.map((st) => (
@@ -421,23 +520,31 @@ export const CheckoutPage = ({ onNavigate }) => {
                     ))}
                   </select>
                 </div>
+              </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-[#1A1F2C] mb-1">
-                    6-Digit PIN Code *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    maxLength={6}
-                    value={formData.pincode}
-                    onChange={(e) => setFormData({ ...formData, pincode: e.target.value.replace(/[^0-9]/g, '') })}
-                    placeholder="141001"
-                    className={`w-full px-3 py-2.5 text-xs rounded-xl bg-[#EEF3FA]/40 border text-[#1A1F2C] focus:outline-none ${
-                      errors.pincode ? 'border-red-500' : 'border-[#B9C9E7] focus:border-[#D91680]'
-                    }`}
-                  />
-                  {errors.pincode && <p className="text-[10px] text-red-600 mt-1">{errors.pincode}</p>}
+              {/* Speed Post Postal Breakdown Chip */}
+              <div className="p-3.5 rounded-2xl bg-[#EEF3FA]/70 border border-[#B9C9E7]/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs">
+                <div className="flex items-center space-x-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-[#1E3A8A] text-white flex items-center justify-center shrink-0 shadow-2xs">
+                    <Truck className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="font-bold text-[#1A1F2C]">India Post Speed Post</span>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#1E3A8A]/10 text-[#1E3A8A]">
+                        {shippingData.zoneLabel}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-[#6A758E] mt-0.5">
+                      Origin: Punjab (Sirhind) • Total Weight: ~{shippingData.totalGrams}g (up to {shippingData.slabMaxGrams}g slab)
+                    </p>
+                  </div>
+                </div>
+                <div className="sm:text-right shrink-0">
+                  <span className="text-sm font-black text-[#1E3A8A]">
+                    {formatCurrency(shippingCharge)}
+                  </span>
+                  <p className="text-[10px] text-emerald-700 font-medium">Incl. GST</p>
                 </div>
               </div>
 
@@ -492,13 +599,21 @@ export const CheckoutPage = ({ onNavigate }) => {
                   <span>Product Subtotal</span>
                   <span className="font-bold text-[#1A1F2C]">{formatCurrency(subtotal)}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>Estimated Delivery</span>
-                  <span className="text-[#D91680] font-bold">Confirmed via WhatsApp</span>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span>Speed Post Delivery</span>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#1E3A8A]/10 text-[#1E3A8A] border border-[#B9C9E7]/60">
+                      {shippingData.zoneLabel} • ~{shippingData.totalGrams}g
+                    </span>
+                  </div>
+                  <span className="text-[#1E3A8A] font-bold">{formatCurrency(shippingCharge)}</span>
                 </div>
-                <div className="pt-2 border-t border-[#B9C9E7]/50 flex justify-between text-base font-bold text-[#1A1F2C]">
-                  <span>Total (Excl. Shipping)</span>
-                  <span className="text-xl font-black text-[#D91680]">{formatCurrency(subtotal)}</span>
+                <div className="pt-2 border-t border-[#B9C9E7]/50 flex justify-between items-baseline text-base font-bold text-[#1A1F2C]">
+                  <div>
+                    <span>Final Total</span>
+                    <p className="text-[10px] text-[#6A758E] font-normal">Products + Speed Post Delivery</p>
+                  </div>
+                  <span className="text-xl font-black text-[#D91680]">{formatCurrency(finalTotal)}</span>
                 </div>
               </div>
 
@@ -558,11 +673,11 @@ export const CheckoutPage = ({ onNavigate }) => {
               {paymentMode === 'razorpay' && (
                 <div className="pt-2">
                   <RazorpayCheckoutButton
-                    amount={subtotal}
+                    amount={finalTotal}
                     customer={formData}
                     onBeforePay={validateShipping}
                     disabled={isSubmitting}
-                    buttonText={`Pay with Razorpay (${formatCurrency(subtotal)})`}
+                    buttonText={`Pay with Razorpay (${formatCurrency(finalTotal)})`}
                     onPaymentSuccess={handleRazorpayPaymentSuccess}
                   />
                 </div>
@@ -575,7 +690,7 @@ export const CheckoutPage = ({ onNavigate }) => {
                     <UpiQrPayment
                       upiId={settings?.upiId}
                       payeeName={settings?.storeName}
-                      amount={subtotal}
+                      amount={finalTotal}
                       orderNumber={tempOrderNumber}
                     />
                   </div>
@@ -624,13 +739,13 @@ export const CheckoutPage = ({ onNavigate }) => {
                     >
                       <MessageCircle className="w-5 h-5 fill-white text-[#25D366]" />
                       <span>
-                        {isSubmitting ? 'Saving Order...' : `Proceed to WhatsApp (${formatCurrency(subtotal)})`}
+                        {isSubmitting ? 'Saving Order...' : `Proceed to WhatsApp (${formatCurrency(finalTotal)})`}
                       </span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
 
                     <p className="text-[11px] text-[#6A758E] text-center leading-relaxed px-1 font-medium">
-                      ✦ Clicking this button saves your order and redirects you to WhatsApp with your pre-filled order details to coordinate courier payment &amp; delivery dispatch.
+                      ✦ Clicking this button saves your order and redirects you to WhatsApp with your pre-filled order details including Speed Post delivery charges.
                     </p>
                   </div>
                 </>

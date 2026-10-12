@@ -115,6 +115,7 @@ export const AdminProducts = () => {
       category: defaultCat,
       price: 799,
       originalPrice: 999,
+      weightGrams: 250,
       description: '',
       tagline: '',
       detailedStory: '',
@@ -151,6 +152,7 @@ export const AdminProducts = () => {
       category: product.category?._id || product.category?.slug || product.category || '',
       price: product.price || 0,
       originalPrice: product.originalPrice || product.price || 0,
+      weightGrams: product.weightGrams || 250,
       description: product.description || '',
       tagline: product.tagline || '',
       detailedStory: product.detailedStory || '',
@@ -644,7 +646,7 @@ export const AdminProducts = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                 <div>
                   <label className="block font-bold text-[#1A1F2C] mb-1">Category</label>
                   <select
@@ -677,6 +679,19 @@ export const AdminProducts = () => {
                     type="number"
                     value={formData.originalPrice || 0}
                     onChange={(e) => setFormData({ ...formData, originalPrice: Number(e.target.value) })}
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#EEF3FA]/40 border border-[#B9C9E7] text-[#1A1F2C] focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-[#1A1F2C] mb-1">Weight (grams) *</label>
+                  <input
+                    type="number"
+                    min="1"
+                    required
+                    value={formData.weightGrams || 250}
+                    onChange={(e) => setFormData({ ...formData, weightGrams: Number(e.target.value) })}
+                    placeholder="250"
                     className="w-full px-3 py-2.5 rounded-xl bg-[#EEF3FA]/40 border border-[#B9C9E7] text-[#1A1F2C] focus:outline-none"
                   />
                 </div>

@@ -18,6 +18,7 @@ const galleryRoutes = require('./routes/gallery.routes');
 const authRoutes = require('./routes/auth.routes');
 const adminRoutes = require('./routes/admin.routes');
 const paymentRoutes = require('./routes/payment.routes');
+const shippingRoutes = require('./routes/shipping.routes');
 
 const app = express();
 
@@ -64,6 +65,7 @@ app.use('/api', reviewRoutes);          // /api/products/:id/reviews
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/gallery', galleryRoutes);
+app.use('/api/shipping', shippingRoutes);
 app.use('/api', paymentRoutes);            // /api/create-order & /api/verify-payment
 app.use('/api/razorpay', paymentRoutes);   // /api/razorpay/create-order & /api/razorpay/verify-payment
 
