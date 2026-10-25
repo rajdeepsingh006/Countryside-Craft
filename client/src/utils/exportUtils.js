@@ -1,5 +1,9 @@
 import { formatDate } from './formatters';
-import ExcelJS from 'exceljs';
+
+const getExcelJS = async () => {
+  const mod = await import('exceljs');
+  return mod.default || mod;
+};
 
 const sanitizeForSpreadsheet = (val) => {
   if (val === null || val === undefined) return '';
@@ -68,6 +72,7 @@ export const exportOrdersToCSV = (orders, filename = 'countryside-craft-orders.c
 
 // ─── Excel Export (FR-25) using ExcelJS ─────────────────────────────
 export const exportOrdersToExcel = async (orders, filename = 'countryside-craft-orders.xlsx') => {
+  const ExcelJS = await getExcelJS();
   const workbook = new ExcelJS.Workbook();
   const worksheet = workbook.addWorksheet('Orders');
 
