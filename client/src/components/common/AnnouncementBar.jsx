@@ -130,7 +130,7 @@ export const AnnouncementBar = ({
       ref={containerRef}
       role="region"
       aria-label="Store Announcement"
-      className="w-full bg-[#193428] text-[#F8F5EF] border-b border-[#244537] relative z-30 select-none transition-colors duration-200"
+      className="w-full bg-[#163323] text-[#F8F5EF] border-b border-[#204430] relative z-30 select-none transition-colors duration-200"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onFocusCapture={() => setIsFocused(true)}
@@ -147,7 +147,7 @@ export const AnnouncementBar = ({
             <button
               type="button"
               onClick={handlePrev}
-              className="p-1 rounded-md text-[#F8F5EF]/70 hover:text-[#C6A46A] hover:bg-[#244537]/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A46A] transition-all cursor-pointer"
+              className="p-1 rounded-md text-[#F8F5EF]/70 hover:text-[#C6A46A] hover:bg-[#204430]/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A46A] transition-all cursor-pointer"
               aria-label="Previous announcement"
             >
               <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
@@ -215,7 +215,7 @@ export const AnnouncementBar = ({
               <button
                 type="button"
                 onClick={() => setIsPaused((prev) => !prev)}
-                className="hidden sm:flex p-1 rounded-md text-[#F8F5EF]/60 hover:text-[#C6A46A] hover:bg-[#244537]/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A46A] transition-all cursor-pointer"
+                className="hidden sm:flex p-1 rounded-md text-[#F8F5EF]/60 hover:text-[#C6A46A] hover:bg-[#204430]/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A46A] transition-all cursor-pointer"
                 aria-label={isPaused ? 'Resume announcement rotation' : 'Pause announcement rotation'}
                 title={isPaused ? 'Resume auto-rotation' : 'Pause auto-rotation'}
               >
@@ -230,7 +230,7 @@ export const AnnouncementBar = ({
               <button
                 type="button"
                 onClick={handleNext}
-                className="p-1 rounded-md text-[#F8F5EF]/70 hover:text-[#C6A46A] hover:bg-[#244537]/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A46A] transition-all cursor-pointer"
+                className="p-1 rounded-md text-[#F8F5EF]/70 hover:text-[#C6A46A] hover:bg-[#204430]/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A46A] transition-all cursor-pointer"
                 aria-label="Next announcement"
               >
                 <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
