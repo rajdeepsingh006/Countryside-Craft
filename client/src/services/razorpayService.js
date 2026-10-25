@@ -21,24 +21,19 @@ export const loadRazorpayScript = () => {
 export const razorpayService = {
   /**
    * STEP 1: Calls backend POST /api/create-order
-   * @param {Object} data - { amount (paise), currency, receipt, notes }
+   * @param {Object} data - { orderId }
    */
-  async createOrder({ amount, currency = 'INR', receipt, notes = {} }) {
-    const res = await api.post('/create-order', {
-      amount,
-      currency,
-      receipt,
-      notes,
-    });
+  async createOrder({ orderId }) {
+    const res = await api.post('/create-order', { orderId });
     return res.data;
   },
 
   /**
-   * STEP 3: Calls backend POST /api/verify-payment
-   * @param {Object} data - { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderId }
+   * STEP 2: Calls backend POST /api/payments/verify
+   * @param {Object} paymentData - { razorpay_order_id, razorpay_payment_id, razorpay_signature }
    */
   async verifyPayment(paymentData) {
-    const res = await api.post('/verify-payment', paymentData);
+    const res = await api.post('/payments/verify', paymentData);
     return res.data;
   },
 

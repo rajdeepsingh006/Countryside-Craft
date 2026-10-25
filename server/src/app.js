@@ -21,18 +21,41 @@ const paymentRoutes = require('./routes/payment.routes');
 const shippingRoutes = require('./routes/shipping.routes');
 
 const app = express();
+app.set('trust proxy', 1);
 
 // ─── Security Middleware ─────────────────────────────────────────
 app.use(helmet());
 
+// Strict CORS allowlist
+const allowedOrigins = [
+  CLIENT_URL,
+  ADMIN_URL,
+  ...(process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim())
+    : []),
+].filter(Boolean);
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow localhost ports (5173, 5174, etc.) and requests with no origin
-      if (!origin || origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+      // Allow requests with no origin (mobile apps, curl, server-to-server)
+      if (!origin) {
         return callback(null, true);
       }
-      return callback(null, true);
+
+      const isDev = (process.env.NODE_ENV || 'development') !== 'production';
+      if (
+        isDev &&
+        (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:'))
+      ) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked: origin ${origin} is not allowed.`), false);
     },
     credentials: true, // Required for cookies (session, refresh token)
   })
@@ -47,11 +70,26 @@ const globalLimiter = rateLimit({
 });
 app.use(globalLimiter);
 
+// Controllers / Handlers for Webhook & Jobs
+const { handleRazorpayWebhook } = require('./controllers/payment.controller');
+const { cleanupExpiredOrders } = require('./controllers/order.controller');
+
+// ─── Razorpay Webhook (Mounted BEFORE express.json for raw body signature check) ─
+app.post(
+  '/api/payments/webhook',
+  express.raw({ type: 'application/json' }),
+  handleRazorpayWebhook
+);
+
 // ─── Core Middleware ─────────────────────────────────────────────
 app.use(logger);
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '100kb' }));
+app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 app.use(cookieParser(SESSION_COOKIE_SECRET));
+
+// Background cleanup: auto-cancel expired pending_payment orders older than 30 mins
+setInterval(cleanupExpiredOrders, 10 * 60 * 1000);
+setTimeout(cleanupExpiredOrders, 5000);
 
 // ─── Health Check ────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
@@ -66,8 +104,8 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/shipping', shippingRoutes);
+app.use('/api/payments', paymentRoutes);
 app.use('/api', paymentRoutes);            // /api/create-order & /api/verify-payment
-app.use('/api/razorpay', paymentRoutes);   // /api/razorpay/create-order & /api/razorpay/verify-payment
 
 // ─── Admin & Auth Routes ─────────────────────────────────────────
 app.use('/api/auth', authRoutes);

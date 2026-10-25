@@ -35,8 +35,8 @@ const sessionSchema = new mongoose.Schema(
     },
     expiresAt: {
       type: Date,
-      // Default: 30 days from now
-      default: () => new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      // Default: 7 days from now for guest sessions
+      default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     },
   },
   { timestamps: true }

@@ -61,19 +61,19 @@ const submitReview = async (req, res) => {
   if (!product) return sendError(res, 'Product not found.', 404);
 
   const review = await Review.create({
-    product: productId,
+    product: product._id,
     customerName: customerName.trim(),
     customerLocation: customerLocation ? customerLocation.trim() : 'India',
     rating: Number(rating),
     comment: comment.trim(),
     images: Array.isArray(images) ? images : [],
-    isVerifiedPurchase: true,
+    isVerifiedPurchase: false, // Must be verified by admin or confirmed delivered order
     isApproved: false, // Pending admin approval
   });
 
   return sendSuccess(
     res,
-    { review },
+    { review: { _id: review._id, rating: review.rating, createdAt: review.createdAt } },
     'Thank you! Your review has been submitted and will appear after moderation.',
     201
   );

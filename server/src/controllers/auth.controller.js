@@ -16,15 +16,22 @@ const login = async (req, res) => {
     return sendError(res, 'Invalid username or password.', 401);
   }
 
-  const payload = { id: admin._id, username: admin.username, role: admin.role };
+  const payload = {
+    id: admin._id.toString(),
+    username: admin.username,
+    role: admin.role,
+    tokenVersion: admin.tokenVersion || 0,
+  };
+
   const accessToken = generateAccessToken(payload);
   const refreshToken = generateRefreshToken(payload);
 
-  // Set refresh token as httpOnly cookie
+  // Set refresh token as httpOnly secure cookie
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    path: '/',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 
@@ -48,8 +55,31 @@ const refreshToken = async (req, res) => {
     const admin = await Admin.findById(decoded.id);
     if (!admin || !admin.isActive) return sendError(res, 'Admin not found or inactive.', 401);
 
-    const payload = { id: admin._id, username: admin.username, role: admin.role };
+    // Verify tokenVersion against revocation
+    if (decoded.tokenVersion !== undefined && admin.tokenVersion !== undefined) {
+      if (decoded.tokenVersion !== admin.tokenVersion) {
+        return sendError(res, 'Refresh token has been revoked.', 401);
+      }
+    }
+
+    const payload = {
+      id: admin._id.toString(),
+      username: admin.username,
+      role: admin.role,
+      tokenVersion: admin.tokenVersion || 0,
+    };
+
     const accessToken = generateAccessToken(payload);
+    const newRefreshToken = generateRefreshToken(payload);
+
+    // Rotate refresh token
+    res.cookie('refreshToken', newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     return sendSuccess(res, { accessToken }, 'Token refreshed');
   } catch {
@@ -58,8 +88,27 @@ const refreshToken = async (req, res) => {
 };
 
 // POST /api/admin/auth/logout
-const logout = (req, res) => {
-  res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'strict' });
+const logout = async (req, res) => {
+  const token = req.cookies?.refreshToken;
+  if (token) {
+    try {
+      const decoded = verifyRefreshToken(token);
+      if (decoded?.id) {
+        // Invalidate active token family by incrementing tokenVersion
+        await Admin.findByIdAndUpdate(decoded.id, { $inc: { tokenVersion: 1 } });
+      }
+    } catch {
+      // Token may already be expired or invalid
+    }
+  }
+
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    path: '/',
+  });
+
   return sendSuccess(res, null, 'Logged out successfully');
 };
 

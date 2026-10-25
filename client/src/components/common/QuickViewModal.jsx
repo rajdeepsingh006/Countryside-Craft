@@ -186,29 +186,40 @@ export const QuickViewModal = ({ onNavigate }) => {
                 <span className="text-xs text-[#6A758E]">({product.ratingCount || 0} reviews)</span>
                 <span className="text-xs text-emerald-700 font-bold">• In Stock ({product.stock} left)</span>
               </div>
-              <div className="mt-3 flex items-baseline space-x-2.5">
-                <span className="text-2xl font-black text-[#1A1F2C]">
-                  {formatCurrency(product.price)}
-                </span>
-                {product.originalPrice && product.originalPrice > product.price && (
-                  <span className="text-sm text-[#8E9DBE] line-through">
-                    {formatCurrency(product.originalPrice)}
-                  </span>
-                )}
-              </div>
-              <p className="text-[11px] text-[#6A758E] mt-1 font-medium italic">
-                * Prices exclude shipping/delivery charges (confirmed via WhatsApp).
+              {(() => {
+                const displayOriginalPrice =
+                  product.originalPrice && product.originalPrice > product.price
+                    ? product.originalPrice
+                    : product.discountPercent > 0
+                    ? Math.round(product.price / (1 - product.discountPercent / 100))
+                    : null;
+
+                return (
+                  <div className="mt-3 flex items-baseline space-x-2.5">
+                    <span className="text-2xl font-black text-[#193428]">
+                      {formatCurrency(product.price)}
+                    </span>
+                    {displayOriginalPrice && displayOriginalPrice > product.price && (
+                      <span className="text-sm text-[#6D756D] line-through">
+                        {formatCurrency(displayOriginalPrice)}
+                      </span>
+                    )}
+                  </div>
+                );
+              })()}
+              <p className="text-[11px] text-[#6D756D] mt-1 font-medium italic">
+                * Speed Post shipping calculated by weight at checkout.
               </p>
-              <p className="text-xs text-[#3E475C] mt-3 line-clamp-3 leading-relaxed">
+              <p className="text-xs text-[#34443A] mt-3 line-clamp-3 leading-relaxed">
                 {product.description}
               </p>
-              <div className="mt-4 pt-3 border-t border-[#EEF3FA] grid grid-cols-2 gap-2 text-[11px] text-[#3E475C]">
+              <div className="mt-4 pt-3 border-t border-[#E7DFD2] grid grid-cols-2 gap-2 text-[11px] text-[#34443A]">
                 <div>
-                  <span className="text-[#6A758E] block font-semibold">Material:</span>
+                  <span className="text-[#6D756D] block font-semibold">Material:</span>
                   <span className="font-bold">{product.material || 'Organic Cotton Duck Canvas'}</span>
                 </div>
                 <div>
-                  <span className="text-[#6A758E] block font-semibold">Size / Capacity:</span>
+                  <span className="text-[#6D756D] block font-semibold">Size / Capacity:</span>
                   <span className="font-bold">{product.dimensions || '16" H x 15" W'}</span>
                 </div>
               </div>
@@ -216,17 +227,17 @@ export const QuickViewModal = ({ onNavigate }) => {
 
             <div className="space-y-3 pt-2">
               <div className="flex items-center space-x-3">
-                <div className="flex items-center border border-[#B9C9E7] rounded-xl bg-white p-1">
+                <div className="flex items-center border border-[#E7DFD2] rounded-xl bg-white p-1">
                   <button
                     onClick={() => setQty(Math.max(1, qty - 1))}
-                    className="w-8 h-8 rounded-lg text-[#1A1F2C] hover:bg-[#EEF3FA] font-bold cursor-pointer"
+                    className="w-8 h-8 rounded-lg text-[#193428] hover:bg-[#F0EBE1] font-bold cursor-pointer"
                   >
                     -
                   </button>
-                  <span className="w-8 text-center text-xs font-black">{qty}</span>
+                  <span className="w-8 text-center text-xs font-black text-[#193428]">{qty}</span>
                   <button
                     onClick={() => setQty(Math.min(product.stock || 99, qty + 1))}
-                    className="w-8 h-8 rounded-lg text-[#1A1F2C] hover:bg-[#EEF3FA] font-bold cursor-pointer"
+                    className="w-8 h-8 rounded-lg text-[#193428] hover:bg-[#F0EBE1] font-bold cursor-pointer"
                   >
                     +
                   </button>
@@ -235,10 +246,10 @@ export const QuickViewModal = ({ onNavigate }) => {
                   id="quickview-add-to-cart-btn"
                   onClick={handleAdd}
                   disabled={added}
-                  className={`flex-1 py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center space-x-2 shadow-md cursor-pointer ${
+                  className={`flex-1 py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center space-x-2 shadow-xs cursor-pointer border ${
                     added
-                      ? 'bg-emerald-600 text-white'
-                      : 'bg-[#D91680] hover:bg-[#BE0E6E] text-white active:scale-98 border border-[#EFC0DA]'
+                      ? 'bg-emerald-700 text-white border-emerald-700'
+                      : 'bg-[#244537] hover:bg-[#193428] text-white active:scale-98 border-[#244537]'
                   }`}
                 >
                   {added ? (
@@ -248,7 +259,7 @@ export const QuickViewModal = ({ onNavigate }) => {
                     </>
                   ) : (
                     <>
-                      <ShoppingBag className="w-4 h-4 text-[#EFC0DA]" />
+                      <ShoppingBag className="w-4 h-4 text-[#C6A46A]" />
                       <span>Add to Bag • {formatCurrency(product.price * qty)}</span>
                     </>
                   )}
@@ -259,7 +270,7 @@ export const QuickViewModal = ({ onNavigate }) => {
                   closeQuickView();
                   onNavigate('product-detail', product.slug);
                 }}
-                className="w-full py-2 rounded-xl text-xs font-bold text-[#D91680] hover:text-[#BE0E6E] flex items-center justify-center space-x-1.5 transition-colors cursor-pointer"
+                className="w-full py-2 rounded-xl text-xs font-bold text-[#244537] hover:text-[#193428] flex items-center justify-center space-x-1.5 transition-colors cursor-pointer"
               >
                 <span>View Full Details, Videos & Customer Reviews</span>
                 <ArrowRight className="w-3.5 h-3.5" />

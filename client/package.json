@@ -6,23 +6,27 @@
   "scripts": {
     "dev": "vite --port=5173",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint src",
+    "test": "node --test"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",
     "@vitejs/plugin-react": "^5.0.4",
     "axios": "^1.7.9",
     "canvas-confetti": "^1.9.4",
+    "exceljs": "^4.4.0",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
     "qrcode.react": "^4.2.0",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "recharts": "^3.10.1",
-    "vite": "^6.2.3",
-    "xlsx": "^0.18.5"
+    "vite": "^6.2.3"
   },
   "devDependencies": {
+    "eslint": "^10.13.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "tailwindcss": "^4.1.14"
   }
 }

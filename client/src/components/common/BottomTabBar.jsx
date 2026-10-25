@@ -36,7 +36,7 @@ export const BottomTabBar = ({ currentView, onNavigate }) => {
   return (
     <nav
       aria-label="Mobile Navigation Bar"
-      className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-[#FFFDFB]/95 backdrop-blur-md border-t border-[#F0E4D8] shadow-[0_-4px_20px_rgba(0,0,0,0.06)] pb-[env(safe-area-inset-bottom)]"
+      className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/95 backdrop-blur-md border-t border-[#E7DFD2] shadow-[0_-4px_20px_rgba(25,52,40,0.06)] pb-[env(safe-area-inset-bottom)]"
     >
       <div className="grid grid-cols-4 h-15 max-w-md mx-auto items-center px-1">
         {tabs.map((tab) => {
@@ -48,32 +48,26 @@ export const BottomTabBar = ({ currentView, onNavigate }) => {
               onClick={tab.action}
               className={`flex flex-col items-center justify-center min-h-[48px] py-1 transition-all relative select-none active:scale-95 outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 shadow-none focus:shadow-none [-webkit-tap-highlight-color:transparent] ${
                 tab.isActive
-                  ? 'text-[#D91680] font-bold'
-                  : tab.isHighlight
-                  ? 'text-[#25D366] hover:text-[#1EB855]'
-                  : 'text-[#6E645A] hover:text-[#1A1F2C]'
+                  ? 'text-[#244537] font-bold'
+                  : 'text-[#6D756D] hover:text-[#34443A]'
               }`}
             >
               <div className="relative">
                 <Icon
                   className={`w-5 h-5 transition-transform ${
-                    tab.isActive ? 'scale-110 stroke-[2.5] text-[#D91680]' : 'stroke-[1.8]'
+                    tab.isActive ? 'scale-110 stroke-[2.5] text-[#244537]' : 'stroke-[1.8]'
                   }`}
                 />
-                {tab.badge !== undefined && tab.badge > 0 && (
-                  <span
-                    id="mobile-tab-cart-badge"
-                    className="absolute -top-1.5 -right-2.5 bg-[#D91680] text-white text-[10px] font-black min-w-4.5 h-4.5 px-1 rounded-full flex items-center justify-center border-2 border-[#FFFDFB] shadow-xs animate-scale-in"
-                  >
-                    {tab.badge}
-                  </span>
-                )}
               </div>
-              <span className={`text-[10px] mt-1 tracking-tight ${tab.isActive ? 'font-bold text-[#D91680]' : 'font-medium'}`}>
+              <span
+                className={`text-[10px] mt-1 tracking-tight ${
+                  tab.isActive ? 'font-bold text-[#244537]' : 'font-medium'
+                }`}
+              >
                 {tab.label}
               </span>
               {tab.isActive && (
-                <span className="absolute bottom-1 w-1 h-1 rounded-full bg-[#D91680]" />
+                <span className="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-[#C6A46A]" />
               )}
             </button>
           );

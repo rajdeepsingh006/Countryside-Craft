@@ -70,8 +70,17 @@ const orderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'pending_whatsapp', 'confirmed', 'shipped', 'delivered', 'cancelled'],
-      default: 'pending',
+      enum: [
+        'pending',
+        'pending_payment',
+        'payment_pending_manual',
+        'pending_whatsapp',
+        'confirmed',
+        'shipped',
+        'delivered',
+        'cancelled',
+      ],
+      default: 'pending_payment',
     },
     paymentMethod: {
       type: String,
@@ -80,12 +89,21 @@ const orderSchema = new mongoose.Schema(
     },
     paymentStatus: {
       type: String,
-      enum: ['pending', 'paid', 'failed'],
+      enum: ['pending', 'pending_manual', 'paid', 'failed', 'refunded'],
       default: 'pending',
     },
-    razorpayOrderId: { type: String, default: '' },
+    razorpayOrderId: { type: String, default: '', index: true },
     razorpayPaymentId: { type: String, default: '' },
-    razorpaySignature: { type: String, default: '' },
+    manualPayment: {
+      markedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
+      markedAt: { type: Date },
+      utrReference: { type: String, default: '' },
+      notes: { type: String, default: '' },
+    },
+    stockRestored: {
+      type: Boolean,
+      default: false,
+    },
     whatsappMessageSent: {
       type: Boolean,
       default: false,
@@ -98,12 +116,18 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Auto-generate human-readable order number before saving (ORD-00001, ORD-00002, ...)
+const { getNextSequence } = require('./counter.model');
+
+// Performance & Lookup Indexes
+orderSchema.index({ razorpayOrderId: 1 });
+orderSchema.index({ createdAt: -1 });
+orderSchema.index({ status: 1, createdAt: -1 });
+
+// Auto-generate human-readable order number atomically (ORD-00001, ORD-00002, ...)
 orderSchema.pre('save', async function (next) {
   if (this.isNew && !this.orderNumber) {
-    const Order = mongoose.model('Order');
-    const count = await Order.countDocuments();
-    this.orderNumber = `ORD-${String(count + 1).padStart(5, '0')}`;
+    const seq = await getNextSequence('orderNumber');
+    this.orderNumber = `ORD-${String(seq).padStart(5, '0')}`;
   }
   next();
 });

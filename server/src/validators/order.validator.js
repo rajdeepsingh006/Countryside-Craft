@@ -26,25 +26,37 @@ const createOrderSchema = Joi.object({
     address: Joi.string().trim().min(5).max(500).required(),
     city: Joi.string().trim().allow('').max(100).optional(),
     state: Joi.string().trim().allow('').max(100).optional(),
-    pincode: Joi.string().trim().allow('').max(10).optional(),
+    pincode: Joi.string().trim().pattern(/^[1-9][0-9]{5}$/).allow('').max(10).optional()
+      .messages({
+        'string.pattern.base': 'Please enter a valid 6-digit Indian PIN code',
+      }),
     email: Joi.string().email().allow('').max(150).optional(),
-    giftWrap: Joi.boolean().optional(),
     note: Joi.string().trim().allow('').max(500).default(''),
-  })
-    .unknown(true)
-    .required(),
+  }).required(),
+
   items: Joi.array()
     .items(
       Joi.object({
-        product: Joi.string().required(),
-        quantity: Joi.number().integer().min(1).required(),
-        name: Joi.string().optional(),
-        price: Joi.number().optional(),
-        image: Joi.string().allow('').optional(),
-      }).unknown(true)
+        product: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required()
+          .messages({ 'string.pattern.base': 'Invalid product identifier format' }),
+        quantity: Joi.number().integer().min(1).max(20).required(),
+      })
     )
     .min(1)
+    .max(50)
     .required(),
-}).unknown(true);
+
+  paymentMethod: Joi.string().valid('razorpay', 'upi', 'whatsapp', 'cod', 'manual').default('whatsapp'),
+  giftWrap: Joi.boolean().default(false),
+  // Any client-supplied calculation/payment fields are stripped; server authoritatively computes all amounts
+  amount: Joi.any().strip(),
+  currency: Joi.any().strip(),
+  receipt: Joi.any().strip(),
+  notes: Joi.any().strip(),
+  shippingCharge: Joi.any().strip(),
+  shippingZone: Joi.any().strip(),
+  totalWeightGrams: Joi.any().strip(),
+  totalAmount: Joi.any().strip(),
+});
 
 module.exports = { createOrderSchema };

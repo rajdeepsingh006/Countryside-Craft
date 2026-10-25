@@ -4,17 +4,21 @@ node_modules/
 
 # Environment Variables & Secrets (CRITICAL)
 .env
+.env*
 .env.*
 !.env.example
 *.env
 server/.env
 client/.env
+*.pem
 
-# Build outputs
+# Build & Test outputs
 dist/
 build/
 */dist/
 */build/
+coverage/
+*/coverage/
 
 # IDE & OS files
 .DS_Store

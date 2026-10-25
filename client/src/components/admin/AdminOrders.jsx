@@ -23,11 +23,15 @@ const STATUS_STYLES = {
   confirmed: 'bg-[#FDF1F7] text-[#86124F] border-[#EFC0DA]',
   cancelled: 'bg-red-50 text-red-800 border-red-300',
   pending: 'bg-neutral-50 text-neutral-800 border-neutral-300',
+  pending_payment: 'bg-amber-50 text-amber-800 border-amber-300',
+  payment_pending_manual: 'bg-purple-50 text-purple-800 border-purple-300',
   pending_whatsapp: 'bg-orange-50 text-orange-800 border-orange-300',
 };
 
 const STATUS_LABELS = {
   pending: '⏳ Pending',
+  pending_payment: '💳 Awaiting Payment',
+  payment_pending_manual: '📱 Manual UPI Pending',
   pending_whatsapp: '💬 WhatsApp Pending',
   confirmed: '✓ Confirmed',
   shipped: '🚚 Shipped',
@@ -121,6 +125,32 @@ export const AdminOrders = () => {
       if (selectedOrder?._id === orderId) setSelectedOrder({ ...selectedOrder, status: newStatus });
     } catch {
       showToast('Failed to update order status.', 'error');
+    }
+  };
+
+  const handleMarkPaid = async (order) => {
+    const utr = window.prompt(`Enter UTR / UPI Reference for Order #${order.orderNumber}:`);
+    if (utr === null) return;
+    try {
+      const res = await adminService.markOrderPaid(order._id, { utrReference: utr.trim() });
+      showToast(`Order #${order.orderNumber} marked as PAID.`, 'success');
+      setOrders((prev) =>
+        prev.map((o) =>
+          o._id === order._id
+            ? { ...o, status: 'confirmed', paymentStatus: 'paid', manualPayment: res.manualPayment }
+            : o
+        )
+      );
+      if (selectedOrder?._id === order._id) {
+        setSelectedOrder((prev) => ({
+          ...prev,
+          status: 'confirmed',
+          paymentStatus: 'paid',
+          manualPayment: res.manualPayment,
+        }));
+      }
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Failed to mark order as paid.', 'error');
     }
   };
 
@@ -370,17 +400,42 @@ export const AdminOrders = () => {
                           </option>
                         ))}
                       </select>
+                      <div className="mt-1 flex items-center space-x-1">
+                        <span
+                          className={`text-[9px] font-bold px-1.5 py-0.5 rounded uppercase ${
+                            order.paymentStatus === 'paid'
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : 'bg-amber-100 text-amber-800'
+                          }`}
+                        >
+                          {order.paymentStatus === 'paid' ? 'Paid' : 'Unpaid'}
+                        </span>
+                        <span className="text-[10px] text-[#6A758E] font-medium capitalize">
+                          ({order.paymentMethod || 'whatsapp'})
+                        </span>
+                      </div>
                     </td>
 
-                    {/* WhatsApp Action */}
+                    {/* Actions */}
                     <td className="py-3.5 px-4 text-right">
-                      <button
-                        onClick={() => handleWhatsAppCustomer(order)}
-                        className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition-colors inline-flex items-center space-x-1 border border-emerald-200 cursor-pointer"
-                      >
-                        <MessageCircle className="w-3.5 h-3.5" />
-                        <span>WhatsApp</span>
-                      </button>
+                      <div className="flex items-center justify-end space-x-2">
+                        {order.paymentStatus !== 'paid' && (
+                          <button
+                            onClick={() => handleMarkPaid(order)}
+                            className="px-2.5 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs transition-colors inline-flex items-center space-x-1 border border-purple-200 cursor-pointer"
+                            title="Mark Paid manually with UTR"
+                          >
+                            <span>✓ Mark Paid</span>
+                          </button>
+                        )}
+                        <button
+                          onClick={() => handleWhatsAppCustomer(order)}
+                          className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition-colors inline-flex items-center space-x-1 border border-emerald-200 cursor-pointer"
+                        >
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          <span>WhatsApp</span>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -445,6 +500,47 @@ export const AdminOrders = () => {
               <p className="text-[#6A758E]"><strong>Placed on:</strong> {formatDate(selectedOrder.createdAt)}</p>
             </div>
 
+            {/* Payment Details */}
+            <div className="p-4 rounded-2xl bg-[#EEF3FA]/40 border border-[#B9C9E7]/60 space-y-1.5 text-xs text-[#1A1F2C]">
+              <h4 className="font-bold text-[#D91680] uppercase tracking-wider text-[11px] mb-2">
+                Payment Information
+              </h4>
+              <p>
+                <strong>Method:</strong>{' '}
+                <span className="capitalize">{selectedOrder.paymentMethod || 'whatsapp'}</span>
+              </p>
+              <p>
+                <strong>Payment Status:</strong>{' '}
+                <span
+                  className={`font-bold px-2 py-0.5 rounded text-[11px] uppercase ${
+                    selectedOrder.paymentStatus === 'paid'
+                      ? 'bg-emerald-100 text-emerald-800'
+                      : 'bg-amber-100 text-amber-800'
+                  }`}
+                >
+                  {selectedOrder.paymentStatus || 'pending'}
+                </span>
+              </p>
+              {selectedOrder.manualPayment?.markedAt && (
+                <div className="mt-2 p-2 bg-emerald-50 rounded-xl border border-emerald-200 text-emerald-900">
+                  <p className="font-bold">✓ Manually Verified as Paid</p>
+                  <p>
+                    <strong>Verified By:</strong>{' '}
+                    {selectedOrder.manualPayment.markedBy?.username || 'Admin'}
+                  </p>
+                  <p>
+                    <strong>Verified On:</strong>{' '}
+                    {formatDate(selectedOrder.manualPayment.markedAt)}
+                  </p>
+                  {selectedOrder.manualPayment.utrReference && (
+                    <p>
+                      <strong>UTR / Ref:</strong> {selectedOrder.manualPayment.utrReference}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+
             {/* Ordered Items */}
             <div className="space-y-2">
               <h4 className="font-bold text-[#1A1F2C] uppercase tracking-wider text-xs">
@@ -476,6 +572,14 @@ export const AdminOrders = () => {
 
             {/* Actions */}
             <div className="flex gap-3">
+              {selectedOrder.paymentStatus !== 'paid' && (
+                <button
+                  onClick={() => handleMarkPaid(selectedOrder)}
+                  className="py-3.5 px-4 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-1 cursor-pointer shadow-md"
+                >
+                  <span>✓ Mark Paid (Manual)</span>
+                </button>
+              )}
               <button
                 onClick={() => handleWhatsAppCustomer(selectedOrder)}
                 className="flex-1 py-3.5 rounded-2xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-2 cursor-pointer shadow-md"

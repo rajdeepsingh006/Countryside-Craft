@@ -92,16 +92,27 @@ export const SignatureSpotlight = ({ onNavigate }) => {
               </div>
 
               <div className="pt-3 sm:pt-4 border-t border-[#EADDC6]">
-                <div className="flex items-baseline space-x-2.5 sm:space-x-3">
-                  <span className="text-2xl sm:text-3xl font-black text-[#1A1F2C]">
-                    {formatCurrency(spotlightProduct.price)}
-                  </span>
-                  {spotlightProduct.originalPrice && spotlightProduct.originalPrice > spotlightProduct.price && (
-                    <span className="text-xs sm:text-sm text-[#8A7E72] line-through">
-                      {formatCurrency(spotlightProduct.originalPrice)}
-                    </span>
-                  )}
-                </div>
+                {(() => {
+                  const displayOriginalPrice =
+                    spotlightProduct.originalPrice && spotlightProduct.originalPrice > spotlightProduct.price
+                      ? spotlightProduct.originalPrice
+                      : spotlightProduct.discountPercent > 0
+                      ? Math.round(spotlightProduct.price / (1 - spotlightProduct.discountPercent / 100))
+                      : null;
+
+                  return (
+                    <div className="flex items-baseline space-x-2.5 sm:space-x-3">
+                      <span className="text-2xl sm:text-3xl font-black text-[#1A1F2C]">
+                        {formatCurrency(spotlightProduct.price)}
+                      </span>
+                      {displayOriginalPrice && displayOriginalPrice > spotlightProduct.price && (
+                        <span className="text-xs sm:text-sm text-[#8A7E72] line-through">
+                          {formatCurrency(displayOriginalPrice)}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })()}
                 <p className="text-[10px] sm:text-[11px] text-[#7A6E62] mt-1 italic">
                   * Shipping calculated extra based on destination pincode
                 </p>

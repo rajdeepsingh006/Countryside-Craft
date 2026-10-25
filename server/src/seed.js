@@ -12,25 +12,44 @@ const Product = require('./models/product.model');
 const Settings = require('./models/settings.model');
 const { DEFAULT_CATEGORIES, DEFAULT_PRODUCTS } = require('./data/defaultProducts');
 
+const crypto = require('crypto');
+
 const seed = async () => {
+  if (process.env.NODE_ENV === 'production') {
+    console.error('\n❌ FATAL: Database seed script cannot be run in production environment!\n');
+    process.exit(1);
+  }
+
   await connectDB();
   console.log('\n🌱 Starting database seed with Jute & Canvas categories and 17 products...\n');
 
-  // ─── Clear existing sample data ───────────────────────────────
-  await Admin.deleteMany({});
+  // ─── Ensure Main Admin Exists ──────────────────────────────────
+  const existingAdmin = await Admin.findOne({ role: 'main_admin' });
+  let adminPassword = process.env.ADMIN_SEED_PASSWORD;
+  let isGeneratedPassword = false;
+
+  if (!existingAdmin) {
+    if (!adminPassword) {
+      adminPassword = crypto.randomBytes(12).toString('base64').replace(/[^a-zA-Z0-9]/g, 'X') + 'A1!';
+      isGeneratedPassword = true;
+    }
+
+    await Admin.create({
+      name: 'Countryside Craft Owner',
+      username: 'admin',
+      passwordHash: adminPassword,
+      role: 'main_admin',
+    });
+    console.log(`✅ Main Admin created — username: admin | password: ${adminPassword}`);
+  } else {
+    console.log(`ℹ️ Main Admin already exists (${existingAdmin.username}). Skipping admin creation.`);
+  }
+
+  // ─── Clear previous catalog data (Categories, Products, Settings) ──
   await Category.deleteMany({});
   await Product.deleteMany({});
   await Settings.deleteMany({});
-  console.log('✅ Cleared all previous sample products and data');
-
-  // ─── Create Main Admin ────────────────────────────────────────
-  await Admin.create({
-    name: 'Countryside Craft Owner',
-    username: 'admin',
-    passwordHash: 'Admin@123456',
-    role: 'main_admin',
-  });
-  console.log(`✅ Main Admin created — username: admin | password: Admin@123456`);
+  console.log('✅ Cleared previous catalog data (Categories, Products, Settings)');
 
   // ─── Create Categories ────────────────────────────────────────
   const categories = await Category.insertMany(
@@ -96,9 +115,13 @@ const seed = async () => {
 
   console.log('\n🎉 Seed complete! Jute and Canvas catalog successfully configured.\n');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('Admin Login:');
+  console.log('Admin Status:');
   console.log('  Username : admin');
-  console.log('  Password : Admin@123456');
+  if (!existingAdmin) {
+    console.log(`  Password : ${adminPassword} ${isGeneratedPassword ? '(Generated - save this!)' : ''}`);
+  } else {
+    console.log('  Password : [Unchanged - existing admin account preserved]');
+  }
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
   await mongoose.connection.close();

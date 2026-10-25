@@ -42,6 +42,10 @@ export const adminService = {
     const { data } = await api.put(`/admin/orders/${id}/status`, { status, adminNotes });
     return data.data;
   },
+  async markOrderPaid(id, { utrReference = '', notes = '' } = {}) {
+    const { data } = await api.put(`/admin/orders/${id}/mark-paid`, { utrReference, notes });
+    return data.data;
+  },
   async exportOrders() {
     const res = await api.get('/admin/orders/export', { responseType: 'blob' });
     return res.data;

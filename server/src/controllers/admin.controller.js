@@ -45,8 +45,18 @@ const updateAdmin = async (req, res) => {
     return sendError(res, 'You cannot deactivate your own account.', 400);
   }
 
+  const targetAdmin = await Admin.findById(req.params.id);
+  if (!targetAdmin) return sendError(res, 'Admin not found.', 404);
+
+  // Guard against demoting or deactivating the last active main_admin
+  if (targetAdmin.role === 'main_admin' && (isActive === false || (role && role !== 'main_admin'))) {
+    const activeMainAdmins = await Admin.countDocuments({ role: 'main_admin', isActive: true });
+    if (activeMainAdmins <= 1) {
+      return sendError(res, 'Cannot deactivate or demote the last remaining active Main Admin.', 400);
+    }
+  }
+
   const admin = await Admin.findByIdAndUpdate(req.params.id, updates, { new: true });
-  if (!admin) return sendError(res, 'Admin not found.', 404);
   return sendSuccess(res, { admin }, 'Admin updated');
 };
 
@@ -55,8 +65,19 @@ const deleteAdmin = async (req, res) => {
   if (req.params.id === req.admin.id) {
     return sendError(res, 'You cannot delete your own account.', 400);
   }
-  const admin = await Admin.findByIdAndDelete(req.params.id);
-  if (!admin) return sendError(res, 'Admin not found.', 404);
+
+  const targetAdmin = await Admin.findById(req.params.id);
+  if (!targetAdmin) return sendError(res, 'Admin not found.', 404);
+
+  // Guard against deleting the last active main_admin
+  if (targetAdmin.role === 'main_admin') {
+    const activeMainAdmins = await Admin.countDocuments({ role: 'main_admin', isActive: true });
+    if (activeMainAdmins <= 1) {
+      return sendError(res, 'Cannot delete the last remaining active Main Admin.', 400);
+    }
+  }
+
+  await Admin.findByIdAndDelete(req.params.id);
   return sendSuccess(res, null, 'Admin account deleted');
 };
 

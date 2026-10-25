@@ -1,5 +1,14 @@
 import { formatDate } from './formatters';
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
+
+const sanitizeForSpreadsheet = (val) => {
+  if (val === null || val === undefined) return '';
+  const str = String(val);
+  if (/^[=+\-@\t\r]/.test(str)) {
+    return `'${str}`;
+  }
+  return str;
+};
 
 // ─── CSV Export ───────────────────────────────────────────────────
 export const exportOrdersToCSV = (orders, filename = 'countryside-craft-orders.csv') => {
@@ -28,20 +37,20 @@ export const exportOrdersToCSV = (orders, filename = 'countryside-craft-orders.c
     const c = order.customer || {};
 
     return [
-      `"${order.orderNumber || ''}"`,
+      `"${sanitizeForSpreadsheet(order.orderNumber || '').replace(/"/g, '""')}"`,
       `"${formatDate(order.createdAt)}"`,
-      `"${(c.name || '').replace(/"/g, '""')}"`,
-      `"${c.phone || ''}"`,
-      `"${c.city || ''}"`,
-      `"${c.state || ''}"`,
-      `"${c.pincode || ''}"`,
-      `"${(c.address || '').replace(/"/g, '""')}"`,
-      `"${itemsSummary.replace(/"/g, '""')}"`,
+      `"${sanitizeForSpreadsheet(c.name || '').replace(/"/g, '""')}"`,
+      `"${sanitizeForSpreadsheet(c.phone || '').replace(/"/g, '""')}"`,
+      `"${sanitizeForSpreadsheet(c.city || '').replace(/"/g, '""')}"`,
+      `"${sanitizeForSpreadsheet(c.state || '').replace(/"/g, '""')}"`,
+      `"${sanitizeForSpreadsheet(c.pincode || '').replace(/"/g, '""')}"`,
+      `"${sanitizeForSpreadsheet(c.address || '').replace(/"/g, '""')}"`,
+      `"${sanitizeForSpreadsheet(itemsSummary).replace(/"/g, '""')}"`,
       totalQty,
       order.totalAmount,
       `"${(order.status || 'pending').toUpperCase()}"`,
       order.giftWrap ? 'Yes' : 'No',
-      `"${(c.note || '').replace(/"/g, '""')}"`,
+      `"${sanitizeForSpreadsheet(c.note || '').replace(/"/g, '""')}"`,
     ];
   });
 
@@ -57,45 +66,65 @@ export const exportOrdersToCSV = (orders, filename = 'countryside-craft-orders.c
   document.body.removeChild(link);
 };
 
-// ─── Excel Export (FR-25) ─────────────────────────────────────────
-export const exportOrdersToExcel = (orders, filename = 'countryside-craft-orders.xlsx') => {
-  const rows = orders.map((order) => {
+// ─── Excel Export (FR-25) using ExcelJS ─────────────────────────────
+export const exportOrdersToExcel = async (orders, filename = 'countryside-craft-orders.xlsx') => {
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet('Orders');
+
+  worksheet.columns = [
+    { header: 'Order #', key: 'orderNumber', width: 16 },
+    { header: 'Date', key: 'date', width: 14 },
+    { header: 'Customer Name', key: 'customerName', width: 22 },
+    { header: 'Phone', key: 'phone', width: 16 },
+    { header: 'City', key: 'city', width: 16 },
+    { header: 'State', key: 'state', width: 16 },
+    { header: 'PIN Code', key: 'pincode', width: 12 },
+    { header: 'Full Address', key: 'address', width: 30 },
+    { header: 'Items Summary', key: 'itemsSummary', width: 35 },
+    { header: 'Total Qty', key: 'totalQty', width: 12 },
+    { header: 'Total Amount (INR)', key: 'totalAmount', width: 18 },
+    { header: 'Status', key: 'status', width: 14 },
+    { header: 'Gift Wrap', key: 'giftWrap', width: 12 },
+    { header: 'Customer Note', key: 'customerNote', width: 25 },
+  ];
+
+  orders.forEach((order) => {
     const itemsSummary = (order.items || [])
       .map((item) => `${item.name} (Qty: ${item.quantity} × ₹${item.price})`)
       .join('; ');
     const totalQty = (order.items || []).reduce((acc, curr) => acc + (curr.quantity || 0), 0);
     const c = order.customer || {};
 
-    return {
-      'Order #': order.orderNumber || '',
-      Date: formatDate(order.createdAt),
-      'Customer Name': c.name || '',
-      Phone: c.phone || '',
-      City: c.city || '',
-      State: c.state || '',
-      'PIN Code': c.pincode || '',
-      'Full Address': c.address || '',
-      'Items Summary': itemsSummary,
-      'Total Qty': totalQty,
-      'Total Amount (₹)': order.totalAmount,
-      Status: (order.status || 'pending').toUpperCase(),
-      'Gift Wrap': order.giftWrap ? 'Yes' : 'No',
-      'Customer Note': c.note || '',
-    };
+    worksheet.addRow({
+      orderNumber: sanitizeForSpreadsheet(order.orderNumber || ''),
+      date: formatDate(order.createdAt),
+      customerName: sanitizeForSpreadsheet(c.name || ''),
+      phone: sanitizeForSpreadsheet(c.phone || ''),
+      city: sanitizeForSpreadsheet(c.city || ''),
+      state: sanitizeForSpreadsheet(c.state || ''),
+      pincode: sanitizeForSpreadsheet(c.pincode || ''),
+      address: sanitizeForSpreadsheet(c.address || ''),
+      itemsSummary: sanitizeForSpreadsheet(itemsSummary),
+      totalQty,
+      totalAmount: Number(order.totalAmount || 0),
+      status: (order.status || 'pending').toUpperCase(),
+      giftWrap: order.giftWrap ? 'Yes' : 'No',
+      customerNote: sanitizeForSpreadsheet(c.note || ''),
+    });
   });
 
-  const worksheet = XLSX.utils.json_to_sheet(rows);
-
-  // Auto-size columns
-  const colWidths = Object.keys(rows[0] || {}).map((key) => ({
-    wch: Math.max(key.length, ...rows.map((r) => String(r[key] || '').length), 10),
-  }));
-  worksheet['!cols'] = colWidths;
-
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Orders');
-
-  XLSX.writeFile(workbook, filename);
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 };
 
 // ─── Customer CSV Export ─────────────────────────────────────────
@@ -124,10 +153,16 @@ export const exportCustomersToCSV = (orders, filename = 'countryside-craft-custo
   });
 
   const customers = Array.from(customerMap.values());
-  const headers = ['Name', 'Phone', 'City', 'State', 'PIN', 'First Order', 'Total Orders', 'Total Spent (₹)'];
+  const headers = ['Name', 'Phone', 'City', 'State', 'PIN', 'First Order', 'Total Orders', 'Total Spent (INR)'];
   const rows = customers.map((c) => [
-    `"${c.name}"`, `"${c.phone}"`, `"${c.city}"`, `"${c.state}"`,
-    `"${c.pincode}"`, `"${c.firstOrderDate}"`, c.totalOrders, c.totalSpend.toFixed(2),
+    `"${sanitizeForSpreadsheet(c.name).replace(/"/g, '""')}"`,
+    `"${sanitizeForSpreadsheet(c.phone).replace(/"/g, '""')}"`,
+    `"${sanitizeForSpreadsheet(c.city).replace(/"/g, '""')}"`,
+    `"${sanitizeForSpreadsheet(c.state).replace(/"/g, '""')}"`,
+    `"${sanitizeForSpreadsheet(c.pincode).replace(/"/g, '""')}"`,
+    `"${c.firstOrderDate}"`,
+    c.totalOrders,
+    c.totalSpend.toFixed(2),
   ]);
 
   const csvContent =

@@ -30,17 +30,22 @@ const normalizeCart = (serverCart) => {
   const items = rawItems.map((item) => {
     // item.product is a populated Product document from server
     const prod = item.product || {};
-    const effectivePrice = prod.discountPercent > 0
-      ? parseFloat((prod.price - (prod.price * prod.discountPercent) / 100).toFixed(2))
-      : (prod.price ?? 0);
+    const actualPrice = Number(prod.price || 0);
+    const increasedPrice =
+      prod.originalPrice && prod.originalPrice > actualPrice
+        ? prod.originalPrice
+        : prod.discountPercent > 0
+        ? Math.round(actualPrice / (1 - prod.discountPercent / 100))
+        : actualPrice;
+
     return {
       product: {
         _id: prod._id || item.productId,
         name: prod.name || '',
         slug: prod.slug || '',
         images: prod.images || [],
-        price: effectivePrice,
-        originalPrice: prod.price,
+        price: actualPrice,
+        originalPrice: increasedPrice,
         discountPercent: prod.discountPercent || 0,
         stock: prod.stock || 99,
         ratingAverage: prod.ratingAverage || 0,

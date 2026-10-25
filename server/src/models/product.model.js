@@ -124,12 +124,18 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Virtual: effective price after discount
+// Virtual: effectivePrice is the actual selling price (real price, not reduced)
 productSchema.virtual('effectivePrice').get(function () {
+  return this.price;
+});
+
+// Virtual: displayOriginalPrice is the increased strikethrough price
+productSchema.virtual('displayOriginalPrice').get(function () {
+  if (this.originalPrice && this.originalPrice > this.price) {
+    return this.originalPrice;
+  }
   if (this.discountPercent > 0) {
-    return parseFloat(
-      (this.price - (this.price * this.discountPercent) / 100).toFixed(2)
-    );
+    return Math.round(this.price / (1 - this.discountPercent / 100));
   }
   return this.price;
 });

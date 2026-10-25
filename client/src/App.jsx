@@ -4,6 +4,7 @@ import { CartProvider } from './context/CartContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 // Common Components
+import { AnnouncementBar } from './components/common/AnnouncementBar';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
 import { BottomTabBar } from './components/common/BottomTabBar';
@@ -203,9 +204,14 @@ const AppContent = () => {
   const isAdminView = currentView === 'admin';
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FDFBF7] text-[#2D2A26] selection:bg-[#EADDC6] selection:text-[#241F18]">
+    <div className="min-h-screen flex flex-col bg-[#F8F5EF] text-[#34443A] selection:bg-[#244537] selection:text-[#F8F5EF]">
       
-      {/* Top Header & Integrated Navbar (Hidden on admin dashboard) */}
+      {/* 1. Top Announcement Bar (Storefront only) */}
+      {!isAdminView && (
+        <AnnouncementBar onNavigate={handleNavigate} />
+      )}
+
+      {/* 2. Top Header & Integrated Navbar (Hidden on admin dashboard) */}
       {!isAdminView && (
         <Navbar currentView={currentView} onNavigate={handleNavigate} />
       )}

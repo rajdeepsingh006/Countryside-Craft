@@ -43,7 +43,10 @@ api.interceptors.response.use(
     if (err.response?.status === 401 && !original._retry && original.url?.includes('/admin/')) {
       original._retry = true;
       try {
-        const { data } = await axios.post('/api/admin/auth/refresh', {}, { withCredentials: true });
+        const refreshUrl = import.meta.env.VITE_API_URL
+          ? `${import.meta.env.VITE_API_URL.replace(/\/+$/, '')}/admin/auth/refresh`
+          : '/api/admin/auth/refresh';
+        const { data } = await axios.post(refreshUrl, {}, { withCredentials: true });
         localStorage.setItem('cc_admin_access_token', data.data.accessToken);
         original.headers.Authorization = `Bearer ${data.data.accessToken}`;
         return api(original);

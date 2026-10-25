@@ -2,20 +2,75 @@
 
 @theme {
   --scale-98: 0.98;
+
+  /* Brand Theme Tokens (Section 3) */
+  --color-forest: #244537;
+  --color-forest-dark: #193428;
+  --color-forest-hover: #1b382c;
+  --color-ivory: #F8F5EF;
+  --color-terracotta: #A94F2B;
+  --color-terracotta-hover: #8f4021;
+  --color-rose: #D95B83;
+  --color-rose-hover: #c4476f;
+  --color-gold: #C6A46A;
+  --color-gold-hover: #b59257;
+  --color-body: #34443A;
+  --color-secondary: #6D756D;
+  --color-border-subtle: #E7DFD2;
+  --color-surface-muted: #F0EBE1;
+  --color-success: #356B49;
+  --color-error: #A83232;
 }
 
 @layer base {
   :root {
-    --cc-blueberry: #B9C9E7;
-    --cc-blueberry-light: #EEF3FA;
-    --cc-limeade: #DBE586;
-    --cc-limeade-light: #F7F9E4;
-    --cc-strawberry: #EFC0DA;
-    --cc-strawberry-light: #FDF1F7;
-    --cc-berry: #D91680;
-    --cc-berry-hover: #BE0E6E;
-    --cc-dark: #1A1F2C;
-    --cc-bg: #FCFBFA;
+    /* Core Brand Tokens */
+    --color-forest: #244537;
+    --color-forest-dark: #193428;
+    --color-forest-hover: #1b382c;
+    --color-ivory: #F8F5EF;
+    --color-terracotta: #A94F2B;
+    --color-terracotta-hover: #8f4021;
+    --color-rose: #D95B83;
+    --color-rose-hover: #c4476f;
+    --color-gold: #C6A46A;
+    --color-gold-hover: #b59257;
+    --color-white: #FFFFFF;
+    --color-body: #34443A;
+    --color-secondary: #6D756D;
+    --color-border: #E7DFD2;
+    --color-surface-muted: #F0EBE1;
+    --color-success: #356B49;
+    --color-error: #A83232;
+
+    /* Semantic Application Tokens */
+    --bg-page: var(--color-ivory);
+    --bg-surface: #FFFFFF;
+    --bg-surface-muted: var(--color-surface-muted);
+    --bg-announcement: var(--color-forest-dark);
+    --bg-footer: var(--color-forest-dark);
+
+    --text-primary: var(--color-body);
+    --text-secondary: var(--color-secondary);
+    --text-inverse: var(--color-ivory);
+    --text-brand: var(--color-forest);
+    --text-accent: var(--color-terracotta);
+    --text-gold: var(--color-gold);
+
+    --border-subtle: var(--color-border);
+    --border-focus: var(--color-forest);
+
+    /* Backwards-compatibility aliases for legacy styles */
+    --cc-berry: #244537;
+    --cc-berry-hover: #1b382c;
+    --cc-dark: #193428;
+    --cc-bg: #F8F5EF;
+    --cc-strawberry: #D95B83;
+    --cc-strawberry-light: #FBF0F4;
+    --cc-limeade: #C6A46A;
+    --cc-limeade-light: #F8F3EA;
+    --cc-blueberry: #34443A;
+    --cc-blueberry-light: #F0EBE1;
   }
 
   html, body {
@@ -23,8 +78,8 @@
     max-width: 100%;
     overflow-x: hidden;
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: #FCFBFA;
-    color: #1A1F2C;
+    background-color: var(--color-ivory);
+    color: var(--color-body);
     -webkit-tap-highlight-color: transparent;
   }
 
@@ -57,7 +112,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
   background-repeat: repeat;
   mix-blend-mode: multiply;
   border-radius: inherit;
@@ -78,19 +133,42 @@
   scrollbar-width: none;
 }
 
-/* Custom modern scrollbar */
+/* Custom modern scrollbar matching brand tokens */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #EEF3FA;
+  background: var(--color-surface-muted);
 }
 ::-webkit-scrollbar-thumb {
-  background: #B9C9E7;
+  background: var(--color-border);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #EFC0DA;
+  background: var(--color-gold);
 }
 
+/* Announcement Bar Slide-and-Fade Animation (Section 5) */
+@keyframes announcementSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-announcement-in {
+  animation: announcementSlideIn 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-announcement-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

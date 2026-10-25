@@ -237,27 +237,27 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] py-2 sm:py-4 pb-44 sm:pb-36 md:pb-24 selection:bg-[#EFC0DA] selection:text-[#86124F]">
+    <div className="min-h-screen bg-[#F8F5EF] py-2 sm:py-4 pb-44 sm:pb-36 md:pb-24 selection:bg-[#244537] selection:text-[#F8F5EF]">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         
         {/* Breadcrumb Hierarchy */}
-        <nav aria-label="Breadcrumb" className="flex items-center space-x-1.5 text-xs text-[#6A758E] mb-2 overflow-x-auto no-scrollbar py-0.5">
-          <button onClick={() => onNavigate('home')} className="hover:text-[#D91680] shrink-0 cursor-pointer font-medium">
+        <nav aria-label="Breadcrumb" className="flex items-center space-x-1.5 text-xs text-[#6D756D] mb-2 overflow-x-auto no-scrollbar py-0.5">
+          <button onClick={() => onNavigate('home')} className="hover:text-[#244537] shrink-0 cursor-pointer font-medium">
             Home
           </button>
-          <span className="text-[#CCD5E4]">/</span>
-          <button onClick={() => onNavigate('products')} className="hover:text-[#D91680] shrink-0 cursor-pointer font-medium">
+          <span className="text-[#E7DFD2]">/</span>
+          <button onClick={() => onNavigate('products')} className="hover:text-[#244537] shrink-0 cursor-pointer font-medium">
             All Totes
           </button>
-          <span className="text-[#CCD5E4]">/</span>
+          <span className="text-[#E7DFD2]">/</span>
           <button
             onClick={() => onNavigate('products', product.categorySlug || product.category?.slug || product.category)}
-            className="hover:text-[#D91680] shrink-0 cursor-pointer"
+            className="hover:text-[#244537] shrink-0 cursor-pointer"
           >
             {product.categoryName || product.category?.name || product.category}
           </button>
-          <span className="text-[#CCD5E4]">/</span>
-          <span className="text-[#1A1F2C] font-semibold truncate max-w-xs">{product.name}</span>
+          <span className="text-[#E7DFD2]">/</span>
+          <span className="text-[#193428] font-semibold truncate max-w-xs">{product.name}</span>
         </nav>
 
         {/* Top Product View: Gallery (6 cols) + Product Details (6 cols) */}
@@ -544,16 +544,26 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
                   <span className="text-2xl sm:text-3xl font-black text-[#1A1F2C]">
                     {formatCurrency(product.price)}
                   </span>
-                  {product.originalPrice && product.originalPrice > product.price && (
-                    <>
-                      <span className="text-sm sm:text-base text-[#8E9DBE] line-through">
-                        {formatCurrency(product.originalPrice)}
-                      </span>
-                      <span className="text-xs font-black text-[#86124F] bg-[#EFC0DA] px-2 py-0.5 rounded-full border border-white">
-                        Save {formatCurrency(product.originalPrice - product.price)}
-                      </span>
-                    </>
-                  )}
+                  {(() => {
+                    const displayOriginalPrice =
+                      product.originalPrice && product.originalPrice > product.price
+                        ? product.originalPrice
+                        : product.discountPercent > 0
+                        ? Math.round(product.price / (1 - product.discountPercent / 100))
+                        : null;
+
+                    if (!displayOriginalPrice || displayOriginalPrice <= product.price) return null;
+                    return (
+                      <>
+                        <span className="text-sm sm:text-base text-[#8E9DBE] line-through">
+                          {formatCurrency(displayOriginalPrice)}
+                        </span>
+                        <span className="text-xs font-black text-[#86124F] bg-[#EFC0DA] px-2 py-0.5 rounded-full border border-white">
+                          Save {formatCurrency(displayOriginalPrice - product.price)}
+                        </span>
+                      </>
+                    );
+                  })()}
                 </div>
                 {/* 2x2 Value Propositions Micro-Grid */}
                 <div className="grid grid-cols-2 gap-2 bg-[#FAF7F2] p-3 rounded-2xl border border-[#F1E9DF] mt-2">
@@ -1162,13 +1172,13 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
                 id="sticky-add-to-cart-btn"
                 onClick={handleAddToCart}
                 disabled={added || (product.stock !== undefined && product.stock <= 0)}
-                className={`h-9 sm:h-10 px-4 sm:px-6 rounded-full text-xs font-bold uppercase tracking-wider shadow-md active:scale-98 transition-all flex items-center space-x-1.5 cursor-pointer ${
+                className={`h-9 sm:h-10 px-4 sm:px-6 rounded-full text-xs font-bold uppercase tracking-wider shadow-md active:scale-98 transition-all flex items-center space-x-1.5 cursor-pointer border ${
                   added
-                    ? 'bg-emerald-600 text-white'
-                    : 'bg-[#D91680] hover:bg-[#BE0E6E] text-white border border-[#EFC0DA]'
+                    ? 'bg-emerald-700 text-white border-emerald-700'
+                    : 'bg-[#244537] hover:bg-[#193428] text-white border-[#244537]'
                 }`}
               >
-                <ShoppingBag className="w-3.5 h-3.5 text-[#EFC0DA]" />
+                <ShoppingBag className="w-3.5 h-3.5 text-[#C6A46A]" />
                 <span>{added ? 'Added! ✓' : 'Add to Bag'}</span>
               </button>
             </div>

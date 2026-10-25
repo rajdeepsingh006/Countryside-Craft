@@ -12,6 +12,7 @@ export const RazorpayCheckoutButton = ({
   onBeforePay = null,
   onPaymentSuccess,
   onPaymentFailure,
+  onClick = null,
   className = '',
   buttonText = 'Pay Securely with Razorpay',
   disabled = false,
@@ -27,37 +28,24 @@ export const RazorpayCheckoutButton = ({
     if (e && e.preventDefault) e.preventDefault();
     if (disabled || isLoading) return;
 
+    if (onClick) {
+      return onClick(e);
+    }
+
     if (onBeforePay && !onBeforePay()) {
       return;
     }
 
-    // Validate amount
-    const amountInRupees = Number(amount);
-    if (!amountInRupees || amountInRupees <= 0) {
-      showToast('Invalid order amount for payment.', 'error');
-      return;
-    }
-
-    const amountInPaise = Math.round(amountInRupees * 100);
-    if (amountInPaise < 100) {
-      showToast('Minimum payable amount is ₹1.00 (100 paise).', 'error');
+    if (!orderId) {
+      showToast('Order must be created before initializing Razorpay payment.', 'error');
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // 1. Create order on backend
-      const orderData = await razorpayService.createOrder({
-        amount: amountInPaise,
-        currency: 'INR',
-        receipt: orderId ? `rcpt_${orderId.slice(-8)}` : `rcpt_${Date.now().toString().slice(-8)}`,
-        notes: {
-          customerName: customer.name || '',
-          customerPhone: customer.phone || '',
-          ...notes,
-        },
-      });
+      // 1. Create Razorpay order on backend tied to internal orderId
+      const orderData = await razorpayService.createOrder({ orderId });
 
       if (!orderData || !orderData.order_id) {
         throw new Error(orderData?.message || 'Failed to initialize Razorpay order.');
@@ -149,7 +137,7 @@ export const RazorpayCheckoutButton = ({
             ? 'bg-emerald-600 text-white cursor-default'
             : disabled
             ? 'bg-neutral-200 text-neutral-400 cursor-not-allowed border border-neutral-300'
-            : 'bg-[#D91680] hover:bg-[#BE0E6E] text-white border border-[#EFC0DA]'
+            : 'bg-[#244537] hover:bg-[#193428] text-white border border-[#193428]'
         } ${className}`}
       >
         {isLoading ? (

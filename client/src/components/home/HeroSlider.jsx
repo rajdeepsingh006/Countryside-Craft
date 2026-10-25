@@ -15,11 +15,11 @@ const HERO_SLIDES = [
     pattern: '/images/patterns/pattern-swirl-damask.png',
     ctaPrimary: 'Explore Handmade Pouches',
     categoryTarget: '',
-    bgGradient: 'from-[#5E103B] via-[#7F1750] to-[#A32067]',
-    mobileGradient: 'from-[#5E103B] via-[#5E103B]/60 via-55% to-transparent',
-    mobileBase: '#5E103B',
-    accentGlow: 'bg-[#D91680]/30',
-    tagBg: 'bg-[#FFF0F7] text-[#9D125A] border-[#FCE7F3]',
+    bgGradient: 'from-[#193428] via-[#244537] to-[#193428]',
+    mobileGradient: 'from-[#193428] via-[#193428]/60 via-55% to-transparent',
+    mobileBase: '#193428',
+    accentGlow: 'bg-[#C6A46A]/25',
+    tagBg: 'bg-[#F8F5EF] text-[#244537] border-[#E7DFD2]',
     decorBadge: 'Handcrafted Heritage',
   },
   {
@@ -164,12 +164,12 @@ export const HeroSlider = ({ onNavigate }) => {
               {slide.description}
             </p>
 
-            {/* Dual CTAs: Primary Pink + Secondary Emerald WhatsApp */}
+            {/* Dual CTAs: Primary Forest Green + Secondary Emerald WhatsApp */}
             <div className="pt-1.5 sm:pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-1.5 sm:gap-3 w-full sm:w-auto">
               <button
                 id="hero-primary-cta"
                 onClick={() => onNavigate('products', slide.categoryTarget)}
-                className="w-full sm:w-auto h-9 sm:h-11 py-2 px-4 sm:px-6 rounded-full bg-[#D91680] hover:bg-[#BE0E6E] text-white font-bold text-[11px] sm:text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center space-x-1.5 active:scale-98 cursor-pointer border border-[#EFC0DA]/50"
+                className="w-full sm:w-auto h-9 sm:h-11 py-2 px-4 sm:px-6 rounded-full bg-[#244537] hover:bg-[#193428] text-white font-bold text-[11px] sm:text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center space-x-1.5 active:scale-98 cursor-pointer border border-[#C6A46A]/50"
               >
                 <span>{slide.ctaPrimary || 'Explore Collection'} →</span>
               </button>

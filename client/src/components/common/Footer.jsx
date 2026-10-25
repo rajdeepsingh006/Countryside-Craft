@@ -24,38 +24,62 @@ export const Footer = ({ onNavigate }) => {
   };
 
   return (
-    <footer className="bg-[#141926] text-[#E8ECF5] pt-16 pb-28 md:pb-12 border-t border-[#252E42] texture-canvas">
+    <footer className="bg-[#193428] text-[#F8F5EF] pt-16 pb-28 md:pb-12 border-t border-[#244537] texture-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Trust Badges */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-12 border-b border-[#252E42]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-12 border-b border-[#244537]">
           {[
-            { icon: <Sparkles className="w-5 h-5" />, color: 'text-[#DBE586]', bg: 'bg-[#DBE586]/10 border-[#DBE586]/30', title: 'Handcrafted Batches', desc: 'Heritage block prints with non-toxic botanical dyes' },
-            { icon: <Truck className="w-5 h-5" />, color: 'text-[#B9C9E7]', bg: 'bg-[#B9C9E7]/10 border-[#B9C9E7]/30', title: '48-Hour Dispatch', desc: 'Safe packaging across India with live WhatsApp tracking' },
-            { icon: <ShieldCheck className="w-5 h-5" />, color: 'text-[#EFC0DA]', bg: 'bg-[#EFC0DA]/10 border-[#EFC0DA]/30', title: 'Premium Canvas Quality', desc: 'Reinforced cross-stitching tested to hold 12+ kg' },
-            { icon: <MessageCircle className="w-5 h-5" />, color: 'text-[#D91680]', bg: 'bg-[#D91680]/10 border-[#D91680]/30', title: 'WhatsApp Direct Support', desc: 'Instant order coordination & custom bulk gifting assistance' },
+            {
+              icon: <Sparkles className="w-5 h-5" />,
+              color: 'text-[#C6A46A]',
+              bg: 'bg-[#244537]/60 border-[#C6A46A]/30',
+              title: 'Handcrafted Batches',
+              desc: 'Heritage block prints with non-toxic botanical dyes',
+            },
+            {
+              icon: <Truck className="w-5 h-5" />,
+              color: 'text-[#F8F5EF]',
+              bg: 'bg-[#244537]/60 border-[#E7DFD2]/25',
+              title: 'India Post Speed Post',
+              desc: 'Fast, verified dispatch across India with tracking',
+            },
+            {
+              icon: <ShieldCheck className="w-5 h-5" />,
+              color: 'text-[#C6A46A]',
+              bg: 'bg-[#244537]/60 border-[#C6A46A]/30',
+              title: 'Pure Cotton Canvas',
+              desc: 'Reinforced cross-stitching tested to hold 12+ kg',
+            },
+            {
+              icon: <MessageCircle className="w-5 h-5" />,
+              color: 'text-[#4ADE80]',
+              bg: 'bg-[#244537]/60 border-[#4ADE80]/30',
+              title: 'WhatsApp Concierge',
+              desc: 'Instant order coordination & custom bulk gifting assistance',
+            },
           ].map(({ icon, color, bg, title, desc }) => (
             <div key={title} className="flex items-start space-x-3.5">
               <div className={`p-2.5 rounded-xl ${bg} ${color} border shrink-0`}>{icon}</div>
               <div>
                 <h4 className="text-sm font-bold text-white">{title}</h4>
-                <p className="text-xs text-[#9AA5BE] mt-0.5">{desc}</p>
+                <p className="text-xs text-[#A3B1A9] mt-0.5">{desc}</p>
               </div>
             </div>
           ))}
         </div>
 
         {/* Newsletter */}
-        <div className="my-12 py-8 px-6 sm:px-10 rounded-3xl bg-gradient-to-r from-[#1B2234] via-[#21293F] to-[#1B2234] border border-[#B9C9E7]/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl texture-canvas">
+        <div className="my-12 py-8 px-6 sm:px-10 rounded-3xl bg-gradient-to-r from-[#244537] via-[#1E3A2E] to-[#244537] border border-[#C6A46A]/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl texture-canvas">
           <div className="max-w-md">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#DBE586] font-mono">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#C6A46A] font-mono">
               Artisan Journal
             </span>
             <h3 className="text-xl sm:text-2xl font-serif-display font-bold text-white mt-1">
-              Receive First Access to Limited Edition Block Prints
+              Receive First Access to Limited Edition Botanical Prints
             </h3>
-            <p className="text-xs sm:text-sm text-[#AAB5CE] mt-1.5">
-              Subscribe for workshop invites, new botanical print releases, and exclusive seasonal gift bundle promotions.
+            <p className="text-xs sm:text-sm text-[#D3DDD7] mt-1.5">
+              Subscribe for workshop invites, new botanical releases, and exclusive seasonal gift bundle promotions.
             </p>
           </div>
           <form onSubmit={handleSubscribe} className="w-full md:w-auto flex-1 max-w-md flex flex-col sm:flex-row gap-2">
@@ -64,12 +88,12 @@ export const Footer = ({ onNavigate }) => {
               value={emailInput}
               onChange={(e) => setEmailInput(e.target.value)}
               placeholder="Enter your email address"
-              className="flex-1 px-4 py-2.5 rounded-xl bg-[#0F131D] border border-[#374462] text-sm text-white placeholder-[#7885A3] focus:outline-none focus:border-[#D91680]"
+              className="flex-1 px-4 py-2.5 rounded-xl bg-[#193428] border border-[#244537] text-sm text-[#F8F5EF] placeholder-[#8A9A90] focus:outline-none focus:border-[#C6A46A]"
               required
             />
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-[#D91680] hover:bg-[#BE0E6E] text-white text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center space-x-2 shadow-md active:scale-98 cursor-pointer border border-[#EFC0DA]"
+              className="px-6 py-2.5 rounded-xl bg-[#A94F2B] hover:bg-[#8F4021] text-white text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center space-x-2 shadow-md active:scale-98 cursor-pointer border border-[#A94F2B]"
             >
               <span>Subscribe</span>
               <Send className="w-3.5 h-3.5" />
@@ -78,10 +102,10 @@ export const Footer = ({ onNavigate }) => {
         </div>
 
         {/* Main Links Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pt-4 pb-12 border-b border-[#252E42]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pt-4 pb-12 border-b border-[#244537]">
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center space-x-3.5">
-              <div className="w-12 h-12 rounded-full overflow-hidden bg-white shadow-md border border-[#EADDC6] p-0.5 shrink-0 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full overflow-hidden bg-white shadow-md border border-[#E7DFD2] p-0.5 shrink-0 flex items-center justify-center">
                 <img
                   src={getAssetUrl('/images/logo.jpg')}
                   alt="Countryside Craft Logo"
@@ -92,19 +116,19 @@ export const Footer = ({ onNavigate }) => {
                 <span className="font-brand-script text-2xl sm:text-3xl tracking-wide text-white leading-none">
                   Countryside Craft
                 </span>
-                <span className="text-[10px] text-[#DBE586] font-mono tracking-widest uppercase mt-0.5">
-                  By Rupinder
+                <span className="text-[10px] text-[#C6A46A] font-mono tracking-widest uppercase mt-0.5">
+                  By Rupinder • Sirhind, Punjab
                 </span>
               </div>
             </div>
 
-            <p className="text-xs sm:text-sm text-[#9CAAC5] leading-relaxed max-w-sm">
+            <p className="text-xs sm:text-sm text-[#A3B1A9] leading-relaxed max-w-sm">
               We design and handcraft premium printed canvas tote bags celebrating timeless Indian block printing, botanical motifs, and sustainable slow living. Every tote is cut, stitched, and printed in small artisan batches.
             </p>
-            <div className="pt-2 flex items-center space-x-3 text-xs text-[#7B8AA8]">
+            <div className="pt-2 flex items-center space-x-3 text-xs text-[#8A9A90]">
               <span className="inline-flex items-center space-x-1 font-medium">
                 <span>Handcrafted with</span>
-                <Heart className="w-3.5 h-3.5 text-[#D91680] fill-[#D91680]" />
+                <Heart className="w-3.5 h-3.5 text-[#A94F2B] fill-[#A94F2B]" />
                 <span>in India</span>
               </span>
             </div>
@@ -112,11 +136,19 @@ export const Footer = ({ onNavigate }) => {
 
           {/* Explore Column */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-[#DBE586]">Explore</h4>
-            <ul className="space-y-2 text-xs sm:text-sm text-[#9CAAC5]">
-              {[['Home', 'home'], ['Shop All Totes', 'products'], ['Workshop Gallery', 'gallery'], ['Our Craft Story', 'about']].map(([label, view]) => (
+            <h4 className="text-xs font-bold uppercase tracking-widest text-[#C6A46A]">Explore</h4>
+            <ul className="space-y-2 text-xs sm:text-sm text-[#D3DDD7]">
+              {[
+                ['Home', 'home'],
+                ['Shop All Totes', 'products'],
+                ['Workshop Gallery', 'gallery'],
+                ['Our Craft Story', 'about'],
+              ].map(([label, view]) => (
                 <li key={view}>
-                  <button onClick={() => onNavigate(view)} className="hover:text-white transition-colors cursor-pointer">
+                  <button
+                    onClick={() => onNavigate(view)}
+                    className="hover:text-white transition-colors cursor-pointer"
+                  >
                     {label}
                   </button>
                 </li>
@@ -124,7 +156,7 @@ export const Footer = ({ onNavigate }) => {
               <li className="pt-1.5">
                 <button
                   onClick={() => openWhatsApp('custom-bulk')}
-                  className="text-[#D91680] hover:text-white hover:bg-[#D91680] transition-all font-bold cursor-pointer inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#D91680]/15 border border-[#D91680]/40 shadow-xs active:scale-98"
+                  className="text-[#C6A46A] hover:text-[#193428] hover:bg-[#C6A46A] transition-all font-bold cursor-pointer inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#C6A46A]/10 border border-[#C6A46A]/40 shadow-xs active:scale-98"
                 >
                   <span>Custom Bulk Gifting</span>
                   <span className="text-xs font-black">↗</span>
@@ -135,24 +167,24 @@ export const Footer = ({ onNavigate }) => {
 
           {/* Studio & Inquiries Column */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-[#DBE586]">Studio & Inquiries</h4>
-            <div className="space-y-2.5 text-xs text-[#9CAAC5]">
+            <h4 className="text-xs font-bold uppercase tracking-widest text-[#C6A46A]">Studio & Inquiries</h4>
+            <div className="space-y-2.5 text-xs text-[#D3DDD7]">
               <div className="flex items-start space-x-2">
-                <MapPin className="w-4 h-4 text-[#DBE586] shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-[#C6A46A] shrink-0 mt-0.5" />
                 <span>{settings.address}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Mail className="w-4 h-4 text-[#DBE586] shrink-0" />
+                <Mail className="w-4 h-4 text-[#C6A46A] shrink-0" />
                 <span>{settings.contactEmail}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Phone className="w-4 h-4 text-[#DBE586] shrink-0" />
+                <Phone className="w-4 h-4 text-[#C6A46A] shrink-0" />
                 <span>+{settings.whatsappNumber}</span>
               </div>
             </div>
             <button
               onClick={() => openWhatsApp('general')}
-              className="mt-3 w-full py-2 px-3 rounded-xl bg-[#25D366]/20 hover:bg-[#25D366]/30 text-[#25D366] text-xs font-bold border border-[#25D366]/40 flex items-center justify-center space-x-2 transition-colors cursor-pointer active:scale-98"
+              className="mt-3 w-full py-2 px-3 rounded-xl bg-[#25D366]/20 hover:bg-[#25D366]/30 text-[#4ADE80] text-xs font-bold border border-[#25D366]/40 flex items-center justify-center space-x-2 transition-colors cursor-pointer active:scale-98"
             >
               <MessageCircle className="w-3.5 h-3.5" />
               <span>Chat on WhatsApp</span>
@@ -161,13 +193,13 @@ export const Footer = ({ onNavigate }) => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#707E9D] gap-4">
-          <p>© {new Date().getFullYear()} Countryside Craft. All rights reserved. Prices exclude delivery.</p>
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#8A9A90] gap-4">
+          <p>© {new Date().getFullYear()} Countryside Craft. All rights reserved. Speed Post delivery calculated at checkout.</p>
           <div className="flex items-center space-x-6">
             <button
               id="footer-admin-link"
               onClick={() => onNavigate('admin-login')}
-              className="text-[#B9C9E7] hover:text-white transition-colors underline cursor-pointer"
+              className="text-[#C6A46A] hover:text-white transition-colors underline cursor-pointer"
             >
               Business Admin Panel
             </button>
@@ -179,7 +211,6 @@ export const Footer = ({ onNavigate }) => {
             <button onClick={() => onNavigate('gallery')} className="hover:text-white transition-colors cursor-pointer">
               Gallery
             </button>
-
           </div>
         </div>
       </div>
