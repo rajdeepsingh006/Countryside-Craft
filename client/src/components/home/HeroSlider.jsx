@@ -10,7 +10,8 @@ import { getAssetUrl } from '../../utils/assetHelper';
  * Features:
  * - Full-bleed background product photography filling 100% of the slide
  * - Refined editorial warm ivory readability gradient overlay
- * - Editorial typography with Playfair Display headings and Plus Jakarta Sans body
+ * - Original authentic artisan texts: Countryside Craft script, taglines, titles, descriptions
+ * - Dual CTAs: Primary collection CTA + WhatsApp Bulk Inquiry button
  * - Authentic wide product photographs (1920x800) with responsive focal positioning
  * - Auto-rotation (6s), hover pause, keyboard navigation, touch swipe & WCAG pause control
  * - Integrated trust features strip directly beneath
@@ -18,16 +19,16 @@ import { getAssetUrl } from '../../utils/assetHelper';
 const HERO_SLIDES = [
   {
     id: 1,
-    image: '/images/carousel/carousel-pouches-wide.jpg',
-    fallbackImage: '/images/carousel/carousel-pouches.jpg',
-    imageAlt: 'Handcrafted jute pouches with natural textures, playful accents, and thoughtful artisan details',
-    eyebrow: 'HANDCRAFTED • MADE WITH CARE',
-    headline: 'Little Details. Beautifully Handmade.',
-    description: 'Discover handcrafted jute pouches with natural textures, playful accents, and thoughtful artisan details.',
-    primaryCta: 'Shop Handmade Pouches',
-    primaryTarget: 'pouch',
-    secondaryCta: 'Explore All Collections',
-    secondaryTarget: '',
+    image: '/images/carousel/carousel-vibrant-collection-wide.jpg',
+    fallbackImage: '/images/carousel/carousel-vibrant-collection.jpg',
+    imageAlt: 'Vibrant Jute Bag Collection',
+    decorBadge: 'Slow Craft Artisan',
+    brandTitle: 'Countryside Craft',
+    tagline: 'Artisan Heritage Collection',
+    title: 'Vibrant Jute Bag Collection',
+    description: 'A colorful collection of handcrafted jute bags featuring elegant trims, embroidery, floral accents, and thoughtful gift designs.',
+    primaryCta: 'Browse Vibrant Collection',
+    primaryTarget: '',
     desktopPosition: 'object-right center',
     mobilePosition: 'object-center',
   },
@@ -35,29 +36,29 @@ const HERO_SLIDES = [
     id: 2,
     image: '/images/carousel/carousel-floral-bags-wide.jpg',
     fallbackImage: '/images/carousel/carousel-floral-bags.jpg',
-    imageAlt: 'Three tall embroidered floral jute bags with colorful floral designs',
-    eyebrow: 'CRAFTED BY HAND • MADE TO GIFT',
-    headline: 'A Little Charm in Every Carry.',
-    description: 'Explore floral jute bags that bring together beautiful embroidery, natural texture, and everyday practicality.',
+    imageAlt: 'Handcrafted Floral Jute Bags',
+    decorBadge: 'Festive & Eco-Friendly',
+    brandTitle: 'Countryside Craft',
+    tagline: 'Botanical & Traditional Charm',
+    title: 'Handcrafted Floral Jute Bags',
+    description: 'Beautiful eco-friendly jute bags adorned with vibrant floral embroidery, bringing together natural texture and traditional handmade charm.',
     primaryCta: 'Shop Floral Jute Bags',
-    primaryTarget: 'bag',
-    secondaryCta: 'Explore Collections',
-    secondaryTarget: '',
+    primaryTarget: '',
     desktopPosition: 'object-right center',
     mobilePosition: 'object-center',
   },
   {
     id: 3,
-    image: '/images/carousel/carousel-vibrant-collection-wide.jpg',
-    fallbackImage: '/images/carousel/carousel-vibrant-collection.jpg',
-    imageAlt: 'Assorted decorative jute bags with colorful trims and handmade embellishments',
-    eyebrow: 'ARTISAN COLLECTION • THOUGHTFULLY MADE',
-    headline: 'Every Bag Has a Story.',
-    description: 'From colorful trims to playful handmade details, discover jute bags created to make gifting and everyday moments special.',
-    primaryCta: 'Browse the Collection',
-    primaryTarget: '',
-    secondaryCta: 'Inquire About Bulk Orders',
-    secondaryTarget: 'bulk-whatsapp',
+    image: '/images/carousel/carousel-pouches-wide.jpg',
+    fallbackImage: '/images/carousel/carousel-pouches.jpg',
+    imageAlt: 'Handcrafted Embellished Jute Pouches',
+    decorBadge: 'Handcrafted Heritage',
+    brandTitle: 'Countryside Craft',
+    tagline: 'Handmade With Love',
+    title: 'Crafted by Hand • Made to Gift',
+    description: 'Rustic textures, colorful details, and thoughtful craftsmanship come together in charming handmade pouches and keychains.',
+    primaryCta: 'Explore Handmade Pouches',
+    primaryTarget: 'pouch',
     desktopPosition: 'object-right center',
     mobilePosition: 'object-center',
   },
@@ -167,14 +168,6 @@ export const HeroSlider = ({ onNavigate }) => {
     window.open(generateWhatsAppUrl(settings.whatsappNumber, msg), '_blank', 'noopener,noreferrer');
   };
 
-  const handleSecondaryCta = (slide) => {
-    if (slide.secondaryTarget === 'bulk-whatsapp') {
-      handleBulkInquiry();
-    } else if (typeof onNavigate === 'function') {
-      onNavigate('products', slide.secondaryTarget || undefined);
-    }
-  };
-
   const activeSlide = HERO_SLIDES[currentSlide];
 
   return (
@@ -201,7 +194,7 @@ export const HeroSlider = ({ onNavigate }) => {
               key={slide.id}
               role="group"
               aria-roledescription="slide"
-              aria-label={`Slide ${idx + 1} of ${HERO_SLIDES.length}: ${slide.headline}`}
+              aria-label={`Slide ${idx + 1} of ${HERO_SLIDES.length}: ${slide.tagline} - ${slide.title}`}
               aria-hidden={currentSlide !== idx}
               className={`absolute inset-0 w-full h-full ${
                 reducedMotion
@@ -241,52 +234,62 @@ export const HeroSlider = ({ onNavigate }) => {
             }}
           />
 
-          {/* Slide Content Layer: Eyebrow, Heading, Description, and Dual CTAs */}
-          <div className="relative z-30 w-full h-full flex flex-col justify-center px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 py-12 sm:py-16">
+          {/* Slide Content Layer: Eyebrow, Brand Title, Tagline, Title, Description, and Dual CTAs */}
+          <div className="relative z-30 w-full h-full flex flex-col justify-center px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 py-10 sm:py-16">
             <div className="max-w-xl lg:max-w-[580px] xl:max-w-[620px] flex flex-col items-start text-left">
               
               {/* Eyebrow Pill */}
-              <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-xs border border-[#E7DFD2] shadow-2xs mb-3 sm:mb-4">
+              <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/95 backdrop-blur-xs border border-[#DDD7CC] shadow-2xs mb-2 sm:mb-2.5">
                 <Sparkles className="w-3.5 h-3.5 text-[#C49A58]" aria-hidden="true" />
-                <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-widest text-[#34271D]">
-                  {activeSlide.eyebrow}
+                <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-[#34271D]">
+                  {activeSlide.decorBadge}
                 </span>
               </div>
 
-              {/* Editorial Serif Headline */}
-              <h1 className="font-serif-display font-bold text-[#34271D] text-3xl sm:text-4xl md:text-5xl lg:text-[50px] xl:text-[56px] leading-[1.12] tracking-tight">
-                {activeSlide.headline}
+              {/* Brand Title (Script Display) */}
+              <div className="mt-1">
+                <span className="font-brand-script font-bold text-3xl sm:text-4xl lg:text-[46px] text-[#34271D] tracking-wide leading-tight">
+                  Countryside Craft
+                </span>
+              </div>
+
+              {/* Tagline */}
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif-display font-bold text-[#A9512D] leading-snug mt-1">
+                {activeSlide.tagline}
               </h1>
 
-              {/* Supporting Body Copy */}
-              <p className="font-sans text-sm sm:text-base lg:text-[17px] text-[#5A4D41] leading-relaxed max-w-lg mt-3 sm:mt-4">
+              {/* Product Title / Subtitle */}
+              <h2 className="text-base sm:text-lg md:text-xl font-serif-display font-semibold text-[#34271D] mt-1">
+                {activeSlide.title}
+              </h2>
+
+              {/* Description */}
+              <p className="font-sans text-xs sm:text-sm md:text-base text-[#5A4D41] leading-relaxed max-w-lg mt-2.5">
                 {activeSlide.description}
               </p>
 
-              {/* Dual Action CTA Buttons */}
+              {/* Dual CTAs: Primary Storefront CTA + WhatsApp Bulk Inquiry */}
               <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
                 {/* Primary Button */}
                 <button
                   id="hero-primary-cta"
                   type="button"
                   onClick={() => onNavigate('products', activeSlide.primaryTarget)}
-                  className="px-7 py-3.5 rounded-full bg-[#254535] hover:bg-[#1A3427] text-[#F8F4EC] font-medium text-xs sm:text-sm flex items-center justify-center space-x-2 shadow-sm hover:shadow-md transition-all active:scale-98 cursor-pointer group"
+                  className="px-7 py-3.5 rounded-full bg-[#254535] hover:bg-[#1A3427] text-[#F8F4EC] font-bold text-xs uppercase tracking-wider shadow-sm hover:shadow-md transition-all active:scale-98 cursor-pointer flex items-center justify-center space-x-2 group"
                 >
-                  <span>{activeSlide.primaryCta}</span>
+                  <span>{activeSlide.primaryCta} →</span>
                   <ArrowRight className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </button>
 
-                {/* Secondary Button */}
+                {/* Secondary Button: WhatsApp Inquiry */}
                 <button
-                  id="hero-secondary-cta"
+                  id="hero-whatsapp-inquiry-cta"
                   type="button"
-                  onClick={() => handleSecondaryCta(activeSlide)}
-                  className="px-7 py-3.5 rounded-full border border-[#34271D]/40 hover:border-[#34271D] bg-white/50 hover:bg-white/85 backdrop-blur-xs text-[#34271D] font-medium text-xs sm:text-sm transition-all active:scale-98 cursor-pointer flex items-center justify-center space-x-2"
+                  onClick={handleBulkInquiry}
+                  className="px-6 py-3.5 rounded-full bg-[#10B981] hover:bg-[#059669] text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all active:scale-98 cursor-pointer flex items-center justify-center space-x-2"
                 >
-                  {activeSlide.secondaryTarget === 'bulk-whatsapp' && (
-                    <MessageCircle className="w-4 h-4 text-[#10B981] shrink-0" aria-hidden="true" />
-                  )}
-                  <span>{activeSlide.secondaryCta}</span>
+                  <MessageCircle className="w-4 h-4 text-white shrink-0" aria-hidden="true" />
+                  <span>Inquire for Custom &amp; Bulk Favors</span>
                 </button>
               </div>
 
