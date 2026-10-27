@@ -239,74 +239,69 @@ export const HeroSlider = ({ onNavigate }) => {
           </div>
         ))}
 
-        {/* Subtle Warm Lateral Fade on Left for Text Contrast on Mobile */}
-        <div
-          className="sm:hidden absolute inset-0 z-10 pointer-events-none"
-          style={{
-            background: 'linear-gradient(90deg, rgba(248,244,236,0.3) 0%, rgba(248,244,236,0.1) 50%, transparent 80%)',
-          }}
-        />
+        {/* Floating Organic Ivory Card on Left (leaves right side open for bags) */}
+        <div className="relative z-20 w-[84%] max-w-[340px] bg-[#FAF6EE]/96 backdrop-blur-md rounded-3xl p-4 sm:p-5 shadow-xl border border-white/80 overflow-hidden ml-3.5 my-auto">
+          {/* Decorative Corner Olive Sprig in Top-Right */}
+          <div className="absolute top-2.5 right-2.5 pointer-events-none text-[#8C9879] opacity-80">
+            <CornerOliveSprig className="w-11 h-11" />
+          </div>
 
-        {/* Direct Layout on Left (Over Sunlit Rustic Plaster Wall, No Heavy Box) */}
-        <div className="relative z-20 w-[84%] max-w-[325px] pt-4 pb-2 px-4 flex flex-col items-start text-left my-auto">
-          
           {/* Eyebrow Pill */}
-          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full border border-[#D5C7B2] bg-white/85 text-[#8F3D1F] text-[9.5px] font-bold uppercase tracking-wider mb-2.5 shadow-2xs">
+          <div className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full border border-[#D5C7B2] bg-white/70 text-[#7D3F1E] text-[9.5px] font-bold uppercase tracking-wider mb-2 shadow-2xs">
             <Sparkles className="w-3 h-3 text-[#8F3D1F]" aria-hidden="true" />
             <span>{activeSlide.decorBadge}</span>
           </div>
 
           {/* Brand Title */}
-          <span className="font-serif-display font-bold text-[31px] text-[#163323] leading-[1.05] block tracking-tight">
-            {activeSlide.brandTitle}
+          <span className="font-serif-display font-bold text-[26px] text-[#163323] leading-[1.1] block">
+            Countryside Craft
           </span>
 
-          {/* Tagline (2 Lines in Rich Terracotta) */}
-          <h1 className="font-serif-display font-bold text-[26px] text-[#9C4D26] leading-[1.08] block mt-1">
+          {/* Tagline */}
+          <span className="font-serif-display font-bold text-[21px] text-[#8F3D1F] leading-[1.1] block mt-0.5">
             {activeSlide.tagline}
-          </h1>
+          </span>
 
           {/* Subtitle */}
-          <h2 className="font-serif-display font-bold text-[14px] text-[#163323] mt-2 leading-snug">
+          <h2 className="font-serif-display font-bold text-[12.5px] text-[#163323] mt-1.5 leading-snug">
             {activeSlide.title}
           </h2>
 
           {/* Small Terracotta Divider Bar */}
-          <div className="w-8 h-[2.5px] bg-[#9C4D26] rounded-full my-3" />
+          <div className="w-7 h-[2px] bg-[#8F3D1F] rounded-full my-2.5" />
 
           {/* Description */}
-          <p className="font-sans text-[11px] text-[#34271D] leading-relaxed mb-4 max-w-[275px]">
+          <p className="font-sans text-[11px] text-[#4A3E36] leading-relaxed mb-4 line-clamp-3">
             {activeSlide.description}
           </p>
 
-          {/* Dual CTAs Stacked Vertically */}
-          <div className="w-full space-y-2">
+          {/* Dual CTAs Stacked Vertically Inside Card */}
+          <div className="space-y-2">
             {/* Primary Dark Green Button with Leaf Icon & Arrow */}
             <button
               id="hero-mobile-primary-cta"
               type="button"
               onClick={() => onNavigate('products', activeSlide.primaryTarget)}
-              className="w-full py-2.5 px-4 rounded-full bg-[#163323] hover:bg-[#204430] text-white text-[10.5px] font-bold uppercase tracking-wider flex items-center justify-between shadow-sm active:scale-98 transition-all cursor-pointer group border border-[#163323]"
+              className="w-full py-2.5 px-3.5 rounded-full bg-[#163323] hover:bg-[#204430] text-white text-[11px] font-bold uppercase tracking-wider flex items-center justify-between shadow-md active:scale-98 transition-all cursor-pointer group"
             >
-              <span className="flex items-center space-x-2 truncate">
+              <span className="flex items-center space-x-1.5 truncate">
                 <Leaf className="w-3.5 h-3.5 text-[#A4B58A] shrink-0" aria-hidden="true" />
                 <span className="truncate">{activeSlide.primaryCta}</span>
               </span>
               <ArrowRight className="w-3.5 h-3.5 text-white shrink-0 ml-1 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
             </button>
 
-            {/* Secondary Translucent Pill with Search Icon */}
+            {/* Secondary Outlined Inquiry Button with Search/Message Icon */}
             <button
               id="hero-mobile-whatsapp-cta"
               type="button"
               onClick={handleBulkInquiry}
-              className="w-full py-2.5 px-3.5 rounded-full border border-[#163323]/80 bg-[#FAF7F0]/85 hover:bg-[#FAF7F0] text-[#163323] text-[9.5px] font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shadow-2xs active:scale-98 transition-all cursor-pointer"
+              className="w-full py-2.5 px-3 rounded-full border border-[#163323]/50 bg-white/70 hover:bg-white text-[#163323] text-[10px] font-bold uppercase tracking-wider flex items-center justify-center space-x-1.5 shadow-2xs active:scale-98 transition-all cursor-pointer"
             >
               <Search className="w-3.5 h-3.5 text-[#163323] shrink-0" aria-hidden="true" />
               <span>INQUIRE FOR CUSTOM &amp; BULK FAVORS</span>
             </button>
           </div>
-
         </div>
 
         {/* Floating Centered Carousel Navigation Pill */}
