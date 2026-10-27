@@ -17,7 +17,7 @@ const HERO_SLIDES = [
     id: 1,
     image: '/images/carousel/carousel-floral-bags-wide.jpg',
     fallbackImage: '/images/carousel/carousel-floral-bags.jpg',
-    imageAlt: 'Three Tall Floral Handcrafted Jute Bags',
+    imageAlt: 'Three Tall Floral Handcrafted Jute Bags on Wooden Table',
     decorBadge: 'SLOW CRAFT ARTISAN',
     brandTitle: 'Countryside Craft',
     tagline: 'Artisan Heritage Collection',
@@ -36,8 +36,8 @@ const HERO_SLIDES = [
     decorBadge: 'SLOW CRAFT ARTISAN',
     brandTitle: 'Countryside Craft',
     tagline: 'Artisan Heritage Collection',
-    title: 'Vibrant Jute Bag Collection',
-    description: 'A colorful collection of handcrafted jute bags featuring elegant trims, embroidery, floral accents, and thoughtful gift designs.',
+    title: 'Festive Decorative Jute Bags',
+    description: 'Traditional handcrafted totes and festive favor bags embellished with elegant borders, tassel details, and vibrant handmade motifs.',
     primaryCta: 'BROWSE VIBRANT COLLECTION',
     primaryTarget: '',
     desktopPosition: 'object-right center',
@@ -47,13 +47,13 @@ const HERO_SLIDES = [
     id: 3,
     image: '/images/carousel/carousel-pouches-wide.jpg',
     fallbackImage: '/images/carousel/carousel-pouches.jpg',
-    imageAlt: 'Handcrafted Jute Pouches with Mirrors and Colorful Beads',
-    decorBadge: 'SLOW CRAFT ARTISAN',
+    imageAlt: 'Handcrafted Jute Pouches with Mirror Work and Colorful Beads',
+    decorBadge: 'HANDCRAFTED HERITAGE',
     brandTitle: 'Countryside Craft',
-    tagline: 'Artisan Heritage Collection',
-    title: 'Vibrant Jute Bag Collection',
-    description: 'A colorful collection of handcrafted jute bags featuring elegant trims, embroidery, floral accents, and thoughtful gift designs.',
-    primaryCta: 'BROWSE VIBRANT COLLECTION',
+    tagline: 'Handmade With Love',
+    title: 'Crafted by Hand • Made to Gift',
+    description: 'Rustic textures, shimmering mirror-work charms, and colorful bead details in charming handcrafted pouches and favors.',
+    primaryCta: 'EXPLORE HANDMADE POUCHES',
     primaryTarget: 'pouch',
     desktopPosition: 'object-right center',
     mobilePosition: 'object-center',
@@ -206,11 +206,11 @@ export const HeroSlider = ({ onNavigate }) => {
           </div>
         ))}
 
-        {/* Subtle Warm Ivory Readability Gradient Overlay */}
+        {/* Subtle Warm Ivory Readability Gradient Overlay — allows rustic sunlit wall and textures to shine through */}
         <div
           className="absolute inset-0 z-20 pointer-events-none"
           style={{
-            background: 'linear-gradient(90deg, rgba(248,244,236,0.92) 0%, rgba(248,244,236,0.85) 32%, rgba(248,244,236,0.50) 52%, rgba(248,244,236,0.10) 72%, transparent 100%)',
+            background: 'linear-gradient(90deg, rgba(248,244,236,0.55) 0%, rgba(248,244,236,0.35) 35%, rgba(248,244,236,0.12) 58%, transparent 80%)',
           }}
         />
 
@@ -218,7 +218,7 @@ export const HeroSlider = ({ onNavigate }) => {
         <div
           className="lg:hidden absolute inset-0 z-20 pointer-events-none"
           style={{
-            background: 'linear-gradient(180deg, rgba(248,244,236,0.95) 0%, rgba(248,244,236,0.88) 54%, rgba(248,244,236,0.45) 80%, rgba(248,244,236,0.15) 100%)',
+            background: 'linear-gradient(180deg, rgba(248,244,236,0.85) 0%, rgba(248,244,236,0.65) 50%, rgba(248,244,236,0.2) 80%, transparent 100%)',
           }}
         />
 
@@ -227,17 +227,17 @@ export const HeroSlider = ({ onNavigate }) => {
           <div className="max-w-xl lg:max-w-[560px] xl:max-w-[620px] flex flex-col items-start text-left">
             
             {/* Eyebrow Pill */}
-            <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/80 backdrop-blur-xs border border-[#DDD7CC] shadow-2xs mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#C49A58]" aria-hidden="true" />
+            <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/75 backdrop-blur-xs border border-[#DDD7CC] shadow-2xs mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-[#A9512D]" aria-hidden="true" />
               <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-[#163323]">
                 {activeSlide.decorBadge}
               </span>
             </div>
 
-            {/* Brand Title (Script Display) */}
+            {/* Brand Title (Serif Display matching Reference Image 1) */}
             <div className="mt-1">
-              <span className="font-brand-script font-bold text-4xl sm:text-5xl lg:text-[54px] text-[#163323] leading-tight">
-                Countryside Craft
+              <span className="font-serif-display font-bold text-4xl sm:text-5xl lg:text-[54px] text-[#163323] leading-tight">
+                {activeSlide.brandTitle}
               </span>
             </div>
 
