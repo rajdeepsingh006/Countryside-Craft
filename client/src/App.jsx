@@ -8,6 +8,8 @@ import { AnnouncementBar } from './components/common/AnnouncementBar';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
 import { BottomTabBar } from './components/common/BottomTabBar';
+import { PagePreloader } from './components/common/PagePreloader';
+import { RouteProgressBar } from './components/common/RouteProgressBar';
 
 import { WhatsAppFloating } from './components/common/WhatsAppFloating';
 import { CartDrawer } from './components/common/CartDrawer';
@@ -157,10 +159,12 @@ const getUrlForRoute = (view, param) => {
 const AppContent = () => {
   const { isAuthenticated } = useAuth();
   const [currentRoute, setCurrentRoute] = useState(() => parseRouteFromUrl());
+  const [isNavigating, setIsNavigating] = useState(false);
   const currentView = currentRoute.view;
   const viewParam = currentRoute.param;
 
   const handleNavigate = (view, param, replace = false) => {
+    setIsNavigating(true);
     setCurrentRoute({ view, param });
     saveCurrentRoute({ view, param });
     const url = getUrlForRoute(view, param);
@@ -170,17 +174,22 @@ const AppContent = () => {
       window.history.pushState({ view, param }, '', url);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      setIsNavigating(false);
+    }, 280);
   };
 
   // Sync browser back & forward navigation
   useEffect(() => {
     const onPopState = (e) => {
+      setIsNavigating(true);
       if (e.state && e.state.view) {
         setCurrentRoute({ view: e.state.view, param: e.state.param });
       } else {
         const route = parseRouteFromUrl();
         setCurrentRoute(route);
       }
+      setTimeout(() => setIsNavigating(false), 280);
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
@@ -205,7 +214,12 @@ const AppContent = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F8F5EF] text-[#34443A] selection:bg-[#244537] selection:text-[#F8F5EF]">
-      
+      {/* 0. Editorial Brand Splash Preloader on initial load */}
+      <PagePreloader />
+
+      {/* Slim Top Navigation Loading Bar on route changes */}
+      <RouteProgressBar isNavigating={isNavigating} />
+
       {/* 1. Top Announcement Bar (Storefront only) */}
       {!isAdminView && (
         <AnnouncementBar onNavigate={handleNavigate} />
@@ -216,48 +230,49 @@ const AppContent = () => {
         <Navbar currentView={currentView} onNavigate={handleNavigate} />
       )}
 
-      {/* Main Routed View (pb-16 on mobile gives breathing room above the sticky bottom bar) */}
+      {/* Main Routed View with smooth route transition animation (pb-16 on mobile gives breathing room) */}
       <main className="flex-1 pb-16 md:pb-0">
+        <div key={`${currentView}-${viewParam || ''}`} className="animate-page-enter">
+          {currentView === 'home' && <HomePage onNavigate={handleNavigate} />}
+          
+          {currentView === 'products' && (
+            <ProductsPage initialCategory={viewParam} onNavigate={handleNavigate} />
+          )}
 
-        {currentView === 'home' && <HomePage onNavigate={handleNavigate} />}
-        
-        {currentView === 'products' && (
-          <ProductsPage initialCategory={viewParam} onNavigate={handleNavigate} />
-        )}
+          {currentView === 'product-detail' && (
+            <ProductDetailPage slug={viewParam || ''} onNavigate={handleNavigate} />
+          )}
 
-        {currentView === 'product-detail' && (
-          <ProductDetailPage slug={viewParam || ''} onNavigate={handleNavigate} />
-        )}
+          {currentView === 'cart' && <CartPage onNavigate={handleNavigate} />}
 
-        {currentView === 'cart' && <CartPage onNavigate={handleNavigate} />}
+          {currentView === 'checkout' && <CheckoutPage onNavigate={handleNavigate} />}
 
-        {currentView === 'checkout' && <CheckoutPage onNavigate={handleNavigate} />}
+          {currentView === 'order-confirmation' && (
+            <OrderConfirmationPage orderId={viewParam || ''} onNavigate={handleNavigate} />
+          )}
 
-        {currentView === 'order-confirmation' && (
-          <OrderConfirmationPage orderId={viewParam || ''} onNavigate={handleNavigate} />
-        )}
+          {currentView === 'gallery' && <GalleryPage onNavigate={handleNavigate} />}
 
-        {currentView === 'gallery' && <GalleryPage onNavigate={handleNavigate} />}
+          {currentView === 'about' && <AboutPage onNavigate={handleNavigate} />}
 
-        {currentView === 'about' && <AboutPage onNavigate={handleNavigate} />}
-
-        {currentView === 'admin-login' && (
-          <AdminLoginPage
-            onLoginSuccess={() => handleNavigate('admin')}
-            onNavigateHome={() => handleNavigate('home')}
-          />
-        )}
-
-        {currentView === 'admin' && (
-          isAuthenticated ? (
-            <AdminDashboard onNavigateHome={() => handleNavigate('home')} />
-          ) : (
+          {currentView === 'admin-login' && (
             <AdminLoginPage
               onLoginSuccess={() => handleNavigate('admin')}
               onNavigateHome={() => handleNavigate('home')}
             />
-          )
-        )}
+          )}
+
+          {currentView === 'admin' && (
+            isAuthenticated ? (
+              <AdminDashboard onNavigateHome={() => handleNavigate('home')} />
+            ) : (
+              <AdminLoginPage
+                onLoginSuccess={() => handleNavigate('admin')}
+                onNavigateHome={() => handleNavigate('home')}
+              />
+            )
+          )}
+        </div>
       </main>
 
       {/* Footer (Hidden in admin dashboard) */}

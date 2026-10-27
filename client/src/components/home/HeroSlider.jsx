@@ -263,7 +263,7 @@ export const HeroSlider = ({ onNavigate }) => {
                 id="hero-primary-cta"
                 type="button"
                 onClick={() => onNavigate('products', activeSlide.primaryTarget)}
-                className="px-7 py-3.5 rounded-full bg-[#163323] hover:bg-[#204430] text-white font-bold text-xs uppercase tracking-wider shadow-sm hover:shadow-md transition-all active:scale-98 cursor-pointer flex items-center justify-center space-x-2 group"
+                className="btn-shimmer-effect px-7 py-3.5 rounded-full bg-[#163323] hover:bg-[#204430] text-white font-bold text-xs uppercase tracking-wider shadow-sm hover:shadow-md transition-all active:scale-98 cursor-pointer flex items-center justify-center space-x-2 group"
               >
                 <span>{activeSlide.primaryCta} →</span>
                 <ArrowRight className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />

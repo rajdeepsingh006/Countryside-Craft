@@ -2,9 +2,10 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Filter, SlidersHorizontal, ArrowUpDown, X, Sparkles, Search, Check, LayoutGrid, List } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { ProductCard } from '../components/product/ProductCard';
+import { ProductCardSkeleton } from '../components/common/ProductCardSkeleton';
 
 export const ProductsPage = ({ initialCategory, onNavigate }) => {
-  const { products, categories } = useStore();
+  const { products, categories, loading } = useStore();
   const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'all');
   const [sortBy, setSortBy] = useState('popularity');
   const [maxPrice, setMaxPrice] = useState(500);
@@ -309,7 +310,13 @@ export const ProductsPage = ({ initialCategory, onNavigate }) => {
 
           {/* Product Grid Area (3 cols) */}
           <div className="lg:col-span-3">
-            {filteredProducts.length === 0 ? (
+            {loading && products.length === 0 ? (
+              <div className={cardLayout === 'horizontal' ? 'flex flex-col gap-3 sm:gap-4' : 'grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5 lg:gap-6'}>
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <ProductCardSkeleton key={i} layout={cardLayout} />
+                ))}
+              </div>
+            ) : filteredProducts.length === 0 ? (
               <div className="bg-white rounded-3xl border border-[#B9C9E7]/50 p-8 sm:p-12 text-center space-y-4 shadow-2xs">
                 <div className="w-14 h-14 rounded-full bg-[#EEF3FA] text-[#8E9DBE] mx-auto flex items-center justify-center">
                   <Search className="w-6 h-6 opacity-60" />
