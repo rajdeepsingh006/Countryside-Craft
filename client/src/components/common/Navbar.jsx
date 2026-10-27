@@ -20,15 +20,36 @@ export const Navbar = ({ currentView, onNavigate }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
+  // Lock body scroll when mobile menu is open (including iOS touch devices)
   useEffect(() => {
     if (mobileMenuOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
     } else {
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+      }
     }
     return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+      }
     };
   }, [mobileMenuOpen]);
 
@@ -48,7 +69,7 @@ export const Navbar = ({ currentView, onNavigate }) => {
       >
         {/* Main Navigation Bar */}
         <div className="max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14 sm:h-[72px] md:h-20 w-full">
+          <div className="flex items-center justify-between h-16 sm:h-[72px] md:h-20 w-full">
             {/* Left: Hamburger + Brand */}
             <div className="flex items-center gap-2 min-w-0">
               {/* Mobile Hamburger */}
@@ -81,10 +102,10 @@ export const Navbar = ({ currentView, onNavigate }) => {
                   </div>
                   {/* Name & Tag */}
                   <div className="flex flex-col min-w-0">
-                    <span className="font-brand-script text-lg sm:text-2xl lg:text-3xl tracking-wide text-[#193428] leading-none group-hover:text-[#244537] transition-colors truncate">
+                    <span className="font-brand-script text-base sm:text-2xl lg:text-3xl tracking-wide text-[#193428] leading-none group-hover:text-[#244537] transition-colors truncate">
                       Countryside Craft
                     </span>
-                    <span className="hidden sm:inline-flex items-center gap-1 text-[9px] tracking-[0.2em] uppercase font-bold text-[#A94F2B] bg-[#F8F5EF] px-2 py-0.5 rounded-full border border-[#E7DFD2] mt-0.5 shadow-2xs group-hover:border-[#244537]/40 transition-all w-fit whitespace-nowrap">
+                    <span className="inline-flex items-center gap-1 text-[7.5px] sm:text-[9px] tracking-[0.12em] sm:tracking-[0.2em] uppercase font-bold text-[#A94F2B] bg-[#F8F5EF] px-1.5 sm:px-2 py-0.5 rounded-full border border-[#E7DFD2] mt-0.5 shadow-2xs group-hover:border-[#244537]/40 transition-all w-fit whitespace-nowrap">
                       <span>🌿</span>
                       <span>Handcrafted Botanical Goods</span>
                     </span>
@@ -165,15 +186,19 @@ export const Navbar = ({ currentView, onNavigate }) => {
 
       {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[60] lg:hidden flex">
+        <div className="fixed inset-0 z-[60] lg:hidden flex overscroll-contain">
           {/* Dark Backdrop */}
           <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-xs"
+            className="absolute inset-0 bg-black/60 backdrop-blur-xs touch-none"
             onClick={() => setMobileMenuOpen(false)}
+            onTouchMove={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
           />
 
           {/* Drawer Panel */}
-          <aside className="relative w-[78%] max-w-[290px] h-full bg-[#193428] text-[#F8F5EF] shadow-2xl border-r border-[#244537] flex flex-col overflow-y-auto animate-slide-right">
+          <aside className="relative w-[80%] max-w-[300px] h-full bg-[#193428] text-[#F8F5EF] shadow-2xl border-r border-[#244537] flex flex-col overflow-y-auto overscroll-contain touch-pan-y animate-slide-right">
             {/* Drawer Header */}
             <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-3 min-w-0">

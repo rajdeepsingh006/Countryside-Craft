@@ -100,6 +100,14 @@
   .font-brand-script {
     font-family: 'Berkshire Swash', 'Great Vibes', cursive;
   }
+
+  .font-handwriting {
+    font-family: 'Caveat', 'Berkshire Swash', cursive;
+  }
+
+  .font-cormorant {
+    font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  }
 }
 
 /* Subtle textured background treatment */

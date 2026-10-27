@@ -228,32 +228,33 @@ export const HeroSlider = ({ onNavigate }) => {
           <div className="max-w-md sm:max-w-xl lg:max-w-[560px] xl:max-w-[620px] flex flex-col items-start text-left">
             
             {/* Eyebrow Pill */}
-            <div className="inline-flex items-center space-x-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-white/90 backdrop-blur-xs border border-[#DDD7CC] shadow-2xs mb-1.5 sm:mb-2">
-              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#A9512D]" aria-hidden="true" />
-              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#163323]">
+            <div className="inline-flex items-center space-x-1.5 px-2.5 sm:px-3.5 py-1 rounded-full bg-white/92 backdrop-blur-md border border-[#DDD7CC] shadow-2xs mb-2 sm:mb-2.5">
+              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#A94F2B]" aria-hidden="true" />
+              <span className="text-[9.5px] sm:text-xs font-bold uppercase tracking-[0.18em] text-[#163323]">
                 {activeSlide.decorBadge}
               </span>
             </div>
 
             {/* Brand Title */}
             <div className="mt-0.5 sm:mt-1">
-              <span className="font-serif-display font-bold text-2xl sm:text-4xl lg:text-[54px] text-[#163323] leading-tight">
+              <span className="font-serif-display font-semibold sm:font-bold text-2xl sm:text-4xl lg:text-[50px] text-[#163323] tracking-tight leading-tight">
                 {activeSlide.brandTitle}
               </span>
             </div>
 
             {/* Tagline */}
-            <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-[44px] font-serif-display font-bold text-[#A9512D] leading-tight mt-0.5 sm:mt-1">
+            <h1 className="font-cormorant italic font-semibold text-2xl sm:text-4xl md:text-5xl lg:text-[56px] text-[#A94F2B] leading-none mt-1 sm:mt-1.5">
               {activeSlide.tagline}
             </h1>
 
             {/* Product Title / Subtitle */}
-            <h2 className="text-xs sm:text-base md:text-xl font-serif-display font-bold text-[#163323] mt-0.5 sm:mt-1">
-              {activeSlide.title}
+            <h2 className="text-[11px] sm:text-xs md:text-sm font-sans uppercase font-bold tracking-[0.15em] text-[#1E362A] mt-2 sm:mt-3 flex items-center gap-2">
+              <span className="w-4 h-[1.5px] bg-[#A94F2B]/60 hidden sm:inline-block" />
+              <span>{activeSlide.title}</span>
             </h2>
 
             {/* Description */}
-            <p className="font-sans text-xs sm:text-sm md:text-[15px] text-[#4A3E36] leading-relaxed max-w-sm sm:max-w-lg mt-1.5 sm:mt-2.5">
+            <p className="font-sans text-xs sm:text-sm md:text-[15px] text-[#423730] leading-relaxed max-w-sm sm:max-w-lg mt-2 sm:mt-2.5 font-normal">
               {activeSlide.description}
             </p>
 
