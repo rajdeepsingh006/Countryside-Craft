@@ -149,13 +149,18 @@ export const SignatureSpotlight = ({ onNavigate }) => {
         {/* Section Header with Carousel Controls */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-8 pb-3 border-b border-[#EADDC6]/50 gap-4">
           <div>
-            <div className="inline-flex items-center space-x-1.5 text-xs font-black uppercase tracking-widest text-[#1E3A8A] mb-1.5 bg-[#EEF3FA] px-3 py-1 rounded-full border border-[#B9C9E7] shadow-2xs">
-              <Sparkles className="w-3.5 h-3.5 text-[#1E3A8A]" />
+            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#A94F2B] mb-1.5 bg-[#FDF4EE] px-3 py-1 rounded-full border border-[#F0D5C3] shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#A94F2B]" />
               <span>Heirloom Craft Spotlight</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif-display font-bold text-[#1A1F2C]">
-              Artisan Top-Rated Masterpieces
-            </h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif-display font-bold text-[#163323]">
+                Artisan Top-Rated Masterpieces
+              </h2>
+              <span className="hidden md:inline-flex font-handwriting text-2xl text-[#A94F2B] font-bold -rotate-3 select-none ml-1">
+                ~ master crafted ✧
+              </span>
+            </div>
           </div>
 
           {/* Interactive Slide Switcher & Indicators */}
@@ -299,6 +304,9 @@ export const SignatureSpotlight = ({ onNavigate }) => {
 
               {/* Verified Customer Review Spotlight Box */}
               <div className="p-3.5 sm:p-4 rounded-2xl bg-[#FAF8F5] border border-[#EADDC6] shadow-2xs relative">
+                <span className="absolute -top-2.5 right-3 font-handwriting text-xs text-[#244537] bg-white px-2 py-0.5 rounded-full border border-[#EADDC6] shadow-2xs rotate-2 font-bold select-none">
+                  real craft story ♡
+                </span>
                 <div className="flex items-start space-x-2.5">
                   <Quote className="w-5 h-5 text-[#A9512D] shrink-0 mt-0.5 opacity-80" />
                   <div>

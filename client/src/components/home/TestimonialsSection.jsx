@@ -44,20 +44,25 @@ export const TestimonialsSection = ({ onNavigate }) => {
         {/* 1. Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between pb-3 sm:pb-4 border-b border-[#EADDC6]/40 gap-3">
           <div>
-            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#1E3A8A] bg-[#EEF3FA] border border-[#B9C9E7] px-2.5 py-1 rounded-full mb-1.5 shadow-2xs">
-              <Sparkles className="w-3.5 h-3.5 text-[#1E3A8A]" />
+            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#A94F2B] bg-[#FDF4EE] border border-[#F0D5C3] px-2.5 py-1 rounded-full mb-1.5 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#A94F2B]" />
               <span>Real Customer Stories</span>
             </div>
-            <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-serif-display font-bold text-[#1A1F2C]">
-              Loved by Conscious Shoppers
-            </h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-serif-display font-bold text-[#163323]">
+                Loved by Conscious Shoppers
+              </h2>
+              <span className="hidden sm:inline-flex font-handwriting text-2xl sm:text-3xl text-[#A94F2B] font-bold -rotate-6 select-none ml-2">
+                ~ from happy hearts ♡
+              </span>
+            </div>
           </div>
           <button
             id="write-a-review-home-btn"
             onClick={() => openReviewModal()}
-            className="px-4 py-2 rounded-full bg-[#FAF7F2] hover:bg-[#F2ECE0] text-[#1A1F2C] text-xs font-bold transition-colors flex items-center space-x-2 shrink-0 border border-[#EADDC6] cursor-pointer w-fit active:scale-98"
+            className="px-4 py-2 rounded-full bg-[#FAF7F2] hover:bg-[#F2ECE0] text-[#163323] text-xs font-bold transition-colors flex items-center space-x-2 shrink-0 border border-[#EADDC6] cursor-pointer w-fit active:scale-98"
           >
-            <MessageSquare className="w-4 h-4 text-[#D91680]" />
+            <MessageSquare className="w-4 h-4 text-[#A94F2B]" />
             <span>Write a Review</span>
           </button>
         </div>

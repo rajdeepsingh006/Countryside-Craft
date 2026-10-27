@@ -56,11 +56,17 @@ export const CategoryTiles = ({ onNavigate }) => {
         {/* Section Header Matching Reference Mockup */}
         <div className="flex items-center justify-between mb-5 sm:mb-8">
           <div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif-display font-bold text-[#163323] leading-tight">
-              Shop by Craft &amp; Material
-            </h2>
-            <p className="text-xs sm:text-sm text-[#4E6151] font-sans mt-0.5 sm:mt-1">
-              Thoughtfully curated, naturally inspired.
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif-display font-bold text-[#163323] leading-tight">
+                Shop by Craft &amp; Material
+              </h2>
+              <span className="hidden sm:inline-flex font-handwriting text-xl text-[#A94F2B] font-bold -rotate-3 select-none">
+                ~ pure earthen charm ✿
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm text-[#4E6151] font-sans mt-0.5 sm:mt-1 flex items-center gap-1.5">
+              <span>Thoughtfully curated, naturally inspired.</span>
+              <span className="sm:hidden font-handwriting text-sm text-[#A94F2B] font-bold">~ pure craft ✿</span>
             </p>
           </div>
 
@@ -128,15 +134,21 @@ export const CategoryTiles = ({ onNavigate }) => {
                 {/* Left Side Content Layered Over the Photographic Background */}
                 <div className="relative z-10 w-[72%] sm:w-[58%] md:w-[52%] p-4 sm:p-6 md:p-8 flex flex-col justify-center items-start text-left">
                   
-                  {/* Design Count Pill Badge */}
-                  <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-xs border border-[#D5C7B2] shadow-2xs mb-2">
-                    {customData.badgeIcon === 'heart' ? (
-                      <Heart className="w-3 h-3 text-[#A84E29] fill-[#A84E29]/20" aria-hidden="true" />
-                    ) : (
-                      <Leaf className="w-3 h-3 text-[#163323]" aria-hidden="true" />
-                    )}
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#163323]">
-                      {count} {count === 1 ? 'DESIGN' : 'DESIGNS'}
+                  {/* Design Count Pill Badge & Cute Handwritten Tag */}
+                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                    <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-xs border border-[#D5C7B2] shadow-2xs">
+                      {customData.badgeIcon === 'heart' ? (
+                        <Heart className="w-3 h-3 text-[#A84E29] fill-[#A84E29]/20" aria-hidden="true" />
+                      ) : (
+                        <Leaf className="w-3 h-3 text-[#163323]" aria-hidden="true" />
+                      )}
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#163323]">
+                        {count} {count === 1 ? 'DESIGN' : 'DESIGNS'}
+                      </span>
+                    </div>
+
+                    <span className="font-handwriting text-xs sm:text-sm text-[#8F3D1F] font-bold bg-[#FAF6EE]/85 px-2.5 py-0.5 rounded-full border border-[#E0D4C3] -rotate-2 select-none shadow-2xs">
+                      {isCanvas ? '100% natural cotton ♡' : 'raw golden jute ✦'}
                     </span>
                   </div>
 

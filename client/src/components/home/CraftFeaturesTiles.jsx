@@ -64,17 +64,22 @@ export const CraftFeaturesTiles = ({ onNavigate }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-4 sm:mb-8 pb-2 sm:pb-4 border-b border-[#EADDC6]/40">
           <div>
-            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#D91680] bg-[#FDF1F7] border border-[#EFC0DA] px-2.5 py-1 rounded-full mb-1.5 shadow-2xs">
-              <Sparkles className="w-3.5 h-3.5 text-[#D91680]" />
+            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#A94F2B] bg-[#FDF4EE] border border-[#F0D5C3] px-2.5 py-1 rounded-full mb-1.5 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#A94F2B]" />
               <span>Artisan &amp; Handwork Craft</span>
             </div>
-            <h2 className="text-xl sm:text-3xl md:text-4xl font-serif-display font-bold text-[#1A1F2C]">
-              Shop by Craft &amp; Occasion
-            </h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl sm:text-3xl md:text-4xl font-serif-display font-bold text-[#163323]">
+                Shop by Craft &amp; Occasion
+              </h2>
+              <span className="hidden sm:inline-flex font-handwriting text-2xl text-[#244537] font-bold -rotate-3 select-none ml-2">
+                ~ stitched with love 𖤣𖥧
+              </span>
+            </div>
           </div>
           <button
             onClick={() => onNavigate('products')}
-            className="text-xs sm:text-sm font-bold text-[#D91680] hover:text-[#BE0E6E] flex items-center space-x-1 transition-colors group cursor-pointer pb-0.5"
+            className="text-xs sm:text-sm font-bold text-[#A94F2B] hover:text-[#8E3F1F] flex items-center space-x-1 transition-colors group cursor-pointer pb-0.5"
           >
             <span>View all</span>
             <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />

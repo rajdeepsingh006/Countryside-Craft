@@ -10,25 +10,30 @@ export const WorkshopTeaser = ({ onNavigate }) => {
   return (
     <section className="py-16 bg-[#FCFBFA] texture-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-[#B9C9E7]/40">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-[#EADDC6]/40">
           <div>
-            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#1E3A8A] bg-[#EEF3FA] border border-[#B9C9E7] px-2.5 py-1 rounded-full mb-2 shadow-2xs">
-              <Sparkles className="w-3.5 h-3.5 text-[#1E3A8A]" />
+            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#A94F2B] bg-[#FDF4EE] border border-[#F0D5C3] px-2.5 py-1 rounded-full mb-2 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#A94F2B]" />
               <span>Behind the Loom & Dye Vats</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif-display font-bold text-[#1A1F2C]">
-              Workshops, Pop-ups & Craft Events
-            </h2>
-            <p className="text-xs sm:text-sm text-[#6A758E] mt-1">
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif-display font-bold text-[#163323]">
+                Workshops, Pop-ups & Craft Events
+              </h2>
+              <span className="hidden sm:inline-flex font-handwriting text-2xl text-[#244537] font-bold -rotate-3 select-none ml-2">
+                ~ real artisan stories ✿
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm text-[#4E6151] mt-1">
               A glimpse into our hands-on block printing masterclasses, artisan pop-ups, and natural dye experiments.
             </p>
           </div>
           <button
             onClick={() => onNavigate('gallery')}
-            className="mt-3 md:mt-0 text-xs sm:text-sm font-bold text-[#D91680] hover:text-[#BE0E6E] flex items-center space-x-1 transition-colors group shrink-0 cursor-pointer"
+            className="mt-3 md:mt-0 text-xs sm:text-sm font-bold text-[#163323] hover:text-[#A94F2B] flex items-center space-x-1 transition-colors group shrink-0 cursor-pointer"
           >
             <span>View Full Media Gallery</span>
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 text-[#A94F2B]" />
           </button>
         </div>
 
