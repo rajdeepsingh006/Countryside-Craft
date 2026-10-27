@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { getAssetUrl } from '../../utils/assetHelper';
 
@@ -41,18 +41,11 @@ export const CategoryTiles = ({ onNavigate }) => {
               Shop by Craft &amp; Material
             </h2>
           </div>
-          <button
-            onClick={() => onNavigate('products')}
-            className="text-xs sm:text-sm font-bold text-[#D91680] hover:text-[#BE0E6E] flex items-center space-x-1 transition-colors group cursor-pointer pb-0.5"
-          >
-            <span>View all</span>
-            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-          </button>
         </div>
 
-        {/* Snap Carousel on Mobile, Responsive Grid on Desktop */}
-        <div className={`flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none gap-4 sm:gap-6 pb-2 md:pb-0 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0 ${
-          categories.length <= 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-2 lg:grid-cols-4'
+        {/* Full-width Responsive Grid */}
+        <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 w-full ${
+          categories.length > 2 ? 'lg:grid-cols-4' : ''
         }`}>
           {categories.map((cat, idx) => {
             const count = products.filter((p) => (p.category?.slug || p.category) === cat.slug).length;
@@ -68,7 +61,7 @@ export const CategoryTiles = ({ onNavigate }) => {
                   onNavigate('products', cat.slug);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="snap-start shrink-0 w-[148px] sm:w-auto rounded-2xl overflow-hidden bg-white shadow-sm flex flex-col border border-[#F1E9DF] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
+                className="w-full rounded-2xl overflow-hidden bg-white shadow-sm flex flex-col border border-[#F1E9DF] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
               >
                 {/* Card Image */}
                 <div className="relative w-full h-[155px] sm:h-[220px] md:h-[260px] bg-[#FAF7F2] overflow-hidden">

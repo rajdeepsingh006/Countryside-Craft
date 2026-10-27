@@ -178,8 +178,7 @@
 }
 
 .animate-page-enter {
-  animation: pageFadeSlideIn 340ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: opacity, transform;
+  animation: pageFadeSlideIn 340ms cubic-bezier(0.16, 1, 0.3, 1) ease-out;
 }
 
 /* ─── Warm Linen Shimmer Skeleton Loading Wave ──────────────────── */

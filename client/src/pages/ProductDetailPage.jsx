@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Star,
   ShoppingBag,
@@ -147,6 +148,7 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
 
   useEffect(() => {
     if (!isLightboxOpen) return;
+    document.body.style.overflow = 'hidden';
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') setIsLightboxOpen(false);
       if (e.key === 'ArrowLeft') {
@@ -157,7 +159,10 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
       }
     };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [isLightboxOpen, mediaList.length]);
 
   useEffect(() => {
@@ -1008,10 +1013,10 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
         )}
 
         {/* Fullscreen Media Lightbox Modal */}
-        {isLightboxOpen && mediaList.length > 0 && (
+        {isLightboxOpen && mediaList.length > 0 && typeof document !== 'undefined' && createPortal(
           <div
             onClick={() => setIsLightboxOpen(false)}
-            className="fixed inset-0 z-50 flex flex-col justify-between p-4 sm:p-6 bg-black/95 backdrop-blur-md transition-opacity select-none"
+            className="fixed inset-0 z-[9999] w-screen h-screen flex flex-col justify-between p-4 sm:p-6 bg-black/95 backdrop-blur-md transition-opacity select-none"
           >
             {/* Lightbox Top Bar */}
             <div
@@ -1120,7 +1125,8 @@ export const ProductDetailPage = ({ slug, onNavigate }) => {
                 ))}
               </div>
             )}
-          </div>
+          </div>,
+          document.body
         )}
 
       </div>
