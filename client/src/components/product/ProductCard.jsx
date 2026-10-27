@@ -247,26 +247,6 @@ export const ProductCard = ({ product, onNavigate, layout = 'grid' }) => {
           <Eye className="w-4 h-4" />
         </button>
 
-        {/* Floating Quick Add Action Button (Mobile) */}
-        <button
-          onClick={handleAddToCart}
-          disabled={product.stock <= 0}
-          aria-label={`Add ${product.name} to bag`}
-          className={`absolute bottom-2 right-2 w-9 h-9 rounded-full flex items-center justify-center shadow-md active:scale-90 transition-transform z-10 md:hidden ${
-            added
-              ? 'bg-emerald-700 text-white'
-              : product.stock <= 0
-              ? 'bg-neutral-200 text-neutral-400 cursor-not-allowed'
-              : 'bg-[#244537] text-white hover:bg-[#193428]'
-          }`}
-        >
-          {added ? (
-            <Check className="w-4 h-4" />
-          ) : (
-            <span className="text-xl font-bold leading-none mb-0.5">+</span>
-          )}
-        </button>
-
         {product.stock > 0 && product.stock <= 5 && (
           <div className="absolute bottom-1.5 left-1.5 bg-[#193428]/90 text-[#C6A46A] text-[9px] font-bold px-1.5 py-0.5 rounded-md">
             Only {product.stock} left
@@ -276,67 +256,69 @@ export const ProductCard = ({ product, onNavigate, layout = 'grid' }) => {
 
       <div className="pt-2 sm:pt-3 px-1 flex-1 flex flex-col justify-between space-y-1.5 sm:space-y-2">
         <div>
-          <div className="flex items-center justify-between text-[10px] sm:text-[11px] gap-2 mb-0.5">
+          <div className="flex items-center justify-between text-[10px] sm:text-[11px] gap-1.5 mb-0.5">
             <span
               title={product.categoryName || product.category}
-              className="font-bold uppercase tracking-wider text-[#A94F2B] text-[10px] truncate max-w-[140px]"
+              className="font-bold uppercase tracking-wider text-[#A94F2B] text-[9.5px] sm:text-[10px] truncate max-w-[110px] sm:max-w-[140px]"
             >
               {(product.categoryName || product.category?.name || product.category || '')
                 .replace(' Prints', '')
                 .replace(' Collection', '')}
             </span>
-            <div className="flex items-center space-x-1 shrink-0 text-amber-500 font-bold text-[11px]">
+            <div className="flex items-center space-x-0.5 sm:space-x-1 shrink-0 text-amber-500 font-bold text-[10px] sm:text-[11px]">
               <Star className="w-3 h-3 fill-amber-400 text-amber-500" />
               <span className="text-[#34443A]">{product.ratingAverage || '4.9'}</span>
-              <span className="text-[#6D756D] font-normal text-[10px]">({product.ratingCount || 12})</span>
+              <span className="text-[#6D756D] font-normal text-[9.5px] sm:text-[10px]">({product.ratingCount || 12})</span>
             </div>
           </div>
           <h3
             title={product.name}
-            className="font-sans font-medium text-[14px] sm:text-[15px] text-[#193428] group-hover:text-[#244537] transition-colors line-clamp-2 min-h-[2.4rem] sm:min-h-[2.6rem] leading-tight break-words"
+            className="font-sans font-medium text-[13px] sm:text-[15px] text-[#193428] group-hover:text-[#244537] transition-colors line-clamp-2 min-h-[2.4rem] sm:min-h-[2.6rem] leading-tight break-words"
           >
             {product.name}
           </h3>
         </div>
 
-        <div className="pt-1.5 border-t border-[#E7DFD2]">
-          <div className="flex items-baseline space-x-1.5">
-            <span className="text-[16px] sm:text-[18px] font-bold text-[#193428]">
-              {formatCurrency(product.price)}
-            </span>
-            {displayOriginalPrice && displayOriginalPrice > product.price && (
-              <span className="text-[11px] sm:text-xs text-[#6D756D] line-through">
-                {formatCurrency(displayOriginalPrice)}
+        <div className="pt-2 border-t border-[#E7DFD2] mt-auto">
+          <div className="flex items-center justify-between gap-1.5">
+            <div className="flex flex-col">
+              <span className="text-[14px] sm:text-[18px] font-bold text-[#193428] leading-tight">
+                {formatCurrency(product.price)}
               </span>
-            )}
-          </div>
+              {displayOriginalPrice && displayOriginalPrice > product.price && (
+                <span className="text-[10px] sm:text-xs text-[#6D756D] line-through leading-none mt-0.5">
+                  {formatCurrency(displayOriginalPrice)}
+                </span>
+              )}
+            </div>
 
-          {/* Full Add to Bag button on desktop */}
-          <button
-            onClick={handleAddToCart}
-            disabled={added || product.stock <= 0}
-            className={`mt-2.5 w-full py-2 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all hidden md:flex items-center justify-center space-x-1.5 shadow-2xs cursor-pointer border ${
-              added
-                ? 'bg-emerald-700 text-white border-emerald-700'
-                : product.stock <= 0
-                ? 'bg-neutral-200 text-neutral-500 border-neutral-300 cursor-not-allowed'
-                : 'bg-[#244537] hover:bg-[#193428] text-white border-[#244537] active:scale-98 shadow-xs'
-            }`}
-          >
-            {added ? (
-              <>
-                <Check className="w-3.5 h-3.5" />
-                <span>Added!</span>
-              </>
-            ) : product.stock <= 0 ? (
-              <span>Out of Stock</span>
-            ) : (
-              <>
-                <ShoppingBag className="w-3.5 h-3.5 text-[#C6A46A]" />
-                <span>Add to Bag</span>
-              </>
-            )}
-          </button>
+            {/* Clean, Symmetrical Add to Bag Button for Both Mobile & Desktop */}
+            <button
+              onClick={handleAddToCart}
+              disabled={added || product.stock <= 0}
+              className={`py-1.5 px-2.5 sm:px-3 rounded-xl text-[10.5px] sm:text-xs font-bold transition-all flex items-center justify-center space-x-1 shadow-2xs cursor-pointer border shrink-0 active:scale-95 ${
+                added
+                  ? 'bg-emerald-700 text-white border-emerald-700'
+                  : product.stock <= 0
+                  ? 'bg-neutral-200 text-neutral-500 border-neutral-300 cursor-not-allowed'
+                  : 'bg-[#244537] hover:bg-[#193428] text-white border-[#244537]'
+              }`}
+            >
+              {added ? (
+                <>
+                  <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white" />
+                  <span className="text-[10px] sm:text-[11px]">Added</span>
+                </>
+              ) : product.stock <= 0 ? (
+                <span className="text-[10px]">Sold Out</span>
+              ) : (
+                <>
+                  <ShoppingBag className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#C6A46A]" />
+                  <span className="text-[10.5px] sm:text-[11px] font-bold">+ Add</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -206,28 +206,20 @@ export const HeroSlider = ({ onNavigate }) => {
           </div>
         ))}
 
-        {/* Subtle Warm Ivory Readability Gradient Overlay — allows rustic sunlit wall and textures to shine through */}
+        {/* Desktop Readability Gradient Overlay — only on sm and up so mobile photography stays 100% natural, crisp, and vibrant */}
         <div
-          className="absolute inset-0 z-20 pointer-events-none"
+          className="hidden sm:block absolute inset-0 z-20 pointer-events-none"
           style={{
-            background: 'linear-gradient(90deg, rgba(248,244,236,0.6) 0%, rgba(248,244,236,0.4) 35%, rgba(248,244,236,0.15) 58%, transparent 80%)',
-          }}
-        />
-
-        {/* Mobile localized gradient wash for optimal text contrast */}
-        <div
-          className="sm:hidden absolute inset-0 z-20 pointer-events-none"
-          style={{
-            background: 'linear-gradient(180deg, rgba(248,244,236,0.85) 0%, rgba(248,244,236,0.65) 55%, rgba(248,244,236,0.2) 85%, transparent 100%)',
+            background: 'linear-gradient(90deg, rgba(248,244,236,0.65) 0%, rgba(248,244,236,0.35) 38%, rgba(248,244,236,0.1) 60%, transparent 80%)',
           }}
         />
 
         {/* Content Container aligned over the sunlit wall on left */}
         <div className="relative z-30 w-full h-full max-w-[1440px] mx-auto px-4 sm:px-10 lg:px-16 xl:px-20 py-8 sm:py-14 flex flex-col justify-center">
-          <div className="max-w-xl lg:max-w-[560px] xl:max-w-[620px] flex flex-col items-start text-left">
+          <div className="max-w-xl lg:max-w-[560px] xl:max-w-[620px] flex flex-col items-start text-left bg-white/60 sm:bg-transparent backdrop-blur-[2px] sm:backdrop-blur-none p-3.5 sm:p-0 rounded-2xl sm:rounded-none border border-white/60 sm:border-0 shadow-2xs sm:shadow-none">
             
             {/* Eyebrow Pill */}
-            <div className="inline-flex items-center space-x-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-white/80 backdrop-blur-xs border border-[#DDD7CC] shadow-2xs mb-2">
+            <div className="inline-flex items-center space-x-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-white/90 backdrop-blur-xs border border-[#DDD7CC] shadow-2xs mb-2">
               <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#A9512D]" aria-hidden="true" />
               <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#163323]">
                 {activeSlide.decorBadge}
@@ -236,7 +228,7 @@ export const HeroSlider = ({ onNavigate }) => {
 
             {/* Brand Title (Serif Display matching Reference Image 1) */}
             <div className="mt-0.5 sm:mt-1">
-              <span className="font-serif-display font-bold text-3xl sm:text-5xl lg:text-[54px] text-[#163323] leading-tight">
+              <span className="font-serif-display font-bold text-2xl sm:text-4xl lg:text-[54px] text-[#163323] leading-tight">
                 {activeSlide.brandTitle}
               </span>
             </div>
@@ -342,20 +334,23 @@ export const HeroSlider = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* 2. Trust Badges Strip (4 Columns directly beneath the photographic hero) */}
+      {/* 2. Trust Badges Strip (Sleek 2x2 Grid on Mobile, 4 Columns on Desktop) */}
       <div className="w-full bg-[#FAF8F5] border-y border-[#E8E2D6]">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-0 lg:divide-x divide-[#E8E2D6]">
+        <div className="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-6 lg:gap-0 lg:divide-x divide-[#E8E2D6]">
             {TRUST_FEATURES.map(({ icon: Icon, title, sub }) => (
-              <div key={title} className="flex items-center space-x-3.5 lg:px-6">
-                <div className="shrink-0">
-                  <Icon className="w-6 h-6 stroke-[1.6] text-[#163323]" aria-hidden="true" />
+              <div
+                key={title}
+                className="flex items-center space-x-2.5 sm:space-x-3.5 p-2 sm:p-0 rounded-xl bg-white/70 sm:bg-transparent border border-[#E8E2D6]/70 sm:border-0 lg:px-6 shadow-2xs sm:shadow-none"
+              >
+                <div className="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#FAF5EC] sm:bg-transparent flex items-center justify-center border border-[#E8E2D6]/60 sm:border-0 text-[#163323]">
+                  <Icon className="w-4 h-4 sm:w-6 sm:h-6 stroke-[1.8] text-[#163323]" aria-hidden="true" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm sm:text-[15px] font-bold text-[#163323] leading-tight">
+                  <p className="text-[11.5px] sm:text-[15px] font-bold text-[#163323] leading-tight truncate sm:whitespace-normal">
                     {title}
                   </p>
-                  <p className="text-xs sm:text-[13px] text-[#55665B] mt-0.5 leading-snug">
+                  <p className="text-[9.5px] sm:text-[13px] text-[#55665B] mt-0.5 leading-tight sm:leading-snug line-clamp-1 sm:line-clamp-none">
                     {sub}
                   </p>
                 </div>
