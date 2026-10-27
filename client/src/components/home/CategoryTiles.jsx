@@ -54,25 +54,29 @@ export const CategoryTiles = ({ onNavigate }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header Matching Reference Mockup */}
-        <div className="flex items-center justify-between mb-5 sm:mb-8">
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif-display font-bold text-[#163323] leading-tight">
-                Shop by Craft &amp; Material
-              </h2>
-              <span className="hidden sm:inline-flex font-handwriting text-xl text-[#A94F2B] font-bold -rotate-3 select-none">
-                ~ pure earthen charm ✿
-              </span>
-            </div>
-            <p className="text-xs sm:text-sm text-[#4E6151] font-sans mt-0.5 sm:mt-1 flex items-center gap-1.5">
-              <span>Thoughtfully curated, naturally inspired.</span>
-              <span className="sm:hidden font-handwriting text-sm text-[#A94F2B] font-bold">~ pure craft ✿</span>
+        <div className="flex items-center justify-between mb-5 sm:mb-8 gap-2">
+          <div className="min-w-0">
+            <h2 className="text-xl sm:text-3xl md:text-4xl font-serif-display font-bold text-[#163323] leading-tight">
+              Shop by Craft &amp; Material
+            </h2>
+            <p className="text-xs sm:text-sm text-[#4E6151] font-sans mt-0.5 sm:mt-1">
+              Thoughtfully curated, naturally inspired.
             </p>
           </div>
 
-          {/* Decorative Botanical Olive Sprig in Header */}
-          <div className="text-[#8C9879] opacity-80 shrink-0 ml-3">
-            <HeaderOliveSprig className="w-10 h-7 sm:w-12 sm:h-9" />
+          {/* Cute Handwritten Callout on Mobile & Desktop */}
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="-rotate-3 select-none text-right pr-0.5 sm:pr-2">
+              <span className="block font-handwriting text-base sm:text-2xl text-[#163323] font-bold leading-none">
+                pure earthen
+              </span>
+              <span className="inline-flex items-center gap-0.5 sm:gap-1 font-handwriting text-lg sm:text-3xl text-[#A94F2B] font-bold leading-none underline decoration-[#A94F2B]/40 decoration-wavy underline-offset-2">
+                charm <span className="text-xs sm:text-base text-[#163323]">✿</span>
+              </span>
+            </div>
+            <div className="text-[#8C9879] opacity-80 shrink-0 hidden sm:block">
+              <HeaderOliveSprig className="w-10 h-7 sm:w-12 sm:h-9" />
+            </div>
           </div>
         </div>
 

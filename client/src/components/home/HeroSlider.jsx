@@ -258,8 +258,15 @@ export const HeroSlider = ({ onNavigate }) => {
               {activeSlide.description}
             </p>
 
+            {/* Handcrafted Note */}
+            <div className="mt-3 sm:mt-4 flex items-center gap-1.5 select-none -rotate-1">
+              <span className="font-handwriting text-xs sm:text-base text-[#8F3D1F] font-bold tracking-wide">
+                ✦ pure slow craft &amp; handmade love ♡
+              </span>
+            </div>
+
             {/* Dual CTAs */}
-            <div className="mt-5 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-4 w-full sm:w-auto">
+            <div className="mt-3.5 sm:mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-4 w-full sm:w-auto">
               {/* Primary Button */}
               <button
                 id="hero-primary-cta"

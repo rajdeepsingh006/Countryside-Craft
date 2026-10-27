@@ -62,28 +62,35 @@ export const CraftFeaturesTiles = ({ onNavigate }) => {
   return (
     <section className="py-8 sm:py-14 bg-[#FDFBF7] texture-canvas border-b border-[#EADDC6]/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-4 sm:mb-8 pb-2 sm:pb-4 border-b border-[#EADDC6]/40">
-          <div>
-            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#A94F2B] bg-[#FDF4EE] border border-[#F0D5C3] px-2.5 py-1 rounded-full mb-1.5 shadow-2xs">
+        <div className="flex items-center justify-between mb-4 sm:mb-8 pb-2 sm:pb-4 border-b border-[#EADDC6]/40 gap-3">
+          <div className="min-w-0">
+            <div className="inline-flex items-center space-x-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#A94F2B] bg-[#FDF4EE] border border-[#F0D5C3] px-2.5 py-1 rounded-full mb-1.5 shadow-2xs">
               <Sparkles className="w-3.5 h-3.5 text-[#A94F2B]" />
               <span>Artisan &amp; Handwork Craft</span>
             </div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-xl sm:text-3xl md:text-4xl font-serif-display font-bold text-[#163323]">
-                Shop by Craft &amp; Occasion
-              </h2>
-              <span className="hidden sm:inline-flex font-handwriting text-2xl text-[#244537] font-bold -rotate-3 select-none ml-2">
-                ~ stitched with love 𖤣𖥧
+            <h2 className="text-xl sm:text-3xl md:text-4xl font-serif-display font-bold text-[#163323] leading-tight">
+              Shop by Craft &amp; Occasion
+            </h2>
+          </div>
+
+          {/* Cute Handwritten Callout on Mobile & Desktop */}
+          <div className="flex flex-col items-end shrink-0 select-none">
+            <div className="-rotate-3 text-right pr-0.5 sm:pr-2">
+              <span className="block font-handwriting text-base sm:text-2xl text-[#244537] font-bold leading-none">
+                stitched with
+              </span>
+              <span className="inline-flex items-center gap-0.5 sm:gap-1 font-handwriting text-lg sm:text-3xl text-[#A94F2B] font-bold leading-none underline decoration-[#A94F2B]/40 decoration-wavy underline-offset-2">
+                love <span className="text-xs sm:text-base text-[#244537]">𖤣𖥧</span>
               </span>
             </div>
+            <button
+              onClick={() => onNavigate('products')}
+              className="text-[11px] sm:text-xs font-bold text-[#A94F2B] hover:text-[#8E3F1F] flex items-center space-x-1 transition-colors group cursor-pointer pt-1"
+            >
+              <span>View all</span>
+              <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
+            </button>
           </div>
-          <button
-            onClick={() => onNavigate('products')}
-            className="text-xs sm:text-sm font-bold text-[#A94F2B] hover:text-[#8E3F1F] flex items-center space-x-1 transition-colors group cursor-pointer pb-0.5"
-          >
-            <span>View all</span>
-            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-          </button>
         </div>
 
         {/* 4-Card Grid on Desktop, Smooth Snap Carousel on Mobile */}

@@ -147,18 +147,25 @@ export const SignatureSpotlight = ({ onNavigate }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header with Carousel Controls */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-8 pb-3 border-b border-[#EADDC6]/50 gap-4">
-          <div>
-            <div className="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-widest text-[#A94F2B] mb-1.5 bg-[#FDF4EE] px-3 py-1 rounded-full border border-[#F0D5C3] shadow-2xs">
-              <Sparkles className="w-3.5 h-3.5 text-[#A94F2B]" />
-              <span>Heirloom Craft Spotlight</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif-display font-bold text-[#163323]">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 sm:mb-8 pb-3 border-b border-[#EADDC6]/50 gap-3">
+          <div className="flex items-start justify-between gap-2 w-full sm:w-auto">
+            <div>
+              <div className="inline-flex items-center space-x-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#A94F2B] mb-1 sm:mb-1.5 bg-[#FDF4EE] px-2.5 sm:px-3 py-1 rounded-full border border-[#F0D5C3] shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-[#A94F2B]" />
+                <span>Heirloom Craft Spotlight</span>
+              </div>
+              <h2 className="text-xl sm:text-3xl md:text-4xl font-serif-display font-bold text-[#163323] leading-tight">
                 Artisan Top-Rated Masterpieces
               </h2>
-              <span className="hidden md:inline-flex font-handwriting text-2xl text-[#A94F2B] font-bold -rotate-3 select-none ml-1">
-                ~ master crafted ✧
+            </div>
+
+            {/* Cute Handwritten Callout on Mobile & Desktop */}
+            <div className="shrink-0 -rotate-3 select-none text-right pt-0.5 pr-1 sm:pr-3">
+              <span className="block font-handwriting text-base sm:text-2xl text-[#244537] font-bold leading-none">
+                master
+              </span>
+              <span className="inline-flex items-center gap-0.5 sm:gap-1 font-handwriting text-lg sm:text-3xl text-[#A94F2B] font-bold leading-none underline decoration-[#A94F2B]/40 decoration-wavy underline-offset-2">
+                crafted <span className="text-xs sm:text-base text-[#244537]">✧</span>
               </span>
             </div>
           </div>
