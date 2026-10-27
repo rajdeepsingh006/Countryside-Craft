@@ -16,25 +16,13 @@ const HeaderOliveSprig = ({ className = 'w-10 h-8' }) => (
   </svg>
 );
 
-// Botanical Watermark for card corner
-const CardOliveWatermark = ({ className = 'w-8 h-6' }) => (
-  <svg viewBox="0 0 80 50" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
-    <path d="M5 45 C35 38 55 25 75 8 C60 16 40 28 5 45 Z" opacity="0.4" />
-    <path d="M72 10 C62 8 56 12 54 18 C62 14 69 13 72 10 Z" />
-    <path d="M58 17 C48 15 42 20 40 25 C48 21 55 20 58 17 Z" />
-    <path d="M42 25 C32 22 26 27 24 32 C32 28 39 28 42 25 Z" />
-    <path d="M68 7 C62 2 55 4 52 10 C58 7 64 6 68 7 Z" />
-    <path d="M54 13 C47 7 40 10 37 16 C44 13 50 12 54 13 Z" />
-    <path d="M38 21 C31 15 24 18 21 24 C28 21 34 20 38 21 Z" />
-  </svg>
-);
-
 const CATEGORY_CUSTOM_DATA = {
   canvas: {
     displayTitle: 'Durable Cotton Weave',
     tagline: 'Sturdy. Stylish. Everyday Ready.',
     btnColor: 'bg-[#163323] hover:bg-[#204430]',
     badgeIcon: 'leaf',
+    bgImage: '/images/categories/category-canvas-wide.png',
     fallbackImage: '/images/categories/travel-stationery.jpg',
   },
   jute: {
@@ -42,6 +30,7 @@ const CATEGORY_CUSTOM_DATA = {
     tagline: 'Earthy textures. Timeless charm.',
     btnColor: 'bg-[#A84E29] hover:bg-[#914120]',
     badgeIcon: 'heart',
+    bgImage: '/images/categories/category-jute-wide.png',
     fallbackImage: '/images/categories/handpainted-jute.jpg',
   },
 };
@@ -101,10 +90,11 @@ export const CategoryTiles = ({ onNavigate }) => {
                   tagline: cat.description || 'Thoughtfully crafted artisan goods.',
                   btnColor: idx % 2 === 0 ? 'bg-[#163323] hover:bg-[#204430]' : 'bg-[#A84E29] hover:bg-[#914120]',
                   badgeIcon: idx % 2 === 0 ? 'leaf' : 'heart',
+                  bgImage: cat.image || '/images/categories/handpainted-jute.jpg',
                   fallbackImage: cat.image || '/images/categories/handpainted-jute.jpg',
                 };
 
-            const imageSrc = cat.image ? getAssetUrl(cat.image) : getAssetUrl(customData.fallbackImage);
+            const imageSrc = getAssetUrl(customData.bgImage || cat.image || customData.fallbackImage);
 
             return (
               <div
@@ -113,34 +103,33 @@ export const CategoryTiles = ({ onNavigate }) => {
                   onNavigate('products', cat.slug);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="relative w-full rounded-3xl overflow-hidden bg-[#FAF6EE] border border-[#E7DFD2] shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group min-h-[190px] sm:min-h-[220px] md:min-h-[235px] flex items-center"
+                className="relative w-full rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group min-h-[195px] sm:min-h-[225px] md:min-h-[245px] flex items-center border border-[#E7DFD2]/80 bg-[#F5EFE4]"
               >
-                {/* Right Side Category Image with Smooth Gradient Mask into Parchment */}
-                <div className="absolute right-0 top-0 bottom-0 w-[58%] sm:w-[50%] md:w-[48%] h-full overflow-hidden select-none">
-                  <img
-                    src={imageSrc}
-                    alt={customData.displayTitle}
-                    onError={(e) => {
-                      if (customData.fallbackImage && e.currentTarget.src !== getAssetUrl(customData.fallbackImage)) {
-                        e.currentTarget.src = getAssetUrl(customData.fallbackImage);
-                      }
-                    }}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                  />
-                  {/* Subtle radial & linear blend so photo fades seamlessly into card background */}
-                  <div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background: 'linear-gradient(90deg, #FAF6EE 0%, rgba(250,246,238,0.92) 22%, rgba(250,246,238,0.4) 55%, transparent 100%)',
-                    }}
-                  />
-                </div>
+                {/* Full Panoramic Background Image covering the entire element */}
+                <img
+                  src={imageSrc}
+                  alt={customData.displayTitle}
+                  onError={(e) => {
+                    if (customData.fallbackImage && e.currentTarget.src !== getAssetUrl(customData.fallbackImage)) {
+                      e.currentTarget.src = getAssetUrl(customData.fallbackImage);
+                    }
+                  }}
+                  className="absolute inset-0 w-full h-full object-cover object-right sm:object-center group-hover:scale-102 transition-transform duration-700 ease-out"
+                />
 
-                {/* Left Side Content Over Parchment */}
-                <div className="relative z-10 w-[68%] sm:w-[58%] md:w-[54%] p-4 sm:p-6 md:p-8 flex flex-col justify-center items-start text-left">
+                {/* Subtle soft natural gradient wash on the left to ensure 100% text contrast without obscuring background */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(90deg, rgba(250,246,238,0.76) 0%, rgba(250,246,238,0.52) 42%, rgba(250,246,238,0.15) 68%, transparent 90%)',
+                  }}
+                />
+
+                {/* Left Side Content Layered Over the Photographic Background */}
+                <div className="relative z-10 w-[72%] sm:w-[58%] md:w-[52%] p-4 sm:p-6 md:p-8 flex flex-col justify-center items-start text-left">
                   
                   {/* Design Count Pill Badge */}
-                  <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-white/90 border border-[#D5C7B2] shadow-2xs mb-2">
+                  <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-xs border border-[#D5C7B2] shadow-2xs mb-2">
                     {customData.badgeIcon === 'heart' ? (
                       <Heart className="w-3 h-3 text-[#A84E29] fill-[#A84E29]/20" aria-hidden="true" />
                     ) : (
@@ -157,12 +146,12 @@ export const CategoryTiles = ({ onNavigate }) => {
                   </h3>
 
                   {/* Subtitle / Tagline */}
-                  <p className="text-xs sm:text-sm text-[#55665B] mt-1 font-medium leading-snug">
+                  <p className="text-xs sm:text-sm text-[#4E6151] mt-1 font-medium leading-snug">
                     {customData.tagline}
                   </p>
 
                   {/* Terracotta Divider Bar */}
-                  <div className="w-7 h-[2px] bg-[#9C4D26] rounded-full my-2.5 sm:my-3" />
+                  <div className="w-7 h-[2.5px] bg-[#9C4D26] rounded-full my-2.5 sm:my-3" />
 
                   {/* Action Button */}
                   <button
@@ -173,11 +162,6 @@ export const CategoryTiles = ({ onNavigate }) => {
                     <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                   </button>
 
-                </div>
-
-                {/* Decorative Botanical Watermark in Bottom-Left Corner */}
-                <div className="absolute bottom-1.5 left-2 pointer-events-none text-[#8C9879] opacity-35">
-                  <CardOliveWatermark className="w-8 h-6 sm:w-10 sm:h-7" />
                 </div>
 
               </div>
