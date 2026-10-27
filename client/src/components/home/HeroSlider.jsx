@@ -5,44 +5,40 @@ import { buildWhatsAppInquiryMessage, generateWhatsAppUrl } from '../../utils/wh
 import { getAssetUrl } from '../../utils/assetHelper';
 
 /**
- * Countryside Craft — Premium Full-Width Dynamic Hero Carousel
+ * Countryside Craft — Premium Full-Bleed Dynamic Hero Announcement Carousel
  * 
- * Features:
- * - Full-bleed background product photography filling 100% of the slide
- * - Refined editorial warm ivory readability gradient overlay
- * - Original authentic artisan texts: Countryside Craft script, taglines, titles, descriptions
- * - Dual CTAs: Primary collection CTA + WhatsApp Bulk Inquiry button
- * - Authentic wide product photographs (1920x800) with responsive focal positioning
- * - Auto-rotation (6s), hover pause, keyboard navigation, touch swipe & WCAG pause control
- * - Integrated trust features strip directly beneath
+ * Configured with the authentic wide product photographs:
+ * 1. Three Tall Floral Bags (from reference image)
+ * 2. Assorted Decorative Jute Bags Collection
+ * 3. Handcrafted Jute Pouches with Mirrorwork
  */
 const HERO_SLIDES = [
   {
     id: 1,
-    image: '/images/carousel/carousel-vibrant-collection-wide.jpg',
-    fallbackImage: '/images/carousel/carousel-vibrant-collection.jpg',
-    imageAlt: 'Vibrant Jute Bag Collection',
-    decorBadge: 'Slow Craft Artisan',
+    image: '/images/carousel/carousel-floral-bags-wide.jpg',
+    fallbackImage: '/images/carousel/carousel-floral-bags.jpg',
+    imageAlt: 'Three Tall Floral Handcrafted Jute Bags',
+    decorBadge: 'SLOW CRAFT ARTISAN',
     brandTitle: 'Countryside Craft',
     tagline: 'Artisan Heritage Collection',
     title: 'Vibrant Jute Bag Collection',
     description: 'A colorful collection of handcrafted jute bags featuring elegant trims, embroidery, floral accents, and thoughtful gift designs.',
-    primaryCta: 'Browse Vibrant Collection',
+    primaryCta: 'BROWSE VIBRANT COLLECTION',
     primaryTarget: '',
     desktopPosition: 'object-right center',
     mobilePosition: 'object-center',
   },
   {
     id: 2,
-    image: '/images/carousel/carousel-floral-bags-wide.jpg',
-    fallbackImage: '/images/carousel/carousel-floral-bags.jpg',
-    imageAlt: 'Handcrafted Floral Jute Bags',
-    decorBadge: 'Festive & Eco-Friendly',
+    image: '/images/carousel/carousel-vibrant-collection-wide.jpg',
+    fallbackImage: '/images/carousel/carousel-vibrant-collection.jpg',
+    imageAlt: 'Assorted Decorative Jute Bags with Colorful Trims and Embroidery',
+    decorBadge: 'SLOW CRAFT ARTISAN',
     brandTitle: 'Countryside Craft',
-    tagline: 'Botanical & Traditional Charm',
-    title: 'Handcrafted Floral Jute Bags',
-    description: 'Beautiful eco-friendly jute bags adorned with vibrant floral embroidery, bringing together natural texture and traditional handmade charm.',
-    primaryCta: 'Shop Floral Jute Bags',
+    tagline: 'Artisan Heritage Collection',
+    title: 'Vibrant Jute Bag Collection',
+    description: 'A colorful collection of handcrafted jute bags featuring elegant trims, embroidery, floral accents, and thoughtful gift designs.',
+    primaryCta: 'BROWSE VIBRANT COLLECTION',
     primaryTarget: '',
     desktopPosition: 'object-right center',
     mobilePosition: 'object-center',
@@ -51,13 +47,13 @@ const HERO_SLIDES = [
     id: 3,
     image: '/images/carousel/carousel-pouches-wide.jpg',
     fallbackImage: '/images/carousel/carousel-pouches.jpg',
-    imageAlt: 'Handcrafted Embellished Jute Pouches',
-    decorBadge: 'Handcrafted Heritage',
+    imageAlt: 'Handcrafted Jute Pouches with Mirrors and Colorful Beads',
+    decorBadge: 'SLOW CRAFT ARTISAN',
     brandTitle: 'Countryside Craft',
-    tagline: 'Handmade With Love',
-    title: 'Crafted by Hand • Made to Gift',
-    description: 'Rustic textures, colorful details, and thoughtful craftsmanship come together in charming handmade pouches and keychains.',
-    primaryCta: 'Explore Handmade Pouches',
+    tagline: 'Artisan Heritage Collection',
+    title: 'Vibrant Jute Bag Collection',
+    description: 'A colorful collection of handcrafted jute bags featuring elegant trims, embroidery, floral accents, and thoughtful gift designs.',
+    primaryCta: 'BROWSE VIBRANT COLLECTION',
     primaryTarget: 'pouch',
     desktopPosition: 'object-right center',
     mobilePosition: 'object-center',
@@ -98,7 +94,6 @@ export const HeroSlider = ({ onNavigate }) => {
   const touchEndXRef = useRef(null);
   const autoPlayTimerRef = useRef(null);
 
-  // Check for reduced motion preference
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -120,7 +115,6 @@ export const HeroSlider = ({ onNavigate }) => {
     setCurrentSlide(index);
   };
 
-  // Autoplay management
   useEffect(() => {
     if (isPaused || isHovered) {
       if (autoPlayTimerRef.current) clearInterval(autoPlayTimerRef.current);
@@ -138,7 +132,6 @@ export const HeroSlider = ({ onNavigate }) => {
     };
   }, [isPaused, isHovered, handleNext, currentSlide]);
 
-  // Touch Swipe handlers
   const handleTouchStart = (e) => {
     touchStartXRef.current = e.targetTouches[0].clientX;
   };
@@ -153,16 +146,15 @@ export const HeroSlider = ({ onNavigate }) => {
     const minSwipeDistance = 50;
 
     if (distance > minSwipeDistance) {
-      handleNext(); // swipe left
+      handleNext();
     } else if (distance < -minSwipeDistance) {
-      handlePrev(); // swipe right
+      handlePrev();
     }
 
     touchStartXRef.current = null;
     touchEndXRef.current = null;
   };
 
-  // Handle WhatsApp bulk inquiry
   const handleBulkInquiry = () => {
     const msg = buildWhatsAppInquiryMessage('custom-bulk');
     window.open(generateWhatsAppUrl(settings.whatsappNumber, msg), '_blank', 'noopener,noreferrer');
@@ -171,205 +163,200 @@ export const HeroSlider = ({ onNavigate }) => {
   const activeSlide = HERO_SLIDES[currentSlide];
 
   return (
-    <section
-      aria-label="Hero Carousel"
-      className="w-full bg-[#FAF8F5] pt-2 sm:pt-4"
-    >
-      {/* 1. Full-Width Photographic Hero Carousel Container */}
-      <div className="w-full max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-8">
-        <div
-          role="region"
-          aria-roledescription="carousel"
-          aria-label="Artisan Collections Showcase"
-          className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-[#E7DFD2] min-h-[540px] sm:min-h-[560px] lg:min-h-[580px] xl:min-h-[620px] select-none flex items-center"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          {/* Full-Bleed Background Images for all 3 slides */}
-          {HERO_SLIDES.map((slide, idx) => (
-            <div
-              key={slide.id}
-              role="group"
-              aria-roledescription="slide"
-              aria-label={`Slide ${idx + 1} of ${HERO_SLIDES.length}: ${slide.tagline} - ${slide.title}`}
-              aria-hidden={currentSlide !== idx}
-              className={`absolute inset-0 w-full h-full ${
-                reducedMotion
-                  ? currentSlide === idx ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
-                  : `transition-opacity duration-700 ease-in-out ${
-                      currentSlide === idx ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
-                    }`
-              }`}
-            >
-              <img
-                src={getAssetUrl(slide.image)}
-                alt={slide.imageAlt}
-                loading={idx === 0 ? 'eager' : 'lazy'}
-                onError={(e) => {
-                  if (slide.fallbackImage && e.currentTarget.src !== slide.fallbackImage) {
-                    e.currentTarget.src = slide.fallbackImage;
-                  }
-                }}
-                className={`w-full h-full object-cover ${slide.desktopPosition} sm:${slide.desktopPosition}`}
-              />
-            </div>
-          ))}
-
-          {/* Premium Readability Overlay: Soft Ivory to Transparent Gradient */}
+    <section aria-label="Hero Announcement Banner" className="w-full bg-[#FAF8F5]">
+      {/* 1. Full-Bleed Edge-to-Edge Hero Banner */}
+      <div
+        role="region"
+        aria-roledescription="carousel"
+        aria-label="Artisan Collections Showcase"
+        className="relative w-full overflow-hidden select-none flex items-center min-h-[520px] sm:min-h-[560px] lg:min-h-[580px] xl:min-h-[600px]"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Full-Bleed Background Images for all slides */}
+        {HERO_SLIDES.map((slide, idx) => (
           <div
-            className="absolute inset-0 z-20 pointer-events-none transition-colors duration-500"
-            style={{
-              background: 'linear-gradient(90deg, rgba(248,244,236,0.96) 0%, rgba(248,244,236,0.91) 28%, rgba(248,244,236,0.65) 48%, rgba(248,244,236,0.18) 72%, transparent 100%)',
-            }}
-          />
-
-          {/* Mobile localized gradient wash for optimal text contrast */}
-          <div
-            className="lg:hidden absolute inset-0 z-20 pointer-events-none"
-            style={{
-              background: 'linear-gradient(180deg, rgba(248,244,236,0.96) 0%, rgba(248,244,236,0.88) 52%, rgba(248,244,236,0.45) 78%, rgba(248,244,236,0.15) 100%)',
-            }}
-          />
-
-          {/* Slide Content Layer: Eyebrow, Brand Title, Tagline, Title, Description, and Dual CTAs */}
-          <div className="relative z-30 w-full h-full flex flex-col justify-center px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 py-10 sm:py-16">
-            <div className="max-w-xl lg:max-w-[580px] xl:max-w-[620px] flex flex-col items-start text-left">
-              
-              {/* Eyebrow Pill */}
-              <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/95 backdrop-blur-xs border border-[#DDD7CC] shadow-2xs mb-2 sm:mb-2.5">
-                <Sparkles className="w-3.5 h-3.5 text-[#C49A58]" aria-hidden="true" />
-                <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-[#34271D]">
-                  {activeSlide.decorBadge}
-                </span>
-              </div>
-
-              {/* Brand Title (Script Display) */}
-              <div className="mt-1">
-                <span className="font-brand-script font-bold text-3xl sm:text-4xl lg:text-[46px] text-[#34271D] tracking-wide leading-tight">
-                  Countryside Craft
-                </span>
-              </div>
-
-              {/* Tagline */}
-              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif-display font-bold text-[#A9512D] leading-snug mt-1">
-                {activeSlide.tagline}
-              </h1>
-
-              {/* Product Title / Subtitle */}
-              <h2 className="text-base sm:text-lg md:text-xl font-serif-display font-semibold text-[#34271D] mt-1">
-                {activeSlide.title}
-              </h2>
-
-              {/* Description */}
-              <p className="font-sans text-xs sm:text-sm md:text-base text-[#5A4D41] leading-relaxed max-w-lg mt-2.5">
-                {activeSlide.description}
-              </p>
-
-              {/* Dual CTAs: Primary Storefront CTA + WhatsApp Bulk Inquiry */}
-              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
-                {/* Primary Button */}
-                <button
-                  id="hero-primary-cta"
-                  type="button"
-                  onClick={() => onNavigate('products', activeSlide.primaryTarget)}
-                  className="px-7 py-3.5 rounded-full bg-[#254535] hover:bg-[#1A3427] text-[#F8F4EC] font-bold text-xs uppercase tracking-wider shadow-sm hover:shadow-md transition-all active:scale-98 cursor-pointer flex items-center justify-center space-x-2 group"
-                >
-                  <span>{activeSlide.primaryCta} →</span>
-                  <ArrowRight className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-                </button>
-
-                {/* Secondary Button: WhatsApp Inquiry */}
-                <button
-                  id="hero-whatsapp-inquiry-cta"
-                  type="button"
-                  onClick={handleBulkInquiry}
-                  className="px-6 py-3.5 rounded-full bg-[#10B981] hover:bg-[#059669] text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all active:scale-98 cursor-pointer flex items-center justify-center space-x-2"
-                >
-                  <MessageCircle className="w-4 h-4 text-white shrink-0" aria-hidden="true" />
-                  <span>Inquire for Custom &amp; Bulk Favors</span>
-                </button>
-              </div>
-
-            </div>
+            key={slide.id}
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`Slide ${idx + 1} of ${HERO_SLIDES.length}: ${slide.tagline} - ${slide.title}`}
+            aria-hidden={currentSlide !== idx}
+            className={`absolute inset-0 w-full h-full ${
+              reducedMotion
+                ? currentSlide === idx ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
+                : `transition-opacity duration-700 ease-in-out ${
+                    currentSlide === idx ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
+                  }`
+            }`}
+          >
+            <img
+              src={getAssetUrl(slide.image)}
+              alt={slide.imageAlt}
+              loading={idx === 0 ? 'eager' : 'lazy'}
+              onError={(e) => {
+                if (slide.fallbackImage && e.currentTarget.src !== slide.fallbackImage) {
+                  e.currentTarget.src = slide.fallbackImage;
+                }
+              }}
+              className={`w-full h-full object-cover ${slide.desktopPosition} sm:${slide.desktopPosition}`}
+            />
           </div>
+        ))}
 
-          {/* Carousel Navigation Controls (Bottom Right Floating Bar) */}
-          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-8 z-30 flex items-center space-x-2 px-3 py-2 rounded-full bg-white/90 backdrop-blur-md border border-[#E7DFD2] text-[#34271D] shadow-md select-none">
-            {/* Previous Button */}
-            <button
-              type="button"
-              onClick={handlePrev}
-              className="p-1.5 rounded-full hover:bg-black/5 text-[#34271D] transition-colors cursor-pointer"
-              aria-label="Previous slide"
-            >
-              <ChevronLeft className="w-4 h-4" aria-hidden="true" />
-            </button>
+        {/* Subtle Warm Ivory Readability Gradient Overlay */}
+        <div
+          className="absolute inset-0 z-20 pointer-events-none"
+          style={{
+            background: 'linear-gradient(90deg, rgba(248,244,236,0.92) 0%, rgba(248,244,236,0.85) 32%, rgba(248,244,236,0.50) 52%, rgba(248,244,236,0.10) 72%, transparent 100%)',
+          }}
+        />
 
-            {/* Slide Indicators */}
-            <div className="flex items-center space-x-1.5 px-1.5">
-              {HERO_SLIDES.map((_, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => goToSlide(idx)}
-                  className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                    currentSlide === idx
-                      ? 'w-6 bg-[#254535]'
-                      : 'w-2 bg-[#34271D]/30 hover:bg-[#34271D]/60'
-                  }`}
-                  aria-label={`Go to slide ${idx + 1}`}
-                  aria-current={currentSlide === idx ? 'true' : 'false'}
-                />
-              ))}
+        {/* Mobile localized gradient wash for optimal text contrast */}
+        <div
+          className="lg:hidden absolute inset-0 z-20 pointer-events-none"
+          style={{
+            background: 'linear-gradient(180deg, rgba(248,244,236,0.95) 0%, rgba(248,244,236,0.88) 54%, rgba(248,244,236,0.45) 80%, rgba(248,244,236,0.15) 100%)',
+          }}
+        />
+
+        {/* Content Container aligned over the sunlit wall on left */}
+        <div className="relative z-30 w-full h-full max-w-[1440px] mx-auto px-6 sm:px-12 lg:px-16 xl:px-20 py-10 sm:py-16 flex flex-col justify-center">
+          <div className="max-w-xl lg:max-w-[560px] xl:max-w-[620px] flex flex-col items-start text-left">
+            
+            {/* Eyebrow Pill */}
+            <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/80 backdrop-blur-xs border border-[#DDD7CC] shadow-2xs mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-[#C49A58]" aria-hidden="true" />
+              <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-[#163323]">
+                {activeSlide.decorBadge}
+              </span>
             </div>
 
-            {/* Next Button */}
-            <button
-              type="button"
-              onClick={handleNext}
-              className="p-1.5 rounded-full hover:bg-black/5 text-[#34271D] transition-colors cursor-pointer"
-              aria-label="Next slide"
-            >
-              <ChevronRight className="w-4 h-4" aria-hidden="true" />
-            </button>
+            {/* Brand Title (Script Display) */}
+            <div className="mt-1">
+              <span className="font-brand-script font-bold text-4xl sm:text-5xl lg:text-[54px] text-[#163323] leading-tight">
+                Countryside Craft
+              </span>
+            </div>
 
-            {/* Autoplay Pause / Play Accessible Toggle */}
-            <div className="pl-1 border-l border-[#E7DFD2]">
+            {/* Tagline */}
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-serif-display font-bold text-[#A9512D] leading-tight mt-1">
+              {activeSlide.tagline}
+            </h1>
+
+            {/* Product Title / Subtitle */}
+            <h2 className="text-base sm:text-lg md:text-xl font-serif-display font-bold text-[#163323] mt-1">
+              {activeSlide.title}
+            </h2>
+
+            {/* Description */}
+            <p className="font-sans text-xs sm:text-sm md:text-[15px] text-[#4A3E36] leading-relaxed max-w-lg mt-2.5">
+              {activeSlide.description}
+            </p>
+
+            {/* Dual CTAs: Primary Storefront CTA + WhatsApp Bulk Inquiry */}
+            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
+              {/* Primary Button */}
               <button
+                id="hero-primary-cta"
                 type="button"
-                onClick={() => setIsPaused((prev) => !prev)}
-                className="p-1.5 rounded-full hover:bg-black/5 text-[#34271D]/70 hover:text-[#34271D] transition-colors cursor-pointer"
-                aria-label={isPaused ? 'Resume autoplay' : 'Pause autoplay'}
-                title={isPaused ? 'Resume autoplay' : 'Pause autoplay'}
+                onClick={() => onNavigate('products', activeSlide.primaryTarget)}
+                className="px-7 py-3.5 rounded-full bg-[#163323] hover:bg-[#204430] text-white font-bold text-xs uppercase tracking-wider shadow-sm hover:shadow-md transition-all active:scale-98 cursor-pointer flex items-center justify-center space-x-2 group"
               >
-                {isPaused ? (
-                  <Play className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
-                ) : (
-                  <Pause className="w-3.5 h-3.5" aria-hidden="true" />
-                )}
+                <span>{activeSlide.primaryCta} →</span>
+                <ArrowRight className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              </button>
+
+              {/* Secondary Button: WhatsApp Inquiry */}
+              <button
+                id="hero-whatsapp-inquiry-cta"
+                type="button"
+                onClick={handleBulkInquiry}
+                className="px-6 py-3.5 rounded-full border border-[#163323]/50 bg-white/40 hover:bg-white/80 text-[#163323] font-bold text-xs uppercase tracking-wider transition-all active:scale-98 cursor-pointer flex items-center justify-center space-x-2"
+              >
+                <MessageCircle className="w-4 h-4 text-[#163323] shrink-0" aria-hidden="true" />
+                <span>INQUIRE FOR CUSTOM &amp; BULK FAVORS</span>
               </button>
             </div>
+
+          </div>
+        </div>
+
+        {/* Carousel Navigation Controls (Bottom Right Floating Bar) */}
+        <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-8 z-30 flex items-center space-x-2 px-3 py-2 rounded-full bg-white/90 backdrop-blur-md border border-[#E7DFD2] text-[#34271D] shadow-md select-none">
+          {/* Previous Button */}
+          <button
+            type="button"
+            onClick={handlePrev}
+            className="p-1.5 rounded-full hover:bg-black/5 text-[#34271D] transition-colors cursor-pointer"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="w-4 h-4" aria-hidden="true" />
+          </button>
+
+          {/* Slide Indicators */}
+          <div className="flex items-center space-x-1.5 px-1.5">
+            {HERO_SLIDES.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => goToSlide(idx)}
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                  currentSlide === idx
+                    ? 'w-6 bg-[#163323]'
+                    : 'w-2 bg-[#34271D]/30 hover:bg-[#34271D]/60'
+                }`}
+                aria-label={`Go to slide ${idx + 1}`}
+                aria-current={currentSlide === idx ? 'true' : 'false'}
+              />
+            ))}
+          </div>
+
+          {/* Next Button */}
+          <button
+            type="button"
+            onClick={handleNext}
+            className="p-1.5 rounded-full hover:bg-black/5 text-[#34271D] transition-colors cursor-pointer"
+            aria-label="Next slide"
+          >
+            <ChevronRight className="w-4 h-4" aria-hidden="true" />
+          </button>
+
+          {/* Autoplay Pause / Play Accessible Toggle */}
+          <div className="pl-1 border-l border-[#E7DFD2]">
+            <button
+              type="button"
+              onClick={() => setIsPaused((prev) => !prev)}
+              className="p-1.5 rounded-full hover:bg-black/5 text-[#34271D]/70 hover:text-[#34271D] transition-colors cursor-pointer"
+              aria-label={isPaused ? 'Resume autoplay' : 'Pause autoplay'}
+              title={isPaused ? 'Resume autoplay' : 'Pause autoplay'}
+            >
+              {isPaused ? (
+                <Play className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
+              ) : (
+                <Pause className="w-3.5 h-3.5" aria-hidden="true" />
+              )}
+            </button>
           </div>
         </div>
       </div>
 
       {/* 2. Trust Badges Strip (4 Columns directly beneath the photographic hero) */}
-      <div className="w-full bg-[#FAF8F5] border-y border-[#E8E2D6] mt-6 sm:mt-10">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
+      <div className="w-full bg-[#FAF8F5] border-y border-[#E8E2D6]">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-0 lg:divide-x divide-[#E8E2D6]">
             {TRUST_FEATURES.map(({ icon: Icon, title, sub }) => (
               <div key={title} className="flex items-center space-x-3.5 lg:px-6">
                 <div className="shrink-0">
-                  <Icon className="w-6 h-6 stroke-[1.6] text-[#254535]" aria-hidden="true" />
+                  <Icon className="w-6 h-6 stroke-[1.6] text-[#163323]" aria-hidden="true" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm sm:text-[15px] font-bold text-[#34271D] leading-tight">
+                  <p className="text-sm sm:text-[15px] font-bold text-[#163323] leading-tight">
                     {title}
                   </p>
-                  <p className="text-xs sm:text-[13px] text-[#5A4D41] mt-0.5 leading-snug">
+                  <p className="text-xs sm:text-[13px] text-[#55665B] mt-0.5 leading-snug">
                     {sub}
                   </p>
                 </div>
