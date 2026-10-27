@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
-  ArrowRight,
   Sparkles,
   MessageCircle,
   ChevronLeft,
@@ -11,48 +10,10 @@ import {
   Truck,
   Leaf,
   HandHeart,
-  Search,
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { buildWhatsAppInquiryMessage, generateWhatsAppUrl } from '../../utils/whatsappMessageBuilder';
 import { getAssetUrl } from '../../utils/assetHelper';
-
-// Botanical Olive Sprig SVGs matching reference mockup
-const CornerOliveSprig = ({ className = 'w-10 h-10' }) => (
-  <svg viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
-    <path d="M85 15 C55 25 35 50 20 85 C23 83 26 80 28 76 C38 48 58 28 85 15 Z" opacity="0.4" />
-    <path d="M82 18 C72 20 62 16 57 11 C65 22 75 24 82 18 Z" />
-    <path d="M68 25 C58 26 50 20 46 14 C52 27 63 31 68 25 Z" />
-    <path d="M54 35 C43 36 36 29 32 23 C38 37 49 41 54 35 Z" />
-    <path d="M74 22 C67 31 62 40 73 34 C77 28 76 24 74 22 Z" />
-    <path d="M60 32 C53 42 47 50 58 45 C63 39 62 34 60 32 Z" />
-    <path d="M46 44 C39 54 34 62 44 57 C49 51 48 46 46 44 Z" />
-  </svg>
-);
-
-const OliveSprigLeft = ({ className = 'w-10 h-8' }) => (
-  <svg viewBox="0 0 80 50" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
-    <path d="M75 42 C45 32 25 22 5 10 C18 18 38 28 75 42 Z" opacity="0.35" />
-    <path d="M8 12 C18 10 24 14 26 20 C18 16 11 15 8 12 Z" />
-    <path d="M22 19 C32 17 38 22 40 27 C32 23 25 22 22 19 Z" />
-    <path d="M38 27 C48 24 54 29 56 34 C48 30 41 30 38 27 Z" />
-    <path d="M12 9 C18 4 25 6 28 12 C22 9 16 8 12 9 Z" />
-    <path d="M26 15 C33 9 40 12 43 18 C36 15 30 14 26 15 Z" />
-    <path d="M42 23 C49 17 56 20 59 26 C52 23 46 22 42 23 Z" />
-  </svg>
-);
-
-const OliveSprigRight = ({ className = 'w-10 h-8' }) => (
-  <svg viewBox="0 0 80 50" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className} style={{ transform: 'scaleX(-1)' }}>
-    <path d="M75 42 C45 32 25 22 5 10 C18 18 38 28 75 42 Z" opacity="0.35" />
-    <path d="M8 12 C18 10 24 14 26 20 C18 16 11 15 8 12 Z" />
-    <path d="M22 19 C32 17 38 22 40 27 C32 23 25 22 22 19 Z" />
-    <path d="M38 27 C48 24 54 29 56 34 C48 30 41 30 38 27 Z" />
-    <path d="M12 9 C18 4 25 6 28 12 C22 9 16 8 12 9 Z" />
-    <path d="M26 15 C33 9 40 12 43 18 C36 15 30 14 26 15 Z" />
-    <path d="M42 23 C49 17 56 20 59 26 C52 23 46 22 42 23 Z" />
-  </svg>
-);
 
 const HERO_SLIDES = [
   {
@@ -205,153 +166,18 @@ export const HeroSlider = ({ onNavigate }) => {
     <section aria-label="Hero Announcement Banner" className="w-full bg-[#FAF8F5]">
       
       {/* ─────────────────────────────────────────────────────────── */}
-      {/* MOBILE-ONLY HERO LAYOUT (Exact Match to User Reference Mockup) */}
+      {/* UNIFIED HERO PRESENTATION (Responsive PC & Mobile View)     */}
       {/* ─────────────────────────────────────────────────────────── */}
       <div
         role="region"
         aria-roledescription="carousel"
-        aria-label="Artisan Collections Showcase (Mobile)"
-        className="sm:hidden relative w-full overflow-hidden select-none min-h-[580px] rounded-b-[2.5rem] shadow-sm flex flex-col justify-between pt-3 pb-4"
+        aria-label="Artisan Collections Showcase"
+        className="relative w-full overflow-hidden select-none flex items-center min-h-[480px] sm:min-h-[540px] md:min-h-[560px] lg:min-h-[580px] xl:min-h-[600px]"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-      >
-        {/* Full Photographic Slide Background */}
-        {HERO_SLIDES.map((slide, idx) => (
-          <div
-            key={slide.id}
-            aria-hidden={currentSlide !== idx}
-            className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out ${
-              currentSlide === idx ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
-            }`}
-          >
-            <img
-              src={getAssetUrl(slide.image)}
-              alt={slide.imageAlt}
-              loading={idx === 0 ? 'eager' : 'lazy'}
-              onError={(e) => {
-                if (slide.fallbackImage && e.currentTarget.src !== slide.fallbackImage) {
-                  e.currentTarget.src = slide.fallbackImage;
-                }
-              }}
-              className={`w-full h-full object-cover ${slide.mobilePosition || 'object-[82%_center]'}`}
-            />
-          </div>
-        ))}
-
-        {/* Floating Organic Ivory Card on Left (leaves right side open for bags) */}
-        <div className="relative z-20 w-[84%] max-w-[340px] bg-[#FAF6EE]/96 backdrop-blur-md rounded-3xl p-4 sm:p-5 shadow-xl border border-white/80 overflow-hidden ml-3.5 my-auto">
-          {/* Decorative Corner Olive Sprig in Top-Right */}
-          <div className="absolute top-2.5 right-2.5 pointer-events-none text-[#8C9879] opacity-80">
-            <CornerOliveSprig className="w-11 h-11" />
-          </div>
-
-          {/* Eyebrow Pill */}
-          <div className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full border border-[#D5C7B2] bg-white/70 text-[#7D3F1E] text-[9.5px] font-bold uppercase tracking-wider mb-2 shadow-2xs">
-            <Sparkles className="w-3 h-3 text-[#8F3D1F]" aria-hidden="true" />
-            <span>{activeSlide.decorBadge}</span>
-          </div>
-
-          {/* Brand Title */}
-          <span className="font-serif-display font-bold text-[26px] text-[#163323] leading-[1.1] block">
-            Countryside Craft
-          </span>
-
-          {/* Tagline */}
-          <span className="font-serif-display font-bold text-[21px] text-[#8F3D1F] leading-[1.1] block mt-0.5">
-            {activeSlide.tagline}
-          </span>
-
-          {/* Subtitle */}
-          <h2 className="font-serif-display font-bold text-[12.5px] text-[#163323] mt-1.5 leading-snug">
-            {activeSlide.title}
-          </h2>
-
-          {/* Small Terracotta Divider Bar */}
-          <div className="w-7 h-[2px] bg-[#8F3D1F] rounded-full my-2.5" />
-
-          {/* Description */}
-          <p className="font-sans text-[11px] text-[#4A3E36] leading-relaxed mb-4 line-clamp-3">
-            {activeSlide.description}
-          </p>
-
-          {/* Dual CTAs Stacked Vertically Inside Card */}
-          <div className="space-y-2">
-            {/* Primary Dark Green Button with Leaf Icon & Arrow */}
-            <button
-              id="hero-mobile-primary-cta"
-              type="button"
-              onClick={() => onNavigate('products', activeSlide.primaryTarget)}
-              className="w-full py-2.5 px-3.5 rounded-full bg-[#163323] hover:bg-[#204430] text-white text-[11px] font-bold uppercase tracking-wider flex items-center justify-between shadow-md active:scale-98 transition-all cursor-pointer group"
-            >
-              <span className="flex items-center space-x-1.5 truncate">
-                <Leaf className="w-3.5 h-3.5 text-[#A4B58A] shrink-0" aria-hidden="true" />
-                <span className="truncate">{activeSlide.primaryCta}</span>
-              </span>
-              <ArrowRight className="w-3.5 h-3.5 text-white shrink-0 ml-1 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-            </button>
-
-            {/* Secondary Outlined Inquiry Button with Search/Message Icon */}
-            <button
-              id="hero-mobile-whatsapp-cta"
-              type="button"
-              onClick={handleBulkInquiry}
-              className="w-full py-2.5 px-3 rounded-full border border-[#163323]/50 bg-white/70 hover:bg-white text-[#163323] text-[10px] font-bold uppercase tracking-wider flex items-center justify-center space-x-1.5 shadow-2xs active:scale-98 transition-all cursor-pointer"
-            >
-              <Search className="w-3.5 h-3.5 text-[#163323] shrink-0" aria-hidden="true" />
-              <span>INQUIRE FOR CUSTOM &amp; BULK FAVORS</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Floating Centered Carousel Navigation Pill */}
-        <div className="relative z-20 mx-auto flex items-center space-x-2 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#E7DFD2] text-[#34271D] shadow-md select-none mt-2">
-          <button
-            type="button"
-            onClick={handlePrev}
-            className="p-1 rounded-full hover:bg-black/5 text-[#34271D] transition-colors cursor-pointer"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
-          </button>
-
-          <div className="flex items-center space-x-1.5 px-1">
-            {HERO_SLIDES.map((_, dotIdx) => (
-              <button
-                key={dotIdx}
-                type="button"
-                onClick={() => goToSlide(dotIdx)}
-                className={`rounded-full transition-all duration-300 cursor-pointer ${
-                  currentSlide === dotIdx
-                    ? 'w-4 h-2 bg-[#163323]'
-                    : 'w-2 h-2 bg-[#D5CBC0] hover:bg-[#8A7A6C]'
-                }`}
-                aria-label={`Go to slide ${dotIdx + 1}`}
-              />
-            ))}
-          </div>
-
-          <button
-            type="button"
-            onClick={handleNext}
-            className="p-1 rounded-full hover:bg-black/5 text-[#34271D] transition-colors cursor-pointer"
-            aria-label="Next slide"
-          >
-            <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
-          </button>
-        </div>
-      </div>
-
-      {/* ─────────────────────────────────────────────────────────── */}
-      {/* DESKTOP HERO LAYOUT (Full-Bleed Editorial Presentation)     */}
-      {/* ─────────────────────────────────────────────────────────── */}
-      <div
-        role="region"
-        aria-roledescription="carousel"
-        aria-label="Artisan Collections Showcase (Desktop)"
-        className="hidden sm:flex relative w-full overflow-hidden select-none items-center min-h-[520px] md:min-h-[560px] lg:min-h-[580px] xl:min-h-[600px]"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
         {/* Full-Bleed Background Images for all slides */}
         {HERO_SLIDES.map((slide, idx) => (
@@ -378,61 +204,67 @@ export const HeroSlider = ({ onNavigate }) => {
                   e.currentTarget.src = slide.fallbackImage;
                 }
               }}
-              className={`w-full h-full object-cover ${slide.desktopPosition}`}
+              className={`w-full h-full object-cover ${slide.mobilePosition ? `${slide.mobilePosition} sm:${slide.desktopPosition}` : slide.desktopPosition}`}
             />
           </div>
         ))}
 
-        {/* Desktop Readability Gradient Overlay over left wall */}
+        {/* Readability Gradient Overlay over left side */}
         <div
-          className="absolute inset-0 z-20 pointer-events-none"
+          className="absolute inset-0 z-20 pointer-events-none hidden sm:block"
           style={{
-            background: 'linear-gradient(90deg, rgba(248,244,236,0.65) 0%, rgba(248,244,236,0.35) 38%, rgba(248,244,236,0.1) 60%, transparent 80%)',
+            background: 'linear-gradient(90deg, rgba(248,244,236,0.68) 0%, rgba(248,244,236,0.35) 38%, rgba(248,244,236,0.1) 60%, transparent 80%)',
+          }}
+        />
+        <div
+          className="absolute inset-0 z-20 pointer-events-none sm:hidden"
+          style={{
+            background: 'linear-gradient(90deg, rgba(248,244,236,0.88) 0%, rgba(248,244,236,0.72) 55%, rgba(248,244,236,0.25) 85%, transparent 100%)',
           }}
         />
 
-        {/* Content Container aligned over the sunlit wall on left */}
-        <div className="relative z-30 w-full h-full max-w-[1440px] mx-auto px-10 lg:px-16 xl:px-20 py-14 flex flex-col justify-center">
-          <div className="max-w-xl lg:max-w-[560px] xl:max-w-[620px] flex flex-col items-start text-left">
+        {/* Content Container aligned over left side directly on background */}
+        <div className="relative z-30 w-full h-full max-w-[1440px] mx-auto px-5 sm:px-10 lg:px-16 xl:px-20 py-8 sm:py-12 md:py-14 flex flex-col justify-center">
+          <div className="max-w-md sm:max-w-xl lg:max-w-[560px] xl:max-w-[620px] flex flex-col items-start text-left">
             
             {/* Eyebrow Pill */}
-            <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-xs border border-[#DDD7CC] shadow-2xs mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#A9512D]" aria-hidden="true" />
-              <span className="text-xs font-bold uppercase tracking-wider text-[#163323]">
+            <div className="inline-flex items-center space-x-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-white/90 backdrop-blur-xs border border-[#DDD7CC] shadow-2xs mb-1.5 sm:mb-2">
+              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#A9512D]" aria-hidden="true" />
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#163323]">
                 {activeSlide.decorBadge}
               </span>
             </div>
 
             {/* Brand Title */}
-            <div className="mt-1">
-              <span className="font-serif-display font-bold text-4xl lg:text-[54px] text-[#163323] leading-tight">
+            <div className="mt-0.5 sm:mt-1">
+              <span className="font-serif-display font-bold text-2xl sm:text-4xl lg:text-[54px] text-[#163323] leading-tight">
                 {activeSlide.brandTitle}
               </span>
             </div>
 
             {/* Tagline */}
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-serif-display font-bold text-[#A9512D] leading-tight mt-1">
+            <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-[44px] font-serif-display font-bold text-[#A9512D] leading-tight mt-0.5 sm:mt-1">
               {activeSlide.tagline}
             </h1>
 
             {/* Product Title / Subtitle */}
-            <h2 className="text-base sm:text-lg md:text-xl font-serif-display font-bold text-[#163323] mt-1">
+            <h2 className="text-xs sm:text-base md:text-xl font-serif-display font-bold text-[#163323] mt-0.5 sm:mt-1">
               {activeSlide.title}
             </h2>
 
             {/* Description */}
-            <p className="font-sans text-sm md:text-[15px] text-[#4A3E36] leading-relaxed max-w-lg mt-2.5">
+            <p className="font-sans text-xs sm:text-sm md:text-[15px] text-[#4A3E36] leading-relaxed max-w-sm sm:max-w-lg mt-1.5 sm:mt-2.5">
               {activeSlide.description}
             </p>
 
             {/* Dual CTAs */}
-            <div className="mt-8 flex items-center gap-4 w-auto">
+            <div className="mt-5 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-4 w-full sm:w-auto">
               {/* Primary Button */}
               <button
                 id="hero-primary-cta"
                 type="button"
                 onClick={() => onNavigate('products', activeSlide.primaryTarget)}
-                className="btn-shimmer-effect px-8 py-3.5 rounded-full bg-[#163323] hover:bg-[#204430] text-white font-bold text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all active:scale-98 cursor-pointer flex items-center justify-center border border-[#163323]"
+                className="btn-shimmer-effect px-6 sm:px-8 py-3 sm:py-3.5 rounded-full bg-[#163323] hover:bg-[#204430] text-white font-bold text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all active:scale-98 cursor-pointer flex items-center justify-center border border-[#163323]"
               >
                 <span>{activeSlide.primaryCta}</span>
               </button>
@@ -442,7 +274,7 @@ export const HeroSlider = ({ onNavigate }) => {
                 id="hero-whatsapp-inquiry-cta"
                 type="button"
                 onClick={handleBulkInquiry}
-                className="px-7 py-3.5 rounded-full border border-[#163323]/40 bg-white/80 hover:bg-white text-[#163323] font-bold text-xs uppercase tracking-wider transition-all active:scale-98 cursor-pointer flex items-center justify-center space-x-2 backdrop-blur-xs shadow-xs hover:shadow-sm"
+                className="px-5 sm:px-7 py-3 sm:py-3.5 rounded-full border border-[#163323]/40 bg-white/85 hover:bg-white text-[#163323] font-bold text-xs uppercase tracking-wider transition-all active:scale-98 cursor-pointer flex items-center justify-center space-x-2 backdrop-blur-xs shadow-xs hover:shadow-sm"
               >
                 <MessageCircle className="w-4 h-4 text-[#163323] shrink-0" aria-hidden="true" />
                 <span>INQUIRE FOR CUSTOM &amp; BULK FAVORS</span>
@@ -452,27 +284,27 @@ export const HeroSlider = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Carousel Navigation Controls (Bottom Right Floating Bar) */}
-        <div className="absolute bottom-6 right-8 z-30 flex items-center space-x-2 px-3 py-2 rounded-full bg-white/90 backdrop-blur-md border border-[#E7DFD2] text-[#34271D] shadow-md select-none">
+        {/* Carousel Navigation Controls (Floating Bottom-Right Pill) */}
+        <div className="absolute bottom-3 right-3 sm:bottom-6 sm:right-8 z-30 flex items-center space-x-1.5 sm:space-x-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full bg-white/90 backdrop-blur-md border border-[#E7DFD2] text-[#34271D] shadow-md select-none">
           <button
             type="button"
             onClick={handlePrev}
-            className="p-1.5 rounded-full hover:bg-black/5 text-[#34271D] transition-colors cursor-pointer"
+            className="p-1 sm:p-1.5 rounded-full hover:bg-black/5 text-[#34271D] transition-colors cursor-pointer"
             aria-label="Previous slide"
           >
-            <ChevronLeft className="w-4 h-4" aria-hidden="true" />
+            <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
           </button>
 
-          <div className="flex items-center space-x-1.5 px-1.5">
+          <div className="flex items-center space-x-1 sm:space-x-1.5 px-1 sm:px-1.5">
             {HERO_SLIDES.map((_, idx) => (
               <button
                 key={idx}
                 type="button"
                 onClick={() => goToSlide(idx)}
-                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 cursor-pointer ${
                   currentSlide === idx
-                    ? 'w-6 bg-[#163323]'
-                    : 'w-2 bg-[#34271D]/30 hover:bg-[#34271D]/60'
+                    ? 'w-5 sm:w-6 bg-[#163323]'
+                    : 'w-1.5 sm:w-2 bg-[#34271D]/30 hover:bg-[#34271D]/60'
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}
                 aria-current={currentSlide === idx ? 'true' : 'false'}
@@ -483,24 +315,24 @@ export const HeroSlider = ({ onNavigate }) => {
           <button
             type="button"
             onClick={handleNext}
-            className="p-1.5 rounded-full hover:bg-black/5 text-[#34271D] transition-colors cursor-pointer"
+            className="p-1 sm:p-1.5 rounded-full hover:bg-black/5 text-[#34271D] transition-colors cursor-pointer"
             aria-label="Next slide"
           >
-            <ChevronRight className="w-4 h-4" aria-hidden="true" />
+            <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
           </button>
 
           <div className="pl-1 border-l border-[#E7DFD2]">
             <button
               type="button"
               onClick={() => setIsPaused((prev) => !prev)}
-              className="p-1.5 rounded-full hover:bg-black/5 text-[#34271D]/70 hover:text-[#34271D] transition-colors cursor-pointer"
+              className="p-1 sm:p-1.5 rounded-full hover:bg-black/5 text-[#34271D]/70 hover:text-[#34271D] transition-colors cursor-pointer"
               aria-label={isPaused ? 'Resume autoplay' : 'Pause autoplay'}
               title={isPaused ? 'Resume autoplay' : 'Pause autoplay'}
             >
               {isPaused ? (
-                <Play className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
+                <Play className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" aria-hidden="true" />
               ) : (
-                <Pause className="w-3.5 h-3.5" aria-hidden="true" />
+                <Pause className="w-3 h-3 sm:w-3.5 sm:h-3.5" aria-hidden="true" />
               )}
             </button>
           </div>
@@ -508,96 +340,21 @@ export const HeroSlider = ({ onNavigate }) => {
       </div>
 
       {/* ─────────────────────────────────────────────────────────── */}
-      {/* MOBILE-ONLY TRUST FEATURES (Exact Match to Reference Mockup) */}
+      {/* TRUST BADGES STRIP (Responsive 2x2 Mobile, 4-Col Desktop)   */}
       {/* ─────────────────────────────────────────────────────────── */}
-      <div className="sm:hidden w-full bg-[#FAF7F0] border-b border-[#E8DFCFA] pt-6 pb-5 px-3">
-        {/* Top Row: 3 Columns with Vertical Dividers */}
-        <div className="grid grid-cols-3 divide-x divide-[#E2D8C8] pb-5 border-b border-[#E8DFCFA]">
-          {/* Feature 1 */}
-          <div className="flex flex-col items-center text-center px-1">
-            <div className="w-11 h-11 rounded-full bg-[#EDE7DA] border border-[#DDD5C5] flex items-center justify-center mb-2 shadow-2xs">
-              <Star className="w-5 h-5 text-[#163323]" aria-hidden="true" />
-            </div>
-            <p className="font-serif-display font-bold text-xs text-[#163323] leading-tight">
-              5,000+ Happy Customers
-            </p>
-            <p className="text-[10px] text-[#6E6054] mt-1 leading-tight">
-              Loved by craft &amp; nature enthusiasts
-            </p>
-          </div>
-
-          {/* Feature 2 */}
-          <div className="flex flex-col items-center text-center px-1">
-            <div className="w-11 h-11 rounded-full bg-[#EDE7DA] border border-[#DDD5C5] flex items-center justify-center mb-2 shadow-2xs">
-              <Truck className="w-5 h-5 text-[#163323]" aria-hidden="true" />
-            </div>
-            <p className="font-serif-display font-bold text-xs text-[#163323] leading-tight">
-              Fast &amp; Reliable Dispatch
-            </p>
-            <p className="text-[10px] text-[#6E6054] mt-1 leading-tight">
-              Within 4–7 business days
-            </p>
-          </div>
-
-          {/* Feature 3 */}
-          <div className="flex flex-col items-center text-center px-1">
-            <div className="w-11 h-11 rounded-full bg-[#EDE7DA] border border-[#DDD5C5] flex items-center justify-center mb-2 shadow-2xs">
-              <Leaf className="w-5 h-5 text-[#163323]" aria-hidden="true" />
-            </div>
-            <p className="font-serif-display font-bold text-xs text-[#163323] leading-tight">
-              Eco-Friendly Materials
-            </p>
-            <p className="text-[10px] text-[#6E6054] mt-1 leading-tight">
-              100% natural &amp; biodegradable
-            </p>
-          </div>
-        </div>
-
-        {/* Bottom Row: Centered 4th Feature Flanked by Botanical Olive Sprigs */}
-        <div className="flex items-center justify-between pt-4 px-2">
-          {/* Left Botanical Sprig */}
-          <div className="text-[#8C9879] opacity-80 shrink-0">
-            <OliveSprigLeft className="w-10 h-8" />
-          </div>
-
-          {/* Center 4th Feature */}
-          <div className="flex items-center space-x-3 mx-auto">
-            <div className="w-11 h-11 rounded-full bg-[#EDE7DA] border border-[#DDD5C5] flex items-center justify-center shrink-0 shadow-2xs">
-              <HandHeart className="w-5 h-5 text-[#163323]" aria-hidden="true" />
-            </div>
-            <div className="text-left">
-              <p className="font-serif-display font-bold text-xs text-[#163323] leading-tight">
-                Handcrafted with Love
-              </p>
-              <p className="text-[10px] text-[#6E6054] mt-0.5 leading-tight">
-                Supporting rural artisans
-              </p>
-            </div>
-          </div>
-
-          {/* Right Botanical Sprig */}
-          <div className="text-[#8C9879] opacity-80 shrink-0">
-            <OliveSprigRight className="w-10 h-8" />
-          </div>
-        </div>
-      </div>
-
-      {/* ─────────────────────────────────────────────────────────── */}
-      {/* DESKTOP TRUST BADGES STRIP (4 Columns with Dividers)       */}
-      {/* ─────────────────────────────────────────────────────────── */}
-      <div className="hidden sm:block w-full bg-[#FAF8F5] border-y border-[#E8E2D6]">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-8 py-6">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0 lg:divide-x divide-[#E8E2D6]">
+      <div className="w-full bg-[#FAF8F5] border-y border-[#E8E2D6]">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6 lg:gap-0 lg:divide-x divide-[#E8E2D6]">
             {TRUST_FEATURES.map(({ icon: Icon, title, sub }) => (
-              <div key={title} className="flex items-center space-x-3.5 lg:px-6">
+              <div key={title} className="flex items-center space-x-2.5 sm:space-x-3.5 lg:px-6">
                 <div className="shrink-0">
-                  <Icon className="w-6 h-6 stroke-[1.6] text-[#163323]" aria-hidden="true" />
+                  <Icon className="w-5 h-5 sm:w-6 sm:h-6 stroke-[1.6] text-[#163323]" aria-hidden="true" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm sm:text-[15px] font-bold text-[#163323] leading-tight">
+                  <p className="text-xs sm:text-sm lg:text-[15px] font-bold text-[#163323] leading-tight">
                     {title}
                   </p>
-                  <p className="text-xs sm:text-[13px] text-[#55665B] mt-0.5 leading-snug">
+                  <p className="text-[10px] sm:text-xs lg:text-[13px] text-[#55665B] mt-0.5 leading-snug">
                     {sub}
                   </p>
                 </div>
